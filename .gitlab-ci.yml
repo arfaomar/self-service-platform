@@ -12,7 +12,7 @@ install-dependencies:
   stage: install
   script: 
     - echo "Installing dependencies..."
-    - npm ci
+    - npm install
   cache: {}
 
 
