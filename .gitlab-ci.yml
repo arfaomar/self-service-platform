@@ -1,3 +1,5 @@
+image: node:lts
+
 cache:
   paths:
     - node_modules/
