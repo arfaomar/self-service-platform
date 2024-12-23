@@ -1,13 +1,5 @@
 image: node:lts
 
-variables:
-  CACHE_PATH: "node_modules"
-
-cache:
-  key: "${CI_COMMIT_REF_SLUG}"
-  paths:
-    - $CACHE_PATH/
-
 stages:
   - install
   - lint
@@ -21,9 +13,7 @@ install-dependencies:
   script: 
     - echo "Installing dependencies..."
     - npm ci
-  cache:
-    paths:
-      - $CACHE_PATH/
+  cache: {}
 
 
 # - - - TEST - - -
@@ -31,7 +21,6 @@ test-unit:
   stage: test
   script:
     - echo "Running unit tests..."
-    - ls node_modules/
     - npm run test:unit
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
