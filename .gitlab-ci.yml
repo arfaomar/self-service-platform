@@ -6,6 +6,14 @@ stages:
   - test
   - build
 
+variables:
+  CACHE_PATH: ".npm"
+
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - $CACHE_PATH/
+
 
 # - - - INSTALL - - -
 install-dependencies:
@@ -13,7 +21,10 @@ install-dependencies:
   script: 
     - echo "Installing dependencies..."
     - npm install
-  cache: {}
+    - ls -la
+  cache:
+    paths:
+      - $CACHE_PATH/
 
 
 # - - - TEST - - -
