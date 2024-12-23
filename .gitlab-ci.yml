@@ -19,6 +19,7 @@ install-dependencies:
   stage: install
   script: 
     - echo "Installing dependencies..."
+    - ls node_modules/
     - npm ci
   cache:
     paths:
@@ -30,6 +31,7 @@ test-unit:
   stage: test
   script:
     - echo "Running unit tests..."
+    - ls node_modules/
     - npm run test:unit
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
