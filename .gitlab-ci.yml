@@ -1,0 +1,49 @@
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - install
+  - lint
+  - test
+  - build
+
+
+# - - - INSTALL - - -
+install-dependencies:
+  stage: install
+  script: 
+    - echo "Installing dependencies..."
+    - npm ci
+  cache:
+    paths:
+      - node_modules/
+
+
+# - - - TEST - - -
+test-unit:
+  stage: test
+  script:
+    - echo "unning unit tests..."
+    - npm run test:unit
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
+    - if: $CI_COMMIT_BRANCH == "main"
+
+test-integration:
+  stage: test
+  script:
+    - echo "Running integration tests..."
+    - npm run test:integration
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+
+# - - - BUILD - - -
+build:
+  stage: build
+  script:
+    - echo "Building the project..."
+    - npm run build
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
