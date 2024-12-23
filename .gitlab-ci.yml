@@ -20,7 +20,7 @@ install-dependencies:
   stage: install
   script: 
     - echo "Installing dependencies..."
-    - npm install
+    - npm ci
   cache:
     paths:
       - $CACHE_PATH/
