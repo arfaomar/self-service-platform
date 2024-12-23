@@ -30,7 +30,6 @@ test-unit:
   stage: test
   script:
     - echo "Running unit tests..."
-    - ls node_modules/
     - npm run test:unit
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
