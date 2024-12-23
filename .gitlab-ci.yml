@@ -7,7 +7,7 @@ stages:
   - build
 
 variables:
-  CACHE_PATH: ".npm"
+  CACHE_PATH: "node_modules"
 
 cache:
   key: "${CI_COMMIT_REF_SLUG}"
@@ -32,8 +32,12 @@ test-unit:
   stage: test
   script:
     - echo "Running unit tests..."
-    - npm run test:unit
     - ls -la
+    - npm run test:unit
+  cache:
+    paths:
+      - $CACHE_PATH/
+      - node_modules/
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
     - if: $CI_COMMIT_BRANCH == "main"
