@@ -19,7 +19,6 @@ install-dependencies:
   stage: install
   script: 
     - echo "Installing dependencies..."
-    - ls node_modules/
     - npm ci
   cache:
     paths:
