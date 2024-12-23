@@ -2,8 +2,8 @@
 
 import { useAuthContext } from "@contexts/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/Tabs";
-import SignInTab from "@components/SignInTab";
-import SignUpTab from "@components/SignUpTab";
+import SignInTab from "@components/clerk/SignInTab";
+import SignUpTab from "@components/clerk/SignUpTab";
 
 export default function AuthTabs() {
     const { activeTab, setActiveTab } = useAuthContext();

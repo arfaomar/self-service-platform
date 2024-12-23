@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@styles/globals.css";
 import { cn } from "@lib/cn";
 import { ClerkProvider } from "@clerk/nextjs";
+import { SyncActiveOrganization } from "@components/clerk/SyncActiveOrganization";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -21,10 +22,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className={cn(inter.className, "antialiased")}>
-                <ClerkProvider>{children}</ClerkProvider>
-            </body>
-        </html>
+        <ClerkProvider>
+            <SyncActiveOrganization />
+            <html lang="en">
+                <body className={cn(inter.className, "antialiased")}>
+                    {children}
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }
