@@ -1,8 +1,11 @@
 image: node:lts
 
+variables:
+  CACHE_PATH: ".npm"
+
 cache:
   paths:
-    - node_modules/
+    - $CACHE_PATH/
 
 stages:
   - install
@@ -19,7 +22,7 @@ install-dependencies:
     - npm install
   cache:
     paths:
-      - node_modules/
+      - $CACHE_PATH/
 
 
 # - - - TEST - - -
