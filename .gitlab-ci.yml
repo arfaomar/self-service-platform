@@ -29,7 +29,7 @@ install-dependencies:
 test-unit:
   stage: test
   script:
-    - echo "unning unit tests..."
+    - echo "Running unit tests..."
     - npm run test:unit
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
