@@ -21,7 +21,6 @@ install-dependencies:
   script: 
     - echo "Installing dependencies..."
     - npm install
-    - ls -la
   cache:
     paths:
       - $CACHE_PATH/
@@ -32,7 +31,6 @@ test-unit:
   stage: test
   script:
     - echo "Running unit tests..."
-    - ls -la
     - npm run test:unit
   cache:
     paths:
