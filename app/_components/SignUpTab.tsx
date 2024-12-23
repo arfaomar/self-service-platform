@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthContext } from "@contexts/AuthContext";
 import * as Clerk from "@clerk/elements/common";
 import * as SignUp from "@clerk/elements/sign-up";
 import { Button } from "@components/ui/Button";
@@ -16,6 +17,8 @@ import { Input } from "@components/ui/Input";
 import { Icons } from "@components/ui/Icons";
 
 export default function SignUpTab() {
+    const { setActiveTab } = useAuthContext();
+
     return (
         <SignUp.Root>
             <Clerk.Loading>
@@ -112,10 +115,8 @@ export default function SignUpTab() {
                                                 </Clerk.Loading>
                                             </Button>
                                         </SignUp.Action>
-                                        <Button variant="link" size="sm" asChild>
-                                            <Clerk.Link navigate="sign-in">
-                                                Already have an account? Sign in
-                                            </Clerk.Link>
+                                        <Button variant="link" size="sm" onClick={() => setActiveTab("sign-in")}>
+                                            Already have an account? Sign in
                                         </Button>
                                     </div>
                                 </CardFooter>

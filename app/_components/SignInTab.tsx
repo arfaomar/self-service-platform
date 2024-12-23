@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthContext } from "@contexts/AuthContext";
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 import { Button } from "@components/ui/Button";
@@ -16,6 +17,8 @@ import { Input } from "@components/ui/Input";
 import { Icons } from "@components/ui/Icons";
 
 export default function SignInTab() {
+    const { setActiveTab } = useAuthContext();
+
     return (
         <SignIn.Root>
             <Clerk.Loading>
@@ -77,11 +80,18 @@ export default function SignInTab() {
                                     <p className="flex items-center gap-x-3 text-sm text-muted-foreground before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
                                         or
                                     </p>
-                                    <Clerk.Field name="identifier" className="space-y-2">
+                                    <Clerk.Field
+                                        name="identifier"
+                                        className="space-y-2"
+                                    >
                                         <Clerk.Label asChild>
                                             <Label>Email address</Label>
                                         </Clerk.Label>
-                                        <Clerk.Input type="email" required asChild>
+                                        <Clerk.Input
+                                            type="email"
+                                            required
+                                            asChild
+                                        >
                                             <Input />
                                         </Clerk.Input>
                                         <Clerk.FieldError className="block text-sm text-destructive" />
@@ -103,10 +113,14 @@ export default function SignInTab() {
                                             </Button>
                                         </SignIn.Action>
 
-                                        <Button variant="link" size="sm" asChild>
-                                            <Clerk.Link navigate="sign-up">
-                                                Don&apos;t have an account? Sign up
-                                            </Clerk.Link>
+                                        <Button
+                                            variant="link"
+                                            size="sm"
+                                            onClick={() =>
+                                                setActiveTab("sign-up")
+                                            }
+                                        >
+                                            Don&apos;t have an account? Sign up
                                         </Button>
                                     </div>
                                 </CardFooter>
@@ -118,24 +132,42 @@ export default function SignInTab() {
                                 <CardHeader>
                                     <CardTitle>Use another method</CardTitle>
                                     <CardDescription>
-                                        Facing issues? You can use any of these methods to sign in.
+                                        Facing issues? You can use any of these
+                                        methods to sign in.
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="grid gap-y-4">
-                                    <SignIn.SupportedStrategy name="email_code" asChild>
-                                        <Button type="button" variant="link" disabled={isGlobalLoading}>
+                                    <SignIn.SupportedStrategy
+                                        name="email_code"
+                                        asChild
+                                    >
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            disabled={isGlobalLoading}
+                                        >
                                             Email code
                                         </Button>
                                     </SignIn.SupportedStrategy>
-                                    <SignIn.SupportedStrategy name="password" asChild>
-                                        <Button type="button" variant="link" disabled={isGlobalLoading}>
+                                    <SignIn.SupportedStrategy
+                                        name="password"
+                                        asChild
+                                    >
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            disabled={isGlobalLoading}
+                                        >
                                             Password
                                         </Button>
                                     </SignIn.SupportedStrategy>
                                 </CardContent>
                                 <CardFooter>
                                     <div className="grid w-full gap-y-4">
-                                        <SignIn.Action navigate="previous" asChild>
+                                        <SignIn.Action
+                                            navigate="previous"
+                                            asChild
+                                        >
                                             <Button disabled={isGlobalLoading}>
                                                 <Clerk.Loading>
                                                     {(isLoading) => {
@@ -159,18 +191,26 @@ export default function SignInTab() {
                                     <CardHeader>
                                         <CardTitle>Check your email</CardTitle>
                                         <CardDescription>
-                                            Enter the verification code sent to your email
+                                            Enter the verification code sent to
+                                            your email
                                         </CardDescription>
                                         <p className="text-sm text-muted-foreground">
-                                            Welcome back <SignIn.SafeIdentifier />
+                                            Welcome back{" "}
+                                            <SignIn.SafeIdentifier />
                                         </p>
                                     </CardHeader>
                                     <CardContent className="grid gap-y-4">
-                                        <Clerk.Field name="password" className="space-y-2">
+                                        <Clerk.Field
+                                            name="password"
+                                            className="space-y-2"
+                                        >
                                             <Clerk.Label asChild>
                                                 <Label>Password</Label>
                                             </Clerk.Label>
-                                            <Clerk.Input type="password" asChild>
+                                            <Clerk.Input
+                                                type="password"
+                                                asChild
+                                            >
                                                 <Input />
                                             </Clerk.Input>
                                             <Clerk.FieldError className="block text-sm text-destructive" />
@@ -179,7 +219,9 @@ export default function SignInTab() {
                                     <CardFooter>
                                         <div className="grid w-full gap-y-4">
                                             <SignIn.Action submit asChild>
-                                                <Button disabled={isGlobalLoading}>
+                                                <Button
+                                                    disabled={isGlobalLoading}
+                                                >
                                                     <Clerk.Loading>
                                                         {(isLoading) => {
                                                             return isLoading ? (
@@ -191,8 +233,15 @@ export default function SignInTab() {
                                                     </Clerk.Loading>
                                                 </Button>
                                             </SignIn.Action>
-                                            <SignIn.Action navigate="choose-strategy" asChild>
-                                                <Button type="button" size="sm" variant="link">
+                                            <SignIn.Action
+                                                navigate="choose-strategy"
+                                                asChild
+                                            >
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    variant="link"
+                                                >
                                                     Use another method
                                                 </Button>
                                             </SignIn.Action>
@@ -206,25 +255,34 @@ export default function SignInTab() {
                                     <CardHeader>
                                         <CardTitle>Check your email</CardTitle>
                                         <CardDescription>
-                                            Enter the verification code sent to your email
+                                            Enter the verification code sent to
+                                            your email
                                         </CardDescription>
                                         <p className="text-sm text-muted-foreground">
-                                            Welcome back <SignIn.SafeIdentifier />
+                                            Welcome back{" "}
+                                            <SignIn.SafeIdentifier />
                                         </p>
                                     </CardHeader>
                                     <CardContent className="grid gap-y-4">
                                         <Clerk.Field name="code">
-                                            <Clerk.Label className="sr-only">Email verification code</Clerk.Label>
+                                            <Clerk.Label className="sr-only">
+                                                Email verification code
+                                            </Clerk.Label>
                                             <div className="grid gap-y-2 items-center justify-center">
                                                 <div className="flex justify-center text-center">
                                                     <Clerk.Input
                                                         type="otp"
                                                         autoSubmit
                                                         className="flex justify-center has-[:disabled]:opacity-50"
-                                                        render={({ value, status }) => {
+                                                        render={({
+                                                            value,
+                                                            status,
+                                                        }) => {
                                                             return (
                                                                 <div
-                                                                    data-status={status}
+                                                                    data-status={
+                                                                        status
+                                                                    }
                                                                     className="relative flex h-9 w-9 items-center justify-center border-y border-r border-input text-sm shadow-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md data-[status=selected]:ring-1 data-[status=selected]:ring-ring data-[status=cursor]:ring-1 data-[status=cursor]:ring-ring"
                                                                 >
                                                                     {value}
@@ -238,15 +296,31 @@ export default function SignInTab() {
                                                     asChild
                                                     resend
                                                     className="text-muted-foreground"
-                                                    fallback={({ resendableAfter }) => (
-                                                        <Button variant="link" size="sm" disabled>
-                                                            Didn&apos;t receive a code? Resend (
-                                                            <span className="tabular-nums">{resendableAfter}</span>)
+                                                    fallback={({
+                                                        resendableAfter,
+                                                    }) => (
+                                                        <Button
+                                                            variant="link"
+                                                            size="sm"
+                                                            disabled
+                                                        >
+                                                            Didn&apos;t receive
+                                                            a code? Resend (
+                                                            <span className="tabular-nums">
+                                                                {
+                                                                    resendableAfter
+                                                                }
+                                                            </span>
+                                                            )
                                                         </Button>
                                                     )}
                                                 >
-                                                    <Button variant="link" size="sm">
-                                                        Didn&apos;t receive a code? Resend
+                                                    <Button
+                                                        variant="link"
+                                                        size="sm"
+                                                    >
+                                                        Didn&apos;t receive a
+                                                        code? Resend
                                                     </Button>
                                                 </SignIn.Action>
                                             </div>
@@ -255,7 +329,9 @@ export default function SignInTab() {
                                     <CardFooter>
                                         <div className="grid w-full gap-y-4">
                                             <SignIn.Action submit asChild>
-                                                <Button disabled={isGlobalLoading}>
+                                                <Button
+                                                    disabled={isGlobalLoading}
+                                                >
                                                     <Clerk.Loading>
                                                         {(isLoading) => {
                                                             return isLoading ? (
@@ -267,8 +343,14 @@ export default function SignInTab() {
                                                     </Clerk.Loading>
                                                 </Button>
                                             </SignIn.Action>
-                                            <SignIn.Action navigate="choose-strategy" asChild>
-                                                <Button size="sm" variant="link">
+                                            <SignIn.Action
+                                                navigate="choose-strategy"
+                                                asChild
+                                            >
+                                                <Button
+                                                    size="sm"
+                                                    variant="link"
+                                                >
                                                     Use another method
                                                 </Button>
                                             </SignIn.Action>
