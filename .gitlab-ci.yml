@@ -20,7 +20,8 @@ install-dependencies:
   stage: install
   script: 
     - echo "Installing dependencies..."
-    - npm ci
+    - echo "${CLERK_SIGN_UP_URL}"
+    - npm install
   cache:
     paths:
       - $CACHE_PATH/
