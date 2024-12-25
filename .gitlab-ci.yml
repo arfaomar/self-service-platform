@@ -19,11 +19,6 @@ install-dependencies:
   cache:
     paths:
       - $CACHE_PATH/
-  artifacts:
-    expire_in: 1 days
-    when: on_success
-    paths:
-      - node_modules/
 
 
 # - - - TEST - - -
@@ -31,14 +26,12 @@ test-unit:
   stage: test
   script:
     - echo "Running unit tests..."
-    - npm install -g jest
     - npm run test:unit
-  cache:
-    paths:
-      - $CACHE_PATH/
   artifacts:
-    paths:
-      - node_modules/
+    when: always
+    reports:
+      junit:
+        - junit.xml
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
     - if: $CI_COMMIT_BRANCH == "main"
