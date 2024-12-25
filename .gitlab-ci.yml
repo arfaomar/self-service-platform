@@ -6,6 +6,7 @@ stages:
   - test
   - build
 
+
 # - - - INSTALL - - -
 install-dependencies:
   stage: install
@@ -13,11 +14,14 @@ install-dependencies:
     - echo "Installing dependencies..."
     - echo "${CLERK_SIGN_UP_URL}"
     - npm install
+  cache:
+    paths:
+      - node_modules/
   artifacts:
     expire_in: 1 days
     when: on_success
     paths:
-      - $node_modules/
+      - node_modules/
 
 
 # - - - TEST - - -
