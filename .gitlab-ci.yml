@@ -10,7 +10,7 @@ variables:
   CACHE_PATH: "node_modules"
 
 cache:
-  key: "${CI_COMMIT_REF_SLUG}"
+  key: "${CI_COMMIT_REF_SLUG}-${CI_JOB_STAGE}"
   paths:
     - $CACHE_PATH/
 
@@ -36,7 +36,6 @@ test-unit:
   cache:
     paths:
       - $CACHE_PATH/
-      - node_modules/
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
     - if: $CI_COMMIT_BRANCH == "main"
