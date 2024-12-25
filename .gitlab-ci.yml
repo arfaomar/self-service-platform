@@ -9,12 +9,6 @@ stages:
 variables:
   CACHE_PATH: "node_modules"
 
-cache:
-  key: "${CI_COMMIT_REF_SLUG}-${CI_JOB_STAGE}"
-  paths:
-    - $CACHE_PATH/
-
-
 # - - - INSTALL - - -
 install-dependencies:
   stage: install
