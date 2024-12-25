@@ -6,9 +6,6 @@ stages:
   - test
   - build
 
-variables:
-  CACHE_PATH: "node_modules"
-
 # - - - INSTALL - - -
 install-dependencies:
   stage: install
@@ -16,14 +13,11 @@ install-dependencies:
     - echo "Installing dependencies..."
     - echo "${CLERK_SIGN_UP_URL}"
     - npm install
-  cache:
-    paths:
-      - $CACHE_PATH/
   artifacts:
     expire_in: 1 days
     when: on_success
     paths:
-      - $CACHE_PATH/
+      - $node_modules/
 
 
 # - - - TEST - - -
