@@ -15,10 +15,15 @@ install-dependencies:
   script: 
     - echo "Installing dependencies..."
     - echo "${CLERK_SIGN_UP_URL}"
-    - npm install -g
+    - npm install
   cache:
     paths:
       - $CACHE_PATH/
+  artifacts:
+    expire_in: 1 days
+    when: on_success
+    paths:
+      - node_modules/
 
 
 # - - - TEST - - -
@@ -31,6 +36,9 @@ test-unit:
   cache:
     paths:
       - $CACHE_PATH/
+  artifacts:
+    paths:
+      - node_modules/
   rules:
     - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
     - if: $CI_COMMIT_BRANCH == "main"
