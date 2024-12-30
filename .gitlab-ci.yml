@@ -12,7 +12,8 @@ install-dependencies:
   stage: install
   script: 
     - echo "Installing dependencies..."
-    - echo "${CLERK_SIGN_UP_URL}"
+    - echo "Test ${CLERK_SIGN_UP_URL}" >> testfile.txt
+    - cat testfile.txt
     - npm install
   cache:
     paths:
