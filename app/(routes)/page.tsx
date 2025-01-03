@@ -1,29 +1,20 @@
-"use server"
-import { auth } from '@clerk/nextjs/server'
-import { AppSidebar } from "@components/app-sidebar"
+"use server";
+
+import { AppSidebar } from "@components/sidebar/AppSidebar";
 import {
     Breadcrumb,
     BreadcrumbItem,
-    BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@components/ui/Breadcrumb"
-import { Separator } from "@components/ui/Separator"
+} from "@components/ui/Breadcrumb";
+import { Separator } from "@components/ui/Separator";
 import {
     SidebarInset,
     SidebarProvider,
     SidebarTrigger,
-} from "@components/ui/Sidebar"
+} from "@components/ui/Sidebar";
 
 export default async function Home() {
-    const data = await auth();
-    console.log(data); // Log the entire data object to inspect its contents
-
-   // const userId = data.userId;
-    //const orgId = data?.orgId;
-    //const orgName = data?.orgSlug;
-
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -31,17 +22,14 @@ export default async function Home() {
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">
                         <SidebarTrigger className="-ml-1" />
-                        <Separator orientation="vertical" className="mr-2 h-4" />
+                        <Separator
+                            orientation="vertical"
+                            className="mr-2 h-4"
+                        />
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="#">
-                                        Building Your Application
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                                    <BreadcrumbPage>Home</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -59,5 +47,3 @@ export default async function Home() {
         </SidebarProvider>
     );
 }
-
-
