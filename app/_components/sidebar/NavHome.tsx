@@ -2,6 +2,7 @@
 
 import { House } from "lucide-react";
 import {
+    SidebarGroup,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
@@ -10,15 +11,17 @@ import Link from "next/link";
 
 export function NavHome() {
     return (
-        <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                    <Link href="/">
-                        <House />
-                        <span>Home</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarGroup>
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                        <Link href="/">
+                            <House />
+                            <span>Home</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+        </SidebarGroup>
     );
 }
