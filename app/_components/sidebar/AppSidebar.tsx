@@ -30,7 +30,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 items: [
                     {
                         title: "Submit Ticket",
-                        url: "#",
+                        url: "/support/submit-ticket",
                     },
                     {
                         title: "My Tickets",
