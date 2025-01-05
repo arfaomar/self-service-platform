@@ -4,6 +4,7 @@ import "@styles/globals.css";
 import { cn } from "@lib/cn";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SyncActiveOrganization } from "@components/clerk/SyncActiveOrganization";
+import { Toaster } from "@components/ui/Sonner";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
             <html lang="en">
                 <body className={cn(inter.className, "antialiased")}>
                     {children}
+                    <Toaster position={"top-center"} expand={true} richColors />
                 </body>
             </html>
         </ClerkProvider>
