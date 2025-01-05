@@ -1,0 +1,62 @@
+image: node:lts
+
+stages:
+  - install
+  - lint
+  - test
+  - build
+
+
+# - - - INSTALL - - -
+install-dependencies:
+  stage: install
+  script: 
+    - echo "Installing dependencies..."
+    - echo "DB_HOSTNAME=${DB_HOSTNAME}" >> .env.local
+    - echo "DB_PORT=${DB_PORT}" >> .env.local
+    - echo "DB_NAME=${DB_NAME}" >> .env.local
+    - echo "DB_USER=${DB_USER}" >> .env.local
+    - echo "DB_PASSWORD=${DB_PASSWORD}" >> .env.local
+    - echo "postgresql://$DB_USER:$DB_PASSWORD@$DB_HOSTNAME:$DB_PORT/$DB_NAME" >> .env.local
+    - echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${CLERK_PUBLISHABLE_KEY}" >> .env.local
+    - echo "CLERK_SECRET_KEY=${CLERK_SECRET_KEYL}" >> .env.local
+    - echo "NEXT_PUBLIC_CLERK_SIGN_IN_URL=${CLERK_SIGN_IN_URL}" >> .env.local
+    - echo "NEXT_PUBLIC_CLERK_SIGN_UP_URL=${CLERK_SIGN_UP_URL}" >> .env.local
+    - npm install
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    expire_in: 1 days
+    when: on_success
+    paths:
+      - node_modules/
+
+
+# - - - TEST - - -
+test-unit:
+  stage: test
+  script:
+    - echo "Running unit tests..."
+    - npm run test:unit
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
+    - if: $CI_COMMIT_BRANCH == "main"
+
+test-integration:
+  stage: test
+  script:
+    - echo "Running integration tests..."
+    - npm run test:integration
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+
+# - - - BUILD - - -
+build:
+  stage: build
+  script:
+    - echo "Building the project..."
+    - npm run build
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
