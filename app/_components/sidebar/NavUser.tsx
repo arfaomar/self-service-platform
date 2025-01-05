@@ -1,13 +1,6 @@
 "use client";
 
-import {
-    BadgeCheck,
-    Bell,
-    ChevronsUpDown,
-    CreditCard,
-    LogOut,
-    Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut, UserRound } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/Avatar";
 import {
@@ -25,17 +18,34 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@components/ui/Sidebar";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
-export function NavUser({
-    user,
-}: {
-    user: {
+export function NavUser() {
+    const { isMobile } = useSidebar();
+    const { signOut, openUserProfile } = useClerk();
+    const { isLoaded, user } = useUser();
+    const router = useRouter();
+
+    type User = {
         name: string;
         email: string;
-        avatar: string;
+        imageUrl: string;
+        initials: string;
     };
-}) {
-    const { isMobile } = useSidebar();
+    const currentUser: User = {
+        name: user?.fullName!,
+        email: user?.primaryEmailAddress?.emailAddress!,
+        imageUrl: user?.imageUrl!,
+        initials:
+            user?.fullName
+                ?.split(" ")
+                .map((n) => n[0].toUpperCase())
+                .join("") || "U",
+    };
+
+    if (!isLoaded) return null;
+    if (!user?.id) return null;
 
     return (
         <SidebarMenu>
@@ -48,19 +58,19 @@ export function NavUser({
                         >
                             <Avatar className="h-8 w-8 rounded-lg">
                                 <AvatarImage
-                                    src={user.avatar}
-                                    alt={user.name}
+                                    src={currentUser.imageUrl}
+                                    alt={currentUser.email}
                                 />
                                 <AvatarFallback className="rounded-lg">
-                                    CN
+                                    {currentUser.initials}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-semibold">
-                                    {user.name}
+                                    {currentUser.name}
                                 </span>
                                 <span className="truncate text-xs">
-                                    {user.email}
+                                    {currentUser.email}
                                 </span>
                             </div>
                             <ChevronsUpDown className="ml-auto size-4" />
@@ -76,49 +86,36 @@ export function NavUser({
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage
-                                        src={user.avatar}
-                                        alt={user.name}
+                                        src={currentUser.imageUrl}
+                                        alt={currentUser.name}
                                     />
                                     <AvatarFallback className="rounded-lg">
-                                        CN
+                                        {currentUser.initials}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="truncate font-semibold">
-                                        {user.name}
+                                        {currentUser.name}
                                     </span>
                                     <span className="truncate text-xs">
-                                        {user.email}
+                                        {currentUser.email}
                                     </span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <Sparkles />
-                                Upgrade to Pro
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
+                            <DropdownMenuItem onClick={() => openUserProfile()}>
+                                <UserRound />
                                 Account
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <CreditCard />
-                                Billing
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Bell />
-                                Notifications
-                            </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => signOut(() => router.push("/"))}
+                        >
                             <LogOut />
-                            Log out
+                            Sign out
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

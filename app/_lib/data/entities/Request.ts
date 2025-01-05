@@ -8,3 +8,7 @@ export interface Request {
     organizationId: string;
     updateDate?: Date;
 }
+
+export interface UpdatedRequest extends Partial<Omit<Request, "id">> {
+    id: number;
+}

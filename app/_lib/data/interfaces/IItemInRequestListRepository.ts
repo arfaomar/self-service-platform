@@ -1,17 +1,21 @@
-import { ItemInRequestList } from "@lib/data/entities";
+import {
+    ItemInRequestList,
+    CreatedItemInRequestList,
+    UpdatedItemInRequestList,
+} from "@lib/data/entities";
 
 export interface IItemInRequestListRepository {
     createItemInRequestList(
-        itemInRequest: ItemInRequestList,
+        newItemInRequest: CreatedItemInRequestList,
     ): Promise<ItemInRequestList>;
     getItemInRequestListById(id: number): Promise<ItemInRequestList>;
     getItemsInRequestList(requestId: number): Promise<ItemInRequestList[]>;
     updateItemInRequestList(
-        itemInRequest: ItemInRequestList,
+        updatedItemInRequest: UpdatedItemInRequestList,
     ): Promise<ItemInRequestList>;
-    deleteItemInRequestList(id: number): Promise<boolean>;
+    deleteItemInRequestList(id: number): Promise<void>;
     getAllRequestsForOrganization(
         organizationId: string,
     ): Promise<ItemInRequestList[]>;
-    deleteAllItemsInRequestList(requestId: number): Promise<boolean>;
+    deleteAllItemsInRequestList(requestId: number): Promise<void>;
 }

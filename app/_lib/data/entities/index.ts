@@ -1,6 +1,10 @@
 export { TicketStatusEnum } from "./TicketStatusEnum";
 export type { Ticket, CreatedTicket, UpdatedTicket } from "./Ticket";
 export { RequestStatusEnum } from "./RequestStatusEnum";
-export type { Request } from "./Request";
-export type { ShopItem } from "./ShopItem";
-export type { ItemInRequestList } from "./ItemInRequestList";
+export type { Request, UpdatedRequest } from "./Request";
+export type { ShopItem, CreatedShopItem, UpdatedShopItem } from "./ShopItem";
+export type {
+    ItemInRequestList,
+    UpdatedItemInRequestList,
+    CreatedItemInRequestList,
+} from "./ItemInRequestList";

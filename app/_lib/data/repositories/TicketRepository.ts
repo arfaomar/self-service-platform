@@ -1,31 +1,25 @@
-import { ITicketRepository } from "../interfaces/ITicketRepository";
+import { ITicketRepository } from "../interfaces";
 import { CreatedTicket, Ticket, UpdatedTicket } from "../entities";
-import { z } from "zod";
+import {
+    CreatedTicketSchema,
+    UpdatedTicketSchema,
+} from "@lib/data/repoZodSchemas";
 import { db, ticket } from "../../../../db";
 import { eq, and } from "drizzle-orm";
-
-const PartialTicketSchema = z.object({
-    title: z.string(),
-    description: z.string(),
-    ownerId: z.string().length(32).startsWith("user_"),
-    organizationId: z.string().length(31).startsWith("org_"),
-});
+import { z } from "zod";
 
 export class TicketRepository implements ITicketRepository {
-    async createTicket(ticketData: CreatedTicket): Promise<{ id: number }> {
-        const parsedTicketData = PartialTicketSchema.safeParse(ticketData);
+    async createTicket(ticketData: CreatedTicket): Promise<Ticket> {
+        const parsedTicketData = CreatedTicketSchema.safeParse(ticketData);
         if (!parsedTicketData.success) {
             throw new Error(parsedTicketData.error.errors[0].message);
         }
-        const partialTicket: PartialTicket = {
-            ...parsedTicketData.data,
-        };
 
         const [createdTicket] = await db
             .insert(ticket)
-            .values(partialTicket)
-            .returning({ id: ticket.id });
-        return createdTicket;
+            .values(parsedTicketData.data)
+            .returning();
+        return createdTicket as Ticket;
     }
 
     async getTicketById(id: number): Promise<Ticket> {
@@ -38,7 +32,7 @@ export class TicketRepository implements ITicketRepository {
         if (foundTicket.length === 0) {
             throw new Error("Ticket not found");
         }
-        return foundTicket; // Returns the found ticket object
+        return foundTicket[0] as Ticket;
     }
 
     async getTicketsByUserId(userId: string, orgId: string): Promise<Ticket[]> {
@@ -53,6 +47,13 @@ export class TicketRepository implements ITicketRepository {
             .startsWith("org_")
             .parse(orgId);
 
+        if (!validUserId) {
+            throw new Error("Invalid user ID");
+        }
+        if (!validOrgId) {
+            throw new Error("Invalid organization ID");
+        }
+
         const foundTickets = await db
             .select()
             .from(ticket)
@@ -62,29 +63,33 @@ export class TicketRepository implements ITicketRepository {
                     eq(ticket.organizationId, validOrgId),
                 ),
             );
-        return foundTickets;
+        return foundTickets as Ticket[];
     }
 
     async updateTicket(ticketData: UpdatedTicket): Promise<Ticket> {
+        const parsedTicketData = UpdatedTicketSchema.safeParse(ticketData);
+        if (!parsedTicketData.success) {
+            throw new Error(parsedTicketData.error.errors[0].message);
+        }
+
         const updatedTicket = await db
             .update(ticket)
-            .set(ticketData)
-            .where(eq(ticket.id, ticketData.id))
+            .set(parsedTicketData.data)
+            .where(eq(ticket.id, parsedTicketData.data.id))
             .returning();
 
         if (updatedTicket.length === 0) {
             throw new Error("Ticket not found for update");
         }
-        return updatedTicket; // Returns the updated ticket object
+        return updatedTicket[0] as Ticket;
     }
 
-    async deleteTicket(id: number): Promise<boolean> {
+    async deleteTicket(id: number): Promise<void> {
+        const validId = z.number().int().parse(id);
         try {
-            await db.delete(ticket).where(eq(ticket.id, id));
+            await db.delete(ticket).where(eq(ticket.id, validId));
         } catch {
             throw new Error("Failed to delete ticket");
-            return false;
         }
-        return true;
     }
 }

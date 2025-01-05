@@ -1,80 +1,121 @@
-import { IRequestRepository } from "../interfaces/IRequestRepository";
-import { Request } from "@lib/data/entities";
+import { IRequestRepository } from "../interfaces";
+import { Request, UpdatedRequest } from "@lib/data/entities";
+import {
+    CreatedRequestSchema,
+    UpdatedRequestSchema,
+} from "@lib/data/repoZodSchemas";
 import { db, request } from "../../../../db";
-import { eq, and, count } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import { z } from "zod";
 
 export class RequestRepository implements IRequestRepository {
-    async createRequest(requestData: Request): Promise<Request> {
-        // Insert the new Request into the database
+    async createRequest(userId: string, orgId: string): Promise<Request> {
+        const validUserId = z
+            .string()
+            .length(32)
+            .startsWith("user_")
+            .parse(userId);
+        const validOrgId = z
+            .string()
+            .length(31)
+            .startsWith("org_")
+            .parse(orgId);
+
+        const requestData = {
+            userId: validUserId,
+            organizationId: validOrgId,
+        };
+
+        const parsedRequestData = CreatedRequestSchema.safeParse(requestData);
+        if (!parsedRequestData.success) {
+            throw new Error(parsedRequestData.error.errors[0].message);
+        }
+
         const [createdRequest] = await db
             .insert(request)
-            .values(requestData)
+            .values(parsedRequestData.data)
             .returning();
-        return createdRequest; // Returns the created Request object
+        return createdRequest as Request;
     }
 
     async getRequestById(id: number): Promise<Request> {
+        const validId = z.number().int().nonnegative().parse(id);
         const foundRequest = await db
             .select()
             .from(request)
-            .where(eq(request.id, id));
+            .where(eq(request.id, validId));
 
         if (foundRequest.length === 0) {
             throw new Error("Request not found");
         }
-        return foundRequest[0]; // Returns the found Request object
+        return foundRequest[0] as Request;
     }
 
     async getAllRequestsByUserId(
         userId: string,
         orgId: string,
     ): Promise<Request[]> {
+        const validUserId = z
+            .string()
+            .length(32)
+            .startsWith("user_")
+            .parse(userId);
+        const validOrgId = z
+            .string()
+            .length(31)
+            .startsWith("org_")
+            .parse(orgId);
+
         const foundRequests = await db
             .select()
             .from(request)
             .where(
                 and(
-                    eq(request.userId, userId),
-                    eq(request.organizationId, orgId),
+                    eq(request.userId, validUserId),
+                    eq(request.organizationId, validOrgId),
                 ),
             );
-
-        return foundRequests; // Returns an array of Requests
+        return foundRequests as Request[];
     }
 
-    async getAllRequestsByOrganizationId(orgId: string): Promise<Request[]> {
+    async getAllRequestsInOrganization(orgId: string): Promise<Request[]> {
+        const validOrgId = z
+            .string()
+            .length(31)
+            .startsWith("org_")
+            .parse(orgId);
+
         const foundRequests = await db
             .select()
             .from(request)
-            .where(eq(request.organizationId, orgId));
-
-        return foundRequests; // Returns an array of Requests
+            .where(eq(request.organizationId, validOrgId));
+        return foundRequests as Request[];
     }
 
-    async updateRequest(requestData: Request): Promise<Request> {
+    async updateRequest(requestData: UpdatedRequest): Promise<Request> {
+        const parsedRequestData = UpdatedRequestSchema.safeParse(requestData);
+        if (!parsedRequestData.success) {
+            throw new Error(parsedRequestData.error.errors[0].message);
+        }
+
         const updatedRequest = await db
             .update(request)
-            .set({
-                userId: requestData.userId,
-                status: requestData.status,
-                creationDate: requestData.creationDate,
-                organizationId: requestData.organizationId,
-                updateDate: requestData.updateDate,
-            })
-            .where(eq(request.id, requestData.id))
+            .set(parsedRequestData.data)
+            .where(eq(request.id, parsedRequestData.data.id))
             .returning();
 
         if (updatedRequest.length === 0) {
             throw new Error("Request not found for update");
         }
-        return updatedRequest[0]; // Returns the updated Request object
+        return updatedRequest[0] as Request;
     }
 
-    async deleteRequest(id: number): Promise<boolean> {
-        const deletedRequest = await db
-            .delete(request)
-            .where(eq(request.id, id));
-
-        return deletedRequest.count > 0; // Returns true if the Request was successfully deleted, else false
+    async deleteRequest(id: number): Promise<void> {
+        const validId = z.number().int().nonnegative().parse(id);
+        try {
+            await db.delete(request).where(eq(request.id, validId));
+        } catch {
+            throw new Error("Failed to delete request");
+        }
     }
 }

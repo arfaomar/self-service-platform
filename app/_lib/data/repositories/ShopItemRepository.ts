@@ -1,64 +1,87 @@
-import { IShopItemRepository } from "../interfaces/IShopItemRepository";
-import { ShopItem } from "@lib/data/entities";
+import { IShopItemRepository } from "@lib/data/interfaces";
+import { CreatedShopItem, ShopItem, UpdatedShopItem } from "@lib/data/entities";
+import {
+    CreatedShopItemSchema,
+    UpdatedShopItemSchema,
+} from "@lib/data/repoZodSchemas";
 import { db, shopItem } from "../../../../db";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 
 export class ShopItemRepository implements IShopItemRepository {
-    async createShopItem(shopItemData: ShopItem): Promise<ShopItem> {
-        // Insert the new ShopItem into the database
+    async createShopItem(shopItemData: CreatedShopItem): Promise<ShopItem> {
+        const parsedShopItemData =
+            CreatedShopItemSchema.safeParse(shopItemData);
+        if (!parsedShopItemData.success) {
+            throw new Error(parsedShopItemData.error.errors[0].message);
+        }
+
         const [createdShopItem] = await db
             .insert(shopItem)
-            .values(shopItemData)
+            .values(parsedShopItemData.data)
             .returning();
-        return createdShopItem; // Returns the created ShopItem object
+        return createdShopItem;
     }
 
     async getShopItemById(id: number): Promise<ShopItem> {
+        const validId = z.number().int().nonnegative().parse(id);
+        if (!validId) {
+            throw new Error("Invalid ID");
+        }
         const foundShopItem = await db
             .select()
             .from(shopItem)
-            .where(eq(shopItem.id, id));
+            .where(eq(shopItem.id, validId));
 
         if (foundShopItem.length === 0) {
-            throw new Error("ShopItem not found");
+            throw new Error("Shop item not found");
         }
-        return foundShopItem[0]; // Returns the found ShopItem object
+        return foundShopItem[0];
     }
 
-    async getShopItemsByOrganizationId(
-        organizationId: string,
-    ): Promise<ShopItem[]> {
-        const foundShopItems = await db
-            .select()
-            .from(shopItem)
-            .where(eq(shopItem.organizationId, organizationId));
+    async updateShopItem(shopItemData: UpdatedShopItem): Promise<ShopItem> {
+        const parsedShopItemData =
+            UpdatedShopItemSchema.safeParse(shopItemData);
+        if (!parsedShopItemData.success) {
+            throw new Error(parsedShopItemData.error.errors[0].message);
+        }
 
-        return foundShopItems; // Returns an array of ShopItems
-    }
-
-    async updateShopItem(shopItemData: ShopItem): Promise<ShopItem> {
         const updatedShopItem = await db
             .update(shopItem)
-            .set({
-                name: shopItemData.name,
-                description: shopItemData.description,
-                stock: shopItemData.stock,
-                organizationId: shopItemData.organizationId,
-            })
-            .where(eq(shopItem.id, shopItemData.id))
+            .set(parsedShopItemData.data)
+            .where(eq(shopItem.id, parsedShopItemData.data.id))
             .returning();
 
         if (updatedShopItem.length === 0) {
-            throw new Error("ShopItem not found for update");
+            throw new Error("Shop item not found for update");
         }
-        return updatedShopItem[0]; // Returns the updated ShopItem object
+        return updatedShopItem[0];
     }
 
-    async deleteShopItem(id: number): Promise<boolean> {
-        const deletedShopItem = await db
-            .delete(shopItem)
-            .where(eq(shopItem.id, id));
+    async getAllShopItemsInOrganization(
+        organizationId: string,
+    ): Promise<ShopItem[]> {
+        const validOrgId = z
+            .string()
+            .length(31)
+            .startsWith("org_")
+            .parse(organizationId);
+        if (!validOrgId) {
+            throw new Error("Invalid organization ID");
+        }
+        const foundShopItems = await db
+            .select()
+            .from(shopItem)
+            .where(eq(shopItem.organizationId, validOrgId));
+        return foundShopItems;
+    }
 
-        return deletedShopItem.count > 0; // Returns true if the ShopItem was successfully deleted, else false
+    async deleteShopItem(id: number): Promise<void> {
+        const validId = z.number().int().parse(id);
+        try {
+            await db.delete(shopItem).where(eq(shopItem.id, validId));
+        } catch {
+            throw new Error("Failed to delete shop item");
+        }
     }
 }
