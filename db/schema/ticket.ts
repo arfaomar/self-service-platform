@@ -12,7 +12,7 @@ export const ticket = pgTable(
     "ticket",
     {
         id: serial("id").primaryKey(),
-        title: varchar("title", { length: 255 }).notNull(),
+        title: varchar("title", { length: 100 }).notNull(),
         description: text("description").notNull(),
         status: ticketStatus("status").default("Open").notNull(),
         ownerId: varchar("owner_id", { length: 32 }).notNull(),
