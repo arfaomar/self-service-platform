@@ -48,60 +48,60 @@ export default function SubmitTicketForm() {
 
     return (
         <Form {...form}>
+            <h1 className="text-3xl font-semibold text-center">
+                Submit a Ticket
+            </h1>
             <form
                 action={formAction}
-                className="space-y-8 max-w-3xl mx-auto py-10"
+                className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
             >
-                <div className="grid grid-cols-12 gap-4">
-                    <div className="col-span-4">
-                        <FormField
-                            control={form.control}
-                            name="ticketTitle"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Subject</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Topic"
-                                            type="text"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Short description of Issue
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                </div>
+                <FormField
+                    control={form.control}
+                    name="ticketTitle"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Subject</FormLabel>
+                            <FormControl>
+                                <Input
+                                    placeholder="Topic"
+                                    type="text"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                Short description of Issue
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-                <div className="grid grid-cols-12 gap-4">
-                    <div className="col-span-4">
-                        <FormField
-                            control={form.control}
-                            name="ticketDescription"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Describe your issue here"
-                                            className="resize-none"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Max. 500 chars, min. 10 chars
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                </div>
-                <LoadingButton loading={isPending} type="submit">
+                <FormField
+                    control={form.control}
+                    name="ticketDescription"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Description</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    placeholder="Describe your issue here"
+                                    className="resize-none"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                Max. 500 chars, min. 10 chars
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <LoadingButton
+                    loading={isPending}
+                    type={"submit"}
+                    className={"w-full"}
+                >
                     Submit
                 </LoadingButton>
             </form>
