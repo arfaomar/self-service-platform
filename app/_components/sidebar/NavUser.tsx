@@ -1,7 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, LogOut, UserRound } from "lucide-react";
-
+import { ChevronsUpDown, LogOut, Moon, Sun, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/Avatar";
 import {
     DropdownMenu,
@@ -20,32 +19,32 @@ import {
 } from "@components/ui/Sidebar";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { Switch } from "@components/ui/Switch";
+import { useTheme } from "next-themes";
 
 export function NavUser() {
     const { isMobile } = useSidebar();
     const { signOut, openUserProfile } = useClerk();
     const { isLoaded, user } = useUser();
     const router = useRouter();
+    const { setTheme, resolvedTheme } = useTheme();
 
-    type User = {
-        name: string;
-        email: string;
-        imageUrl: string;
-        initials: string;
-    };
-    const currentUser: User = {
-        name: user?.fullName!,
-        email: user?.primaryEmailAddress?.emailAddress!,
-        imageUrl: user?.imageUrl!,
+    const switchDark = resolvedTheme === "dark" ? "system" : "dark";
+    const switchLight = resolvedTheme === "light" ? "system" : "light";
+
+    if (!isLoaded) return null;
+    if (!user?.id) return null;
+
+    const currentUser = {
+        name: user.fullName || "Unknown User",
+        email: user.primaryEmailAddress?.emailAddress || "No Email",
+        imageUrl: user.imageUrl || "",
         initials:
-            user?.fullName
+            user.fullName
                 ?.split(" ")
                 .map((n) => n[0].toUpperCase())
                 .join("") || "U",
     };
-
-    if (!isLoaded) return null;
-    if (!user?.id) return null;
 
     return (
         <SidebarMenu>
@@ -108,6 +107,18 @@ export function NavUser() {
                             <DropdownMenuItem onClick={() => openUserProfile()}>
                                 <UserRound />
                                 Account
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Sun />
+                                <Switch
+                                    defaultChecked={resolvedTheme === "dark"}
+                                    onCheckedChange={(checked) =>
+                                        setTheme(
+                                            checked ? switchDark : switchLight,
+                                        )
+                                    }
+                                />
+                                <Moon />
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />

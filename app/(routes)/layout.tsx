@@ -5,6 +5,7 @@ import { cn } from "@lib/cn";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SyncActiveOrganization } from "@components/clerk/SyncActiveOrganization";
 import { Toaster } from "@components/ui/Sonner";
+import ThemeProvider from "@components/theming/ThemeProvider";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -25,10 +26,24 @@ export default function RootLayout({
     return (
         <ClerkProvider>
             <SyncActiveOrganization />
-            <html lang="en">
-                <body className={cn(inter.className, "antialiased")}>
-                    {children}
-                    <Toaster position={"top-center"} expand={true} richColors />
+            <html lang="en" suppressHydrationWarning>
+                <body
+                    className={cn(inter.className, "antialiased")}
+                    suppressHydrationWarning
+                >
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                        <Toaster
+                            position={"top-center"}
+                            expand={true}
+                            richColors
+                        />
+                    </ThemeProvider>
                 </body>
             </html>
         </ClerkProvider>
