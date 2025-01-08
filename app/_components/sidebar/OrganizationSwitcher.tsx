@@ -40,7 +40,7 @@ export function OrganizationSwitcher() {
     >(null);
 
     const { orgId } = useAuth();
-
+    // Clerk beschuldet, Thomas sagt es sei ok
     useEffect(() => {
         if (!isLoaded) return;
         const fetchedTeams: Organization[] = userMemberships.data?.map(
