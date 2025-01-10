@@ -4,6 +4,10 @@ export { RequestStatusEnum } from "./RequestStatusEnum";
 export type { Request, UpdatedRequest } from "./Request";
 export type { ShopItem, CreatedShopItem, UpdatedShopItem } from "./ShopItem";
 export type {
+    ShopItemCategory,
+    CreatedShopItemCategory,
+} from "./ShopItemCategory";
+export type {
     ItemInRequestList,
     UpdatedItemInRequestList,
     CreatedItemInRequestList,
