@@ -1,10 +1,10 @@
 import { IShopItemRepository } from "@lib/data/interfaces";
-import { CreatedShopItem, ShopItem, UpdatedShopItem } from "@lib/data/entities";
+import { CreatedShopItem, ShopItem, ShopItemCategory, UpdatedShopItem } from "@lib/data/entities";
 import {
     CreatedShopItemSchema,
     UpdatedShopItemSchema,
 } from "@lib/data/repoZodSchemas";
-import { db, shopItem } from "../../../../db";
+import { db, shopItem, shopItemCategory } from "../../../../db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -74,6 +74,25 @@ export class ShopItemRepository implements IShopItemRepository {
             .from(shopItem)
             .where(eq(shopItem.organizationId, validOrgId));
         return foundShopItems;
+    }
+
+    async getShopItemCategoryByShopItemId(id: number): Promise<ShopItemCategory> {
+        const foundShopItem = await this.getShopItemById(id);
+
+        if (foundShopItem.categoryId == null) {
+            throw new Error("Shop item does not have a valid category ID");
+        }
+
+        const foundShopItemCategory = await db
+            .select()
+            .from(shopItemCategory)
+            .where(eq(shopItemCategory.id, foundShopItem.categoryId));
+
+        if (foundShopItemCategory.length === 0) {
+            throw new Error("Shop item category not found");
+        }
+
+        return foundShopItemCategory[0];
     }
 
     async deleteShopItem(id: number): Promise<void> {
