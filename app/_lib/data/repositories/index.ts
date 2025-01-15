@@ -3,9 +3,11 @@ import { ShopItemRepository } from "./ShopItemRepository";
 import { ShopItemCategoryRepository } from "@lib/data/repositories/ShopItemCategoryRepository";
 import { RequestRepository } from "./RequestRepository";
 import { ItemInRequestListRepository } from "./ItemInRequestListRepository";
+import { TicketScreenshotRepository } from "./TicketScreenshotRepository";
 
 export const ticketRepository = new TicketRepository();
 export const shopItemRepository = new ShopItemRepository();
 export const shopItemCategoryRepository = new ShopItemCategoryRepository();
 export const requestRepository = new RequestRepository();
 export const itemInRequestRepository = new ItemInRequestListRepository();
+export const ticketScreenshotRepository = new TicketScreenshotRepository();

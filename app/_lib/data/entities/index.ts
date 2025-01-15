@@ -12,3 +12,4 @@ export type {
     UpdatedItemInRequestList,
     CreatedItemInRequestList,
 } from "./ItemInRequestList";
+export type { TicketScreenshot, UpdatedTicketScreenshot } from "./TicketScreenshot";

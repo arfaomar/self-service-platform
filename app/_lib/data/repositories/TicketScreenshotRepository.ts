@@ -1,0 +1,48 @@
+import {ITicketScreenshotRepository} from "@lib/data/interfaces";
+import {TicketScreenshot, UpdatedTicketScreenshot} from "@lib/data/entities";
+import { db, ticketScreenshot } from "../../../../db";
+import { eq } from "drizzle-orm";
+
+export class TicketScreenshotRepository implements ITicketScreenshotRepository {
+    async createTicketScreenshot(ticketScreenshot: TicketScreenshot): Promise<TicketScreenshot> {
+        const [createdTicketScreenshot] = await db
+            .insert(ticketScreenshot)
+            .values(ticketScreenshot)
+            .returning();
+        return createdTicketScreenshot as TicketScreenshot;
+    }
+
+    async findTicketScreenshotById(id: number): Promise<TicketScreenshot> {
+        const foundTicketScreenshot = await db
+            .select()
+            .from(ticketScreenshot)
+            .where(eq(ticketScreenshot.id, id));
+
+        if (foundTicketScreenshot.length === 0) {
+            throw new Error("Ticket screenshot not found");
+        }
+        return foundTicketScreenshot[0] as TicketScreenshot;
+    }
+
+    async findTicketScreenshotsByTicketId(ticketId: number): Promise<TicketScreenshot[]> {
+        const foundTicketScreenshots = await db
+            .select()
+            .from(ticketScreenshot)
+            .where(eq(ticketScreenshot.ticketId, ticketId));
+        return foundTicketScreenshots as TicketScreenshot[];
+    }
+
+    async updateTicketScreenshot(ticketScreenshot: UpdatedTicketScreenshot): Promise<void> {
+        await db
+            .update(ticketScreenshot)
+            .set(ticketScreenshot)
+            .where(eq(ticketScreenshot.id, ticketScreenshot.id));
+    }
+
+    async deleteTicketScreenshot(id: number): Promise<void> {
+        await db
+            .delete()
+            .from(ticketScreenshot)
+            .where(eq(ticketScreenshot.id, id));
+    }
+}
