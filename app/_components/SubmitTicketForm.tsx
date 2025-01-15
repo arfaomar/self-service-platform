@@ -19,6 +19,7 @@ import { submitTicketFormSchema } from "@lib/formSchemas";
 import submitTicketAction from "@actions/submitTicketAction";
 import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
+import { useRef } from "react";
 
 export default function SubmitTicketForm() {
     const form = useForm<z.infer<typeof submitTicketFormSchema>>({
@@ -46,12 +47,16 @@ export default function SubmitTicketForm() {
         }
     }, [state]);
 
+    const formRef = useRef<HTMLFormElement>(null);
+
     return (
         <Form {...form}>
             <h1 className="text-3xl font-semibold text-center">
                 Submit a Ticket
             </h1>
             <form
+                ref={formRef}
+                onSubmit={form.handleSubmit(() => formRef.current?.submit())}
                 action={formAction}
                 className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
             >
