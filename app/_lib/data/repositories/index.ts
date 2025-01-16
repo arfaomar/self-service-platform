@@ -4,6 +4,7 @@ import { ShopItemCategoryRepository } from "@lib/data/repositories/ShopItemCateg
 import { RequestRepository } from "./RequestRepository";
 import { ItemInRequestListRepository } from "./ItemInRequestListRepository";
 import { TicketScreenshotRepository } from "./TicketScreenshotRepository";
+import { TicketConversationRepository } from "@lib/data/repositories/TicketConversationRepository";
 
 export const ticketRepository = new TicketRepository();
 export const shopItemRepository = new ShopItemRepository();
@@ -11,3 +12,4 @@ export const shopItemCategoryRepository = new ShopItemCategoryRepository();
 export const requestRepository = new RequestRepository();
 export const itemInRequestRepository = new ItemInRequestListRepository();
 export const ticketScreenshotRepository = new TicketScreenshotRepository();
+export const ticketConversationRepository = new TicketConversationRepository();

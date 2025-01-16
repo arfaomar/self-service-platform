@@ -1,13 +1,15 @@
-import {ITicketScreenshotRepository} from "@lib/data/interfaces";
-import {TicketScreenshot, UpdatedTicketScreenshot} from "@lib/data/entities";
+import { ITicketScreenshotRepository } from "@lib/data/interfaces";
+import { TicketScreenshot, UpdatedTicketScreenshot } from "@lib/data/entities";
 import { db, ticketScreenshot } from "../../../../db";
 import { eq } from "drizzle-orm";
 
 export class TicketScreenshotRepository implements ITicketScreenshotRepository {
-    async createTicketScreenshot(ticketScreenshot: TicketScreenshot): Promise<TicketScreenshot> {
+    async createTicketScreenshot(
+        newTicketScreenshot: TicketScreenshot,
+    ): Promise<TicketScreenshot> {
         const [createdTicketScreenshot] = await db
             .insert(ticketScreenshot)
-            .values(ticketScreenshot)
+            .values(newTicketScreenshot)
             .returning();
         return createdTicketScreenshot as TicketScreenshot;
     }
@@ -24,7 +26,9 @@ export class TicketScreenshotRepository implements ITicketScreenshotRepository {
         return foundTicketScreenshot[0] as TicketScreenshot;
     }
 
-    async findTicketScreenshotsByTicketId(ticketId: number): Promise<TicketScreenshot[]> {
+    async findTicketScreenshotsByTicketId(
+        ticketId: number,
+    ): Promise<TicketScreenshot[]> {
         const foundTicketScreenshots = await db
             .select()
             .from(ticketScreenshot)
@@ -32,17 +36,16 @@ export class TicketScreenshotRepository implements ITicketScreenshotRepository {
         return foundTicketScreenshots as TicketScreenshot[];
     }
 
-    async updateTicketScreenshot(ticketScreenshot: UpdatedTicketScreenshot): Promise<void> {
+    async updateTicketScreenshot(
+        updatedTicketScreenshot: UpdatedTicketScreenshot,
+    ): Promise<void> {
         await db
             .update(ticketScreenshot)
-            .set(ticketScreenshot)
+            .set(updatedTicketScreenshot)
             .where(eq(ticketScreenshot.id, ticketScreenshot.id));
     }
 
     async deleteTicketScreenshot(id: number): Promise<void> {
-        await db
-            .delete()
-            .from(ticketScreenshot)
-            .where(eq(ticketScreenshot.id, id));
+        await db.delete(ticketScreenshot).where(eq(ticketScreenshot.id, id));
     }
 }
