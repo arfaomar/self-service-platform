@@ -1,7 +1,8 @@
 export interface TicketScreenshot {
     id: number;
     ticketId: number;
-    url: string;
+    data: Buffer;
+    fileFormat: string;
     name: string;
 }
 
