@@ -14,7 +14,7 @@ import {
     SidebarTrigger,
 } from "@components/ui/Sidebar";
 
-export default function SubmitTicketLayout({
+export default function SubmitTicketPageLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;

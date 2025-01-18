@@ -66,6 +66,24 @@ export class TicketRepository implements ITicketRepository {
         return foundTickets as Ticket[];
     }
 
+    async getTicketsByOrganizationId(orgId: string): Promise<Ticket[]> {
+        const validOrgId = z
+            .string()
+            .length(31)
+            .startsWith("org_")
+            .parse(orgId);
+
+        if (!validOrgId) {
+            throw new Error("Invalid organization ID");
+        }
+
+        const foundTickets = await db
+            .select()
+            .from(ticket)
+            .where(eq(ticket.organizationId, validOrgId));
+        return foundTickets as Ticket[];
+    }
+
     async updateTicket(ticketData: UpdatedTicket): Promise<Ticket> {
         const parsedTicketData = UpdatedTicketSchema.safeParse(ticketData);
         if (!parsedTicketData.success) {
