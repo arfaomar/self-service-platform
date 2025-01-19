@@ -1,15 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
-// import { ticketRepository } from "@lib/data/repositories";
+import { ticketRepository } from "@lib/data/repositories";
 import {
     Table,
-    TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@components/ui/Table";
-import Link from "next/link";
 import { Ticket, TicketStatusEnum } from "@lib/data/entities";
+import TicketTableBody from "@components/support/TicketTableBody";
 
 export default async function MyTicketsPage() {
     const { userId, orgId } = await auth();
@@ -17,10 +15,10 @@ export default async function MyTicketsPage() {
         return null;
     }
 
-    /*const userTickets : Ticket[] = await ticketRepository.getTicketsByUserId(
+    const userTickets : Ticket[] = await ticketRepository.getTicketsByUserId(
         userId,
         orgId,
-    );*/
+    );
     const testTickets: Ticket[] = [
         {
             id: 1,
@@ -48,7 +46,7 @@ export default async function MyTicketsPage() {
             id: 3,
             title: "Error in report generation",
             description: "Reports are not being generated correctly",
-            status: TicketStatusEnum.Closed,
+            status: TicketStatusEnum.OnHold,
             ownerId: "user3",
             creationDate: new Date("2023-01-05T10:00:00Z"),
             organizationId: "org3",
@@ -60,7 +58,7 @@ export default async function MyTicketsPage() {
     return (
         <section>
             <h1 className={"text-3xl font-semibold text-center"}>My Tickets</h1>
-            <div className={"mx-auto mb-10 mt-4 container"}>
+            <div className={"mx-auto my-10 container rounded-lg bg-card p-4"}>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -72,24 +70,7 @@ export default async function MyTicketsPage() {
                             <TableHead>Assigned To</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
-                        {testTickets.map((ticket) => (
-                            <TableRow key={ticket.id + 1}>
-                                <TableCell>{ticket.id}</TableCell>
-                                <TableCell>{ticket.title}</TableCell>
-                                <TableCell>{ticket.status}</TableCell>
-                                <TableCell>
-                                    {ticket.creationDate.toLocaleString()}
-                                </TableCell>
-                                <TableCell>
-                                    {ticket.updateDate?.toLocaleString()}
-                                </TableCell>
-                                <TableCell>
-                                    {ticket.supportId ?? "Not Assigned"}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
+                    <TicketTableBody tickets={testTickets}/>
                 </Table>
             </div>
         </section>
