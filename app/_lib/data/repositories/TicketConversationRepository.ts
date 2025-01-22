@@ -9,7 +9,7 @@ import {
     UpdatedTicketConversationSchema,
 } from "@lib/data/repoZodSchemas";
 import { db, ticketConversation } from "../../../../db";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 export class TicketConversationRepository
@@ -51,8 +51,18 @@ export class TicketConversationRepository
         return foundTicketConversation[0];
     }
 
-    async getAllTicketConversations(): Promise<TicketConversation[]> {
-        const ticketConversations = await db.select().from(ticketConversation);
+    async getTicketConversationsByTicketId(
+        ticketId: number,
+    ): Promise<TicketConversation[]> {
+        const validId = z.number().int().nonnegative().parse(ticketId);
+        if (!validId) {
+            throw new Error("Invalid ID");
+        }
+        const ticketConversations = await db
+            .select()
+            .from(ticketConversation)
+            .where(eq(ticketConversation.ticketId, validId))
+            .orderBy(asc(ticketConversation.creationDate));
 
         return ticketConversations as TicketConversation[];
     }

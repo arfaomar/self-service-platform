@@ -7,7 +7,7 @@ import {
     ticketScreenshotRepository,
 } from "@lib/data/repositories";
 
-export default async function SubmitTicketAction(
+export default async function submitTicketAction(
     prevState: {
         message: string;
         success?: boolean;
@@ -16,7 +16,6 @@ export default async function SubmitTicketAction(
     formData: FormData,
 ) {
     try {
-        console.log("ACTION");
 
         const { userId, orgId } = await auth();
 
@@ -27,9 +26,6 @@ export default async function SubmitTicketAction(
             };
         }
 
-        for (const pair of formData.entries()) {
-            console.log(`${pair[0]}:`, pair[1]);
-        }
         const parsedData = submitTicketFormSchema.safeParse({
             ticketTitle: formData.get("ticketTitle"),
             ticketDescription: formData.get("ticketDescription"),
