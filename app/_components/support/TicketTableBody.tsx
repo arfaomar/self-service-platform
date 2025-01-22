@@ -3,28 +3,15 @@ import { Ticket } from "@lib/data/entities";
 import { TableBody, TableCell, TableRow } from "@components/ui/Table";
 import { useRouter } from "next/navigation";
 import { Badge } from "@components/ui/Badge";
+import { formatDate, getBadgeVariant } from "@lib/utils";
 
 interface TicketTableBodyProps {
     tickets: Ticket[];
 }
 
 export default function TicketTableBody({ tickets }: TicketTableBodyProps) {
-    const router = useRouter();
 
-    const getBadgeVariant = (status: string) => {
-        switch (status) {
-            case "Open":
-                return "default";
-            case "Closed":
-                return "outline";
-            case "On Hold":
-                return "destructive";
-            case "In Progress":
-                return "secondary";
-            default:
-                return "outline";
-        }
-    };
+    const router = useRouter();
 
     return (
         <TableBody>
@@ -32,7 +19,7 @@ export default function TicketTableBody({ tickets }: TicketTableBodyProps) {
                 <TableRow>
                     <TableCell
                         className="h-24 text-center content-center"
-                        colSpan={6}
+                        colSpan={5}
                     >
                         No tickets found. Have you submitted one yet?
                     </TableCell>
@@ -54,13 +41,10 @@ export default function TicketTableBody({ tickets }: TicketTableBodyProps) {
                             </Badge>
                         </TableCell>
                         <TableCell>
-                            {ticket.creationDate.toLocaleString()}
+                            {formatDate(ticket.creationDate)}
                         </TableCell>
                         <TableCell>
-                            {ticket.updateDate?.toLocaleString()}
-                        </TableCell>
-                        <TableCell>
-                            {ticket.supportId ?? "Not Assigned"}
+                            {ticket.updateDate ? formatDate(ticket.updateDate) : "-"}
                         </TableCell>
                     </TableRow>
                 ))

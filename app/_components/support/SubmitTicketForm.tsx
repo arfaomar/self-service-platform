@@ -14,12 +14,12 @@ import {
 } from "@components/ui/Form";
 import { Input } from "@components/ui/Input";
 import { Textarea } from "@components/ui/Textarea";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, startTransition } from "react";
 import { submitTicketFormSchema } from "@lib/formSchemas";
 import submitTicketAction from "@actions/submitTicketAction";
 import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
-import { useRef } from "react";
+import { FileUploader } from "@components/support/FileUploader";
 
 export default function SubmitTicketForm() {
     const form = useForm<z.infer<typeof submitTicketFormSchema>>({
@@ -27,6 +27,7 @@ export default function SubmitTicketForm() {
         defaultValues: {
             ticketTitle: "",
             ticketDescription: "",
+            images: [],
         },
     });
 
@@ -43,6 +44,18 @@ export default function SubmitTicketForm() {
         initialState,
     );
 
+    const onSubmit = (data: z.infer<typeof submitTicketFormSchema>) => {
+        const formData = new FormData();
+        formData.append("ticketTitle", data.ticketTitle);
+        formData.append("ticketDescription", data.ticketDescription);
+        data.images.forEach((file) => {
+            formData.append("images", file);
+        });
+        startTransition(() => {
+            formAction(formData);
+        });
+    };
+
     useEffect(() => {
         if (state && "error" in state && state.message !== "") {
             toast.error(state.message);
@@ -51,17 +64,13 @@ export default function SubmitTicketForm() {
         }
     }, [state]);
 
-    const formRef = useRef<HTMLFormElement>(null);
-
     return (
         <Form {...form}>
             <h1 className="text-3xl font-semibold text-center">
                 Submit a Ticket
             </h1>
             <form
-                ref={formRef}
-                onSubmit={form.handleSubmit(() => formRef.current?.submit())}
-                action={formAction}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
             >
                 <FormField
@@ -100,6 +109,28 @@ export default function SubmitTicketForm() {
                             </FormControl>
                             <FormDescription>
                                 Max. 500 chars, min. 10 chars
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="images"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Upload Screenshots</FormLabel>
+                            <FormControl>
+                                <FileUploader
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                    maxFileCount={4}
+                                    maxSize={8 * 1024 * 1024}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                Max. 4 images, 8MB each
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

@@ -2,80 +2,111 @@
 
 //import { Ticket } from "@lib/data/entities";
 import { Badge } from "@components/ui/Badge";
+import {
+    ticketRepository,
+    ticketScreenshotRepository,
+} from "@lib/data/repositories";
+import { formatDate, getBadgeVariant } from "@lib/utils";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@components/ui/Card";
+import { Clock4, RotateCw } from "lucide-react";
+import { Button } from "@components/ui/Button";
+import Image from "next/image";
+import Link from "next/link";
+
 export default async function TicketPage({
-                                             params,
-                                         }: {
+    params,
+}: {
     params: Promise<{ ticketId: string }>;
 }) {
     const ticketId = (await params).ticketId;
 
-    const getBadgeVariant = (status: string) => {
-        switch (status) {
-            case "Open":
-                return "default";
-            case "Closed":
-                return "outline";
-            case "On Hold":
-                return "destructive";
-            case "In Progress":
-                return "secondary";
-            default:
-                return "outline";
-        }
-    };
+    const ticket = await ticketRepository.getTicketById(parseInt(ticketId));
 
-    // Mock data, replace with a real API fetch or database query
-    const ticket = {
-
-        title: "Sample Ticket Title",
-        description: "This is a sample ticket description with multiple lines.\nIt demonstrates how the content would look in the description box.\nFeel free to replace this with dynamic data.",
-        status: "Open",
-        createdAt: "2025-01-19",
-        updatedAt: "2025-01-19",
-        assignedTo: "John Doe",
-
-    };
+    const screenshots =
+        await ticketScreenshotRepository.findTicketScreenshotsByTicketId(
+            parseInt(ticketId),
+        );
 
     return (
-        <div className="max-w-4xl bg-card mx-auto mt-8 p-4 border rounded-lg shadow-lg">
-            {/* Header Section */}
-            <div className="mb-6">
-                <p className="text-muted-foreground text-sm font-medium">
-                    Ticket: <span className="font-bold">#{ticketId}</span>
-                </p>
-                <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold">{ticket.title}</h1>
-                    <Badge variant={getBadgeVariant(ticket.status)}>
-                        {ticket.status}
-                    </Badge>
-                </div>
-            </div>
+        <Card className={"mx-auto container"}>
+            <CardHeader>
+                <CardTitle>{ticket.title}</CardTitle>
 
-            {/* Metadata Section */}
-            <div className="grid grid-cols-2 gap-4 mb-4 text-sm text-muted-foreground">
-                <div>
-                    <p>
-                        <strong>Created At:</strong> {ticket.createdAt}
-                    </p>
-                    <p>
-                        <strong>Updated At:</strong> {ticket.updatedAt || "N/A"}
+                <div
+                    className={
+                        "text-sm flex flex-row justify-start items-center space-x-12"
+                    }
+                >
+                    <CardDescription>
+                        <Badge
+                            variant={getBadgeVariant(ticket.status)}
+                            className={"mr-2"}
+                        >
+                            {ticket.status}
+                        </Badge>
+                        Ticket <span className={"font-bold"}>#{ticket.id}</span>{" "}
+                    </CardDescription>
+                    <CardDescription>
+                        <span className={"flex items-center"}>
+                            <Clock4 className={"h-4 w-4 mr-2"} />
+                            <p>{formatDate(ticket.creationDate)}</p>
+                        </span>
+                    </CardDescription>
+                    <CardDescription>
+                        <span className={"flex items-center"}>
+                            <RotateCw className={"h-4 w-4 mr-2"} />
+                            <p>
+                                {ticket.updateDate
+                                    ? formatDate(ticket.updateDate)
+                                    : "-"}
+                            </p>
+                        </span>
+                    </CardDescription>
+                </div>
+            </CardHeader>
+            <CardContent className={"space-y-4"}>
+                <CardDescription>Description:</CardDescription>
+                <div
+                    className={
+                        "rounded-lg border border-muted-foreground bg-muted p-4 min-h-32"
+                    }
+                >
+                    <p
+                        className={
+                            "whitespace-nowrap overflow-hidden text-ellipsis"
+                        }
+                    >
+                        {ticket.description}
                     </p>
                 </div>
-                <div>
-                    <p>
-                        <strong>Assigned to:</strong>{" "}
-                        {ticket.assignedTo || "Unassigned"}
-                    </p>
+                <CardDescription>Attachments:</CardDescription>
+                <div
+                    className={
+                        "rounded-lg border border-muted-foreground bg-muted p-4 min-h-32"
+                    }
+                >
+                    {screenshots.map((screenshot) => (
+                        <Link target={"_blank"} href={screenshot.url} key={screenshot.id}>
+                            <Image
+                                src={screenshot.url}
+                                alt={screenshot.id.toString() + "-screenshot"}
+                                width={128}
+                                height={128}
+                            />
+                        </Link>
+                    ))}
                 </div>
-            </div>
-
-            {/* Description Section */}
-            <div className="mb-6">
-                <h2 className="font-bold mb-2">Description:</h2>
-                <div className="p-4 bg-gray-100 rounded-lg border text-gray-800 whitespace-pre-line">
-                    {ticket.description}
-                </div>
-            </div>
-        </div>
+            </CardContent>
+            <CardFooter className={"grid justify-items-end"}>
+                <Button variant={"destructive"}>Close Ticket</Button>
+            </CardFooter>
+        </Card>
     );
 }

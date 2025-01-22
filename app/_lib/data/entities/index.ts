@@ -15,6 +15,7 @@ export type {
 export type {
     TicketScreenshot,
     UpdatedTicketScreenshot,
+    CreatedTicketScreenshot,
 } from "./TicketScreenshot";
 export type {
     CreatedTicketConversation,

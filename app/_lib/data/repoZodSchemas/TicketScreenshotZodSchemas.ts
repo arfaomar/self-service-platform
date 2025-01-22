@@ -12,11 +12,7 @@ export const TicketScreenshotSchema = z.object({
     url: z
         .string()
         .url({ message: "Invalid URL format" })
-        .max(255, { message: "URL must not exceed 255 characters" }),
-    name: z
-        .string()
-        .min(1, { message: "Name is required" })
-        .max(255, { message: "Name must not exceed 255 characters" }),
+        .max(255, { message: "URL must not exceed 255 characters" })
 });
 
 export const CreatedTicketScreenshotSchema = TicketScreenshotSchema.omit({
@@ -29,11 +25,7 @@ export const CreatedTicketScreenshotSchema = TicketScreenshotSchema.omit({
     url: z
         .string()
         .url({ message: "Invalid URL format" })
-        .max(255, { message: "URL must not exceed 255 characters" }),
-    name: z
-        .string()
-        .min(1, { message: "Name is required" })
-        .max(255, { message: "Name must not exceed 255 characters" }),
+        .max(255, { message: "URL must not exceed 255 characters" })
 });
 
 export const UpdatedTicketScreenshotSchema =

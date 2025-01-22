@@ -1,11 +1,11 @@
 import { ITicketScreenshotRepository } from "@lib/data/interfaces";
-import { TicketScreenshot, UpdatedTicketScreenshot } from "@lib/data/entities";
+import { TicketScreenshot, UpdatedTicketScreenshot, CreatedTicketScreenshot } from "@lib/data/entities";
 import { db, ticketScreenshot } from "../../../../db";
 import { eq } from "drizzle-orm";
 
 export class TicketScreenshotRepository implements ITicketScreenshotRepository {
     async createTicketScreenshot(
-        newTicketScreenshot: TicketScreenshot,
+        newTicketScreenshot: CreatedTicketScreenshot,
     ): Promise<TicketScreenshot> {
         const [createdTicketScreenshot] = await db
             .insert(ticketScreenshot)

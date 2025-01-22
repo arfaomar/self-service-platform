@@ -1,8 +1,8 @@
-import { TicketScreenshot, UpdatedTicketScreenshot } from "@lib/data/entities";
+import { TicketScreenshot, UpdatedTicketScreenshot, CreatedTicketScreenshot } from "@lib/data/entities";
 
 export interface ITicketScreenshotRepository {
     createTicketScreenshot(
-        newTicketScreenshot: TicketScreenshot,
+        newTicketScreenshot: CreatedTicketScreenshot,
     ): Promise<TicketScreenshot>;
     findTicketScreenshotById(id: number): Promise<TicketScreenshot>;
     findTicketScreenshotsByTicketId(
