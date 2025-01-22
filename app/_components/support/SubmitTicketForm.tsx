@@ -24,6 +24,10 @@ import { useRef } from "react";
 export default function SubmitTicketForm() {
     const form = useForm<z.infer<typeof submitTicketFormSchema>>({
         resolver: zodResolver(submitTicketFormSchema),
+        defaultValues: {
+            ticketTitle: "",
+            ticketDescription: "",
+        },
     });
 
     const initialState: {
