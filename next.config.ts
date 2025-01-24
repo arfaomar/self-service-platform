@@ -17,9 +17,17 @@ const nextConfig: NextConfig = {
             {
                 protocol: "https",
                 hostname: "res.cloudinary.com",
-                pathname: "/"+process.env.CLOUDINARY_CLOUD_NAME+"/image/upload/**",
+                pathname:
+                    "/" +
+                    process.env.CLOUDINARY_CLOUD_NAME +
+                    "/image/upload/**",
             },
         ],
+    },
+    experimental: {
+        serverActions: {
+            bodySizeLimit: "32mb",
+        },
     },
     output: "standalone",
 };

@@ -6,6 +6,7 @@ import {
     ticketRepository,
     ticketScreenshotRepository,
 } from "@lib/data/repositories";
+import { revalidatePath } from "next/cache";
 
 export default async function submitTicketAction(
     prevState: {
@@ -16,7 +17,6 @@ export default async function submitTicketAction(
     formData: FormData,
 ) {
     try {
-
         const { userId, orgId } = await auth();
 
         if (!userId || !orgId) {
@@ -61,10 +61,12 @@ export default async function submitTicketAction(
                 });
             }),
         );
+        revalidatePath("/support/my-tickets");
 
         return {
             message: "Ticket submitted successfully",
             success: true,
+            redirectUrl: `/support/ticket/${ticket.id}`,
         };
     } catch (error) {
         console.log(error);

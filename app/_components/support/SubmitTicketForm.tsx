@@ -20,6 +20,7 @@ import submitTicketAction from "@actions/submitTicketAction";
 import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
 import { FileUploader } from "@components/support/FileUploader";
+import { useRouter } from "next/navigation";
 
 export default function SubmitTicketForm() {
     const form = useForm<z.infer<typeof submitTicketFormSchema>>({
@@ -35,6 +36,7 @@ export default function SubmitTicketForm() {
         message: string;
         success?: boolean;
         error?: boolean;
+        redirectUrl?: string;
     } = {
         message: "",
     };
@@ -56,13 +58,18 @@ export default function SubmitTicketForm() {
         });
     };
 
+    const router = useRouter();
+
     useEffect(() => {
         if (state && "error" in state && state.message !== "") {
             toast.error(state.message);
         } else if (state && "success" in state && state.message !== "") {
             toast.success(state.message);
+            if (state.redirectUrl) {
+                router.push(state.redirectUrl);
+            }
         }
-    }, [state]);
+    }, [state, router]);
 
     return (
         <Form {...form}>
