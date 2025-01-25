@@ -14,21 +14,29 @@ import {
 } from "@components/ui/Form";
 import { Input } from "@components/ui/Input";
 import { Textarea } from "@components/ui/Textarea";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, startTransition } from "react";
 import { submitTicketFormSchema } from "@lib/formSchemas";
 import submitTicketAction from "@actions/submitTicketAction";
 import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
+import { FileUploader } from "@components/support/FileUploader";
+import { useRouter } from "next/navigation";
 
 export default function SubmitTicketForm() {
     const form = useForm<z.infer<typeof submitTicketFormSchema>>({
         resolver: zodResolver(submitTicketFormSchema),
+        defaultValues: {
+            ticketTitle: "",
+            ticketDescription: "",
+            images: [],
+        },
     });
 
     const initialState: {
         message: string;
         success?: boolean;
         error?: boolean;
+        redirectUrl?: string;
     } = {
         message: "",
     };
@@ -38,13 +46,30 @@ export default function SubmitTicketForm() {
         initialState,
     );
 
+    const onSubmit = (data: z.infer<typeof submitTicketFormSchema>) => {
+        const formData = new FormData();
+        formData.append("ticketTitle", data.ticketTitle);
+        formData.append("ticketDescription", data.ticketDescription);
+        data.images.forEach((file) => {
+            formData.append("images", file);
+        });
+        startTransition(() => {
+            formAction(formData);
+        });
+    };
+
+    const router = useRouter();
+
     useEffect(() => {
         if (state && "error" in state && state.message !== "") {
             toast.error(state.message);
         } else if (state && "success" in state && state.message !== "") {
             toast.success(state.message);
+            if (state.redirectUrl) {
+                router.push(state.redirectUrl);
+            }
         }
-    }, [state]);
+    }, [state, router]);
 
     return (
         <Form {...form}>
@@ -52,7 +77,7 @@ export default function SubmitTicketForm() {
                 Submit a Ticket
             </h1>
             <form
-                action={formAction}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
             >
                 <FormField
@@ -91,6 +116,28 @@ export default function SubmitTicketForm() {
                             </FormControl>
                             <FormDescription>
                                 Max. 500 chars, min. 10 chars
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="images"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Upload Screenshots</FormLabel>
+                            <FormControl>
+                                <FileUploader
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                    maxFileCount={4}
+                                    maxSize={8 * 1024 * 1024}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                Max. 4 images, 8MB each
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

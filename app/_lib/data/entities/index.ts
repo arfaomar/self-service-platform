@@ -12,3 +12,13 @@ export type {
     UpdatedItemInRequestList,
     CreatedItemInRequestList,
 } from "./ItemInRequestList";
+export type {
+    TicketScreenshot,
+    UpdatedTicketScreenshot,
+    CreatedTicketScreenshot,
+} from "./TicketScreenshot";
+export type {
+    CreatedTicketConversation,
+    UpdatedTicketConversation,
+    TicketConversation,
+} from "./TicketConversation";

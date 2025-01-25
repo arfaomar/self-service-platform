@@ -34,7 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     },
                     {
                         title: "My Tickets",
-                        url: "#",
+                        url: "/support/my-tickets",
                     },
                 ],
             },

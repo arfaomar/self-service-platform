@@ -1,10 +1,6 @@
-"use client";
-import SubmitTicketForm from "@components/SubmitTicketForm";
+"use server";
+import SubmitTicketForm from "@components/support/SubmitTicketForm";
 
-export default function SubmitTicketPage() {
-    return (
-        <div>
-            <SubmitTicketForm />
-        </div>
-    );
+export default async function SubmitTicketPage() {
+    return <SubmitTicketForm />;
 }
