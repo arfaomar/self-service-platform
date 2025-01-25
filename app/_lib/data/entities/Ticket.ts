@@ -15,7 +15,7 @@ export interface Ticket {
 export interface CreatedTicket
     extends Omit<
         Partial<Ticket>,
-        "title" | "description" | "ownerId" | "organizationId"
+        "title" | "description" | "ownerId" | "organizationId" | "status"
     > {
     title: string;
     description: string;

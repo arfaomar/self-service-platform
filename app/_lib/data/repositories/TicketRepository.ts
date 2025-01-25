@@ -1,11 +1,16 @@
 import { ITicketRepository } from "../interfaces";
-import { CreatedTicket, Ticket, UpdatedTicket } from "../entities";
+import {
+    CreatedTicket,
+    Ticket,
+    UpdatedTicket,
+    TicketStatusEnum,
+} from "../entities";
 import {
     CreatedTicketSchema,
     UpdatedTicketSchema,
 } from "@lib/data/repoZodSchemas";
 import { db, ticket } from "../../../../db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
 
 export class TicketRepository implements ITicketRepository {
@@ -62,7 +67,38 @@ export class TicketRepository implements ITicketRepository {
                     eq(ticket.ownerId, validUserId),
                     eq(ticket.organizationId, validOrgId),
                 ),
-            );
+            ).orderBy(sql`CASE status
+                WHEN ${TicketStatusEnum.Open} THEN 1
+                WHEN ${TicketStatusEnum.InProgress} THEN 2
+                WHEN ${TicketStatusEnum.OnHold} THEN 3
+                WHEN ${TicketStatusEnum.Closed} THEN 4
+                ELSE 5
+            END`);
+        return foundTickets as Ticket[];
+    }
+
+    async getTicketsByOrganizationId(orgId: string): Promise<Ticket[]> {
+        const validOrgId = z
+            .string()
+            .length(31)
+            .startsWith("org_")
+            .parse(orgId);
+
+        if (!validOrgId) {
+            throw new Error("Invalid organization ID");
+        }
+
+        const foundTickets = await db
+            .select()
+            .from(ticket)
+            .where(eq(ticket.organizationId, validOrgId))
+            .orderBy(sql`CASE status
+                WHEN ${TicketStatusEnum.Open} THEN 1
+                WHEN ${TicketStatusEnum.InProgress} THEN 2
+                WHEN ${TicketStatusEnum.OnHold} THEN 3
+                WHEN ${TicketStatusEnum.Closed} THEN 4
+                ELSE 5
+            END`);
         return foundTickets as Ticket[];
     }
 

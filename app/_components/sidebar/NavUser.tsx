@@ -18,7 +18,6 @@ import {
     useSidebar,
 } from "@components/ui/Sidebar";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { Switch } from "@components/ui/Switch";
 import { useTheme } from "next-themes";
 
@@ -26,7 +25,6 @@ export function NavUser() {
     const { isMobile } = useSidebar();
     const { signOut, openUserProfile } = useClerk();
     const { isLoaded, user } = useUser();
-    const router = useRouter();
     const { setTheme, resolvedTheme } = useTheme();
 
     const switchDark = resolvedTheme === "dark" ? "system" : "dark";
@@ -123,9 +121,7 @@ export function NavUser() {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            onClick={() =>
-                                signOut().then(() => router.push("/"))
-                            }
+                            onClick={() => signOut({ redirectUrl: "/" })}
                         >
                             <LogOut />
                             Sign out

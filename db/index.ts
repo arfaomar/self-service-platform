@@ -15,3 +15,5 @@ export * from "./schema/shopItemCategory";
 export * from "./schema/ticket";
 export * from "./schema/enums";
 export * from "./schema/itemInRequestList";
+export * from "./schema/ticketScreenshot";
+export * from "./schema/ticketConversation";

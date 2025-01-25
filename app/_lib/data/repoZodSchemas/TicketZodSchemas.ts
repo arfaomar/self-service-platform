@@ -33,6 +33,7 @@ export const CreatedTicketSchema = TicketSchema.omit({
     creationDate: true,
     updateDate: true,
     supportId: true,
+    status: true,
 }).extend({
     title: z.string().min(1, { message: "Title is required" }),
     description: z.string().min(1, { message: "Description is required" }),

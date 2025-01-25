@@ -14,7 +14,20 @@ const nextConfig: NextConfig = {
                 hostname: "img.clerk.com",
                 pathname: "/**",
             },
+            {
+                protocol: "https",
+                hostname: "res.cloudinary.com",
+                pathname:
+                    "/" +
+                    process.env.CLOUDINARY_CLOUD_NAME +
+                    "/image/upload/**",
+            },
         ],
+    },
+    experimental: {
+        serverActions: {
+            bodySizeLimit: "32mb",
+        },
     },
     output: "standalone",
 };
