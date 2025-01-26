@@ -100,7 +100,7 @@ export default async function TicketPage({
                     <CardDescription>Attachments:</CardDescription>
                     <div
                         className={
-                            "rounded-lg border border-muted-foreground bg-muted p-4 min-h-32"
+                            "rounded-lg border border-muted-foreground bg-background p-4 min-h-32 flex flex-row gap-4"
                         }
                     >
                         {screenshots.map((screenshot) => (
@@ -116,6 +116,7 @@ export default async function TicketPage({
                                     }
                                     width={128}
                                     height={128}
+                                    className={""}
                                 />
                             </Link>
                         ))}

@@ -7,6 +7,7 @@ export const shopItem = pgTable(
         id: serial("id").primaryKey(),
         name: varchar("name", { length: 255 }).notNull(),
         description: varchar("description", { length: 255 }),
+        url: varchar("url", { length: 255}),
         categoryId: integer("category_id").references(
             () => shopItemCategory.id,
         ),
