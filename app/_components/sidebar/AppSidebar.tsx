@@ -42,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 title: "Request Equipment",
                 url: "#",
                 icon: NotepadText,
-                isActive: currentSection.toLowerCase() === "equipment-request",
+                isActive: currentSection.toLowerCase() === "equipment",
                 items: [
                     {
                         title: "Equipment Shop",
