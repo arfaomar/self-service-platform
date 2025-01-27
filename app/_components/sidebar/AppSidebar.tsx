@@ -20,7 +20,10 @@ import { useAuth } from "@clerk/nextjs";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname();
     const currentSection = pathname.split("/")[1] || "";
-    const auth = useAuth();
+    const { has, isLoaded } = useAuth();
+
+    if (!isLoaded) return false;
+
     const data = {
         navMain: [
             {
@@ -30,22 +33,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 isActive: currentSection.toLowerCase() === "support",
                 items: [
                     // USER + MANAGER + ADMIN
-                    {
-                        title: "Submit Ticket",
-                        url: "/support/submit-ticket",
-                    },
+                    ...(has({ permission: 'org:tickets:submit' }) ? [
+                        {
+                            title: "Submit Ticket",
+                            url: "/support/submit-ticket",
+                        },
+                    ] : []),
                     // USER + MANAGER + ADMIN
-                    {
-                        title: "My Tickets",
-                        url: "/support/my-tickets",
-                    },
+                    ...(has({ permission: 'org:tickets:view' }) ? [
+                        {
+                            title: "My Tickets",
+                            url: "/support/my-tickets",
+                        },
+                    ] : []),
                     // SUPPORT + ADMIN
-                    {
-                        title: "( All Tickets )",
-                        url: "#",
-                    },
-                ],
-                requirePermission: "org:tickets:submit",
+                    ...(has({ permission: 'org:tickets:view_all' }) ? [
+                        {
+                            title: "( All Tickets )",
+                            url: "#",
+                        },
+                    ] : []),
+                ]
             },
             {
                 title: "Equipment",
@@ -53,12 +61,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 icon: NotepadText,
                 isActive: currentSection.toLowerCase() === "equipment",
                 items: [
-                    ...(auth.orgRole && ["org:manager", "org:admin"].includes(auth.orgRole) ? [
-                        {
-                            title: "List",
-                            url: "/equipment/list",
-                        },
-                    ] : []),
                     // USER + SUPPORT + ADMIN + MANAGER (directly assign)
                     {
                         title: "Shop",
@@ -66,38 +68,49 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     },
                     // USER + MANAGER + SUPPORT + ADMIN
                     {
-                        title: "( My Equipments )",
-                        url: "#",
-                    },
-                    // USER + SUPPORT + ADMIN
-                    {
-                        title: "( My Requests )",
+                        title: "( My Equipment )",
                         url: "#",
                     },
                     // MANAGER + ADMIN
-                    {
-                        title: "( All Requests )",
-                        url: "#",
-                    },
+                    ...(has({ permission: 'org:requests:view_all' }) ? [
+                        {
+                            title: "All Equipment",
+                            url: "/equipment/list",
+                        },
+                    ] : []),
+                    // USER + SUPPORT + ADMIN
+                    ...(!has({ role: 'org:manager' }) ? [
+                        {
+                            title: "( My Requests )",
+                            url: "#",
+                        },
+                    ] : []),
+                    // MANAGER + ADMIN
+                    ...(has({ permission: 'org:requests:view_all' }) ? [
+                        {
+                            title: "( All Requests )",
+                            url: "#",
+                        },
+                    ] : []),
                 ],
             },
         ],
     };
 
-    if (auth.orgRole === "org:admin") {
+    if (has({ role: 'org:admin' })) {
         data.navMain.push({
-            title: "Manage",
+            title: "Admin",
             url: "#",
             icon: NotepadText,
-            isActive: currentSection.toLowerCase() === "manage",
+            isActive: currentSection.toLowerCase() === "admin",
             items: [
                 {
-                    title: "( Equipments )",
+                    title: "( Equipment )",
                     url: "#",
                 },
                 {
                     title: "Categories",
-                    url: "/manage/categories",
+                    url: "/admin/categories",
                 },
             ],
         })
