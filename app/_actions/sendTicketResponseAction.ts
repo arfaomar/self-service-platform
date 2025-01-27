@@ -2,8 +2,11 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { sendTicketResponseFormSchema } from "@lib/formSchemas";
-import { ticketConversationRepository } from "@lib/data/repositories";
-import { CreatedTicketConversation } from "@lib/data/entities";
+import {
+    ticketConversationRepository,
+    ticketRepository,
+} from "@lib/data/repositories";
+import { CreatedTicketConversation, UpdatedTicket } from "@lib/data/entities";
 import { revalidatePath } from "next/cache";
 
 export default async function sendTicketResponseAction(
@@ -55,7 +58,15 @@ export default async function sendTicketResponseAction(
             newTicketConversation,
         );
 
+        const updatedTicket: UpdatedTicket = {
+            id: parsedData.data.ticketId,
+            updateDate: new Date(),
+        };
+
+        await ticketRepository.updateTicket(updatedTicket);
+
         revalidatePath(`/support/ticket/${parsedData.data.ticketId}`);
+        revalidatePath(`/support/my-tickets`);
 
         return {
             message: "Ticket response sent successfully",

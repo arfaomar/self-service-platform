@@ -17,7 +17,7 @@ import { startTransition, useActionState, useEffect } from "react";
 import sendTicketResponseAction from "@actions/sendTicketResponseAction";
 import { sendTicketResponseFormSchema } from "@lib/formSchemas";
 
-export default function ConversationInput({ ticketId }: { ticketId: number }) {
+export default function ConversationInput({ ticketId }: { ticketId: string }) {
     const formSchema = z.object({
         content: z
             .string()
@@ -31,9 +31,11 @@ export default function ConversationInput({ ticketId }: { ticketId: number }) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             content: "",
-            ticketId: ticketId,
+            ticketId: parseInt(ticketId),
         },
     });
+
+    const { reset } = form;
 
     const initialState: {
         message: string;
@@ -53,8 +55,9 @@ export default function ConversationInput({ ticketId }: { ticketId: number }) {
             toast.error(state.message);
         } else if (state && "success" in state && state.message !== "") {
             toast.success(state.message);
+            reset();
         }
-    }, [state]);
+    }, [state, reset]);
 
     const onSubmit = (data: z.infer<typeof sendTicketResponseFormSchema>) => {
         const formData = new FormData();
