@@ -6,7 +6,7 @@ import {
     TableRow,
 } from "@components/ui/Table";
 
-export default async function MyTicketsPage() {
+export default async function EquipmentListPage() {
     const { userId, orgId } = await auth();
     if (!userId || !orgId) {
         return null;
