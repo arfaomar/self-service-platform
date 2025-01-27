@@ -6,6 +6,7 @@ export const ShopItemSchema = z.object({
         .int()
         .nonnegative({ message: "ID must be a non-negative integer" }),
     name: z.string().min(1, { message: "Name is required" }),
+    url: z.string().optional(),
     description: z.string().optional(),
     stock: z
         .number()

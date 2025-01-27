@@ -37,19 +37,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         url: "/support/my-tickets",
                     },
                 ],
+                requirePermission: "org:tickets:submit",
             },
             {
                 title: "Request Equipment",
                 url: "#",
                 icon: NotepadText,
-                isActive: currentSection.toLowerCase() === "equipment-request",
+                isActive: currentSection.toLowerCase() === "equipment",
                 items: [
                     {
-                        title: "Equipment Shop",
+                        title: "List",
+                        url: "/equipment/list",
+                    },
+                    {
+                        title: "Shop",
+                        url: "/equipment/shop",
+                    },
+                    {
+                        title: "( All Requests )",
                         url: "#",
                     },
                     {
-                        title: "My Requests",
+                        title: "( My Requests )",
                         url: "#",
                     },
                 ],

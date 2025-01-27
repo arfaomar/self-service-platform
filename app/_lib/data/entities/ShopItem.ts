@@ -1,6 +1,7 @@
 export interface ShopItem {
     id: number;
     name: string;
+    url?: string | null;
     description?: string | null;
     categoryId?: number | null;
     stock: number;
