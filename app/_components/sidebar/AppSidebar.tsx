@@ -37,6 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         url: "/support/my-tickets",
                     },
                 ],
+                requirePermission: "org:tickets:submit",
             },
             {
                 title: "Request Equipment",
