@@ -346,7 +346,7 @@ const ChartLegendContent = React.forwardRef<
                                     }}
                                 />
                             )}
-                            {itemConfig?.label}
+                            {itemConfig?.label || item.value}
                         </div>
                     );
                 })}
