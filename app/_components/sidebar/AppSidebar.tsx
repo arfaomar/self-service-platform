@@ -21,7 +21,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname();
     const currentSection = pathname.split("/")[1] || "";
     const auth = useAuth();
-    console.log("auth", auth.orgRole);
     const data = {
         navMain: [
             {
@@ -97,8 +96,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     url: "#",
                 },
                 {
-                    title: "( Categories )",
-                    url: "#",
+                    title: "Categories",
+                    url: "/manage/categories",
                 },
             ],
         })
