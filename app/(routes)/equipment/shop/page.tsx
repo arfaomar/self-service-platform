@@ -13,7 +13,6 @@ export default async function EquipmentShopPage() {
     const shopItemCategories = await shopItemCategoryRepository.getAllShopItemCategoriesInOrganization(orgId);
     const shopItems = await shopItemRepository.getAllShopItemsInOrganization(orgId);
 
-    // org_2qa2IRDtdoV8SB4nqPy2LJbW8pu
     const defaultCategory = shopItemCategories.length > 0 ? shopItemCategories[0].name : "default";
 
     return (
