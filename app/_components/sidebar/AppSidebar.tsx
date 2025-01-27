@@ -74,15 +74,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     },
                     // USER + MANAGER + SUPPORT + ADMIN
                     {
-                        title: "( My Equipment )",
-                        url: "#",
+                        title: "My Equipment",
+                        url: "/equipment/my-equipment",
                     },
                     // MANAGER + ADMIN
                     ...(has({ permission: "org:requests:view_all" })
                         ? [
                               {
                                   title: "All Equipment",
-                                  url: "/equipment/list",
+                                  url: "/equipment/all-equipment",
                               },
                           ]
                         : []),
@@ -90,8 +90,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     ...(!has({ role: "org:manager" })
                         ? [
                               {
-                                  title: "( My Requests )",
-                                  url: "#",
+                                  title: "My Requests",
+                                  url: "/equipment/my-requests",
                               },
                           ]
                         : []),
@@ -99,8 +99,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     ...(has({ permission: "org:requests:view_all" })
                         ? [
                               {
-                                  title: "( All Requests )",
-                                  url: "#",
+                                  title: "All Requests",
+                                  url: "/equipment/all-requests",
                               },
                           ]
                         : []),

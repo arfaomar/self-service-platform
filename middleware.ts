@@ -4,13 +4,14 @@ const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/public(.*)"]);
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isSupportRoute = createRouteMatcher(["/support/all-tickets(.*)"]);
 const isManagerRoute = createRouteMatcher([
-    "/equipment/all-equipment-requests(.*)",
+    "/equipment/all-requests(.*)",
+    "/equipment/all-equipment(.*)",
 ]);
 
 const isUserRoute = createRouteMatcher([
     "/support/my-tickets(.*)",
     "/support/submit-ticket(.*)",
-]); //TODO: Add more routes as needed
+]);
 
 export default clerkMiddleware(async (auth, request) => {
     if (!isPublicRoute(request)) {
