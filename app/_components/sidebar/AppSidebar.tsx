@@ -46,11 +46,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 isActive: currentSection.toLowerCase() === "equipment",
                 items: [
                     {
-                        title: "Equipment Shop",
+                        title: "List",
+                        url: "/equipment/list",
+                    },
+                    {
+                        title: "Shop",
                         url: "/equipment/shop",
                     },
                     {
-                        title: "My Requests",
+                        title: "( All Requests )",
+                        url: "#",
+                    },
+                    {
+                        title: "( My Requests )",
                         url: "#",
                     },
                 ],
