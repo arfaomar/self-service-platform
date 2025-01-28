@@ -39,7 +39,7 @@ export default function EquipmentListPageLayout({
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbPage>Equipment List</BreadcrumbPage>
+                                    <BreadcrumbPage>All Equipment</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>

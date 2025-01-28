@@ -12,6 +12,7 @@ export const db = drizzle({
 export * from "./schema/request";
 export * from "./schema/shopItem";
 export * from "./schema/shopItemCategory";
+export * from "./schema/inventory";
 export * from "./schema/ticket";
 export * from "./schema/enums";
 export * from "./schema/itemInRequestList";
