@@ -1,9 +1,12 @@
+import { ItemInRequestStatusEnum } from "@lib/data/entities/ItemInRequestStatusEnum";
+
 export interface ItemInRequestList {
     id: number;
     requestId: number;
     itemId: number;
     quantity: number;
     organizationId: string;
+    status: ItemInRequestStatusEnum | "Accepted" | "Declined" | "Processing";
 }
 
 export interface CreatedItemInRequestList
