@@ -5,12 +5,12 @@ import {
     UpdatedInventory
 } from "@lib/data/entities";
 import { db, inventory } from "../../../../db";
-import { eq, and, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import {
     CreatedInventorySchema,
     UpdatedInventorySchema
-} from "@lib/data/repoZodSchemas/InventoryZodSchemas";
+} from "@lib/data/repoZodSchemas";
 
 export class InventoryRepository implements IInventoryRepository {
     async createInventory(inventoryData: CreatedInventory): Promise<Inventory> {
