@@ -90,8 +90,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     ...(!has({ role: "org:manager" })
                         ? [
                               {
-                                  title: "( My Requests )",
-                                  url: "#",
+                                  title: "My Requests",
+                                  url: "/equipment/my-requests",
                               },
                           ]
                         : []),
