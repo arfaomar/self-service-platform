@@ -3,7 +3,7 @@ export type { Ticket, CreatedTicket, UpdatedTicket } from "./Ticket";
 export { RequestStatusEnum } from "./RequestStatusEnum";
 export { ItemInRequestStatusEnum } from "./ItemInRequestStatusEnum";
 export type { Request, UpdatedRequest } from "./Request";
-export type { ShopItem, CreatedShopItem, UpdatedShopItem } from "./ShopItem";
+export type { ShopItem, CreatedShopItem, UpdatedShopItem, ShopItemInCart } from "./ShopItem";
 export type {
     ShopItemCategory,
     CreatedShopItemCategory,
