@@ -15,8 +15,8 @@ import {
 } from "@components/ui/Sidebar";
 
 export default function EquipmentShopPageLayout({
-                                                children,
-                                            }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
@@ -39,7 +39,9 @@ export default function EquipmentShopPageLayout({
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbPage>Equipment Shop</BreadcrumbPage>
+                                    <BreadcrumbPage>
+                                        Equipment Shop
+                                    </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>

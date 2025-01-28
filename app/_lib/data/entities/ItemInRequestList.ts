@@ -6,7 +6,7 @@ export interface ItemInRequestList {
     itemId: number;
     quantity: number;
     organizationId: string;
-    status: ItemInRequestStatusEnum | "Accepted" | "Declined" | "Processing";
+    status: ItemInRequestStatusEnum;
 }
 
 export interface CreatedItemInRequestList

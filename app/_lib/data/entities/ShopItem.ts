@@ -18,3 +18,7 @@ export interface CreatedShopItem
 export interface UpdatedShopItem extends Partial<Omit<ShopItem, "id">> {
     id: number;
 }
+
+export interface ShopItemInCart extends ShopItem {
+    quantity: number;
+}

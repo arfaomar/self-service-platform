@@ -14,9 +14,9 @@ import {
     SidebarTrigger,
 } from "@components/ui/Sidebar";
 
-export default function EquipmentListPageLayout({
-                                                children,
-                                            }: Readonly<{
+export default function AllEquipmentPageLayout({
+                                                    children,
+                                                }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
