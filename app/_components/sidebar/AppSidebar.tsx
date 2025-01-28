@@ -33,27 +33,33 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 isActive: currentSection.toLowerCase() === "support",
                 items: [
                     // USER + MANAGER + ADMIN
-                    ...(has({ permission: 'org:tickets:submit' }) ? [
-                        {
-                            title: "Submit Ticket",
-                            url: "/support/submit-ticket",
-                        },
-                    ] : []),
+                    ...(has({ permission: "org:tickets:submit" })
+                        ? [
+                              {
+                                  title: "Submit Ticket",
+                                  url: "/support/submit-ticket",
+                              },
+                          ]
+                        : []),
                     // USER + MANAGER + ADMIN
-                    ...(has({ permission: 'org:tickets:view' }) ? [
-                        {
-                            title: "My Tickets",
-                            url: "/support/my-tickets",
-                        },
-                    ] : []),
+                    ...(has({ permission: "org:tickets:view" })
+                        ? [
+                              {
+                                  title: "My Tickets",
+                                  url: "/support/my-tickets",
+                              },
+                          ]
+                        : []),
                     // SUPPORT + ADMIN
-                    ...(has({ permission: 'org:tickets:view_all' }) ? [
-                        {
-                            title: "( All Tickets )",
-                            url: "#",
-                        },
-                    ] : []),
-                ]
+                    ...(has({ permission: "org:tickets:view_all" })
+                        ? [
+                              {
+                                  title: "( All Tickets )",
+                                  url: "#",
+                              },
+                          ]
+                        : []),
+                ],
             },
             {
                 title: "Equipment",
@@ -72,32 +78,38 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         url: "#",
                     },
                     // MANAGER + ADMIN
-                    ...(has({ permission: 'org:requests:view_all' }) ? [
-                        {
-                            title: "All Equipment",
-                            url: "/equipment/list",
-                        },
-                    ] : []),
+                    ...(has({ permission: "org:requests:view_all" })
+                        ? [
+                              {
+                                  title: "All Equipment",
+                                  url: "/equipment/list",
+                              },
+                          ]
+                        : []),
                     // USER + SUPPORT + ADMIN
-                    ...(!has({ role: 'org:manager' }) ? [
-                        {
-                            title: "( My Requests )",
-                            url: "#",
-                        },
-                    ] : []),
+                    ...(!has({ role: "org:manager" })
+                        ? [
+                              {
+                                  title: "My Requests",
+                                  url: "/equipment/my-requests",
+                              },
+                          ]
+                        : []),
                     // MANAGER + ADMIN
-                    ...(has({ permission: 'org:requests:view_all' }) ? [
-                        {
-                            title: "( All Requests )",
-                            url: "#",
-                        },
-                    ] : []),
+                    ...(has({ permission: "org:requests:view_all" })
+                        ? [
+                              {
+                                  title: "( All Requests )",
+                                  url: "#",
+                              },
+                          ]
+                        : []),
                 ],
             },
         ],
     };
 
-    if (has({ role: 'org:admin' })) {
+    if (has({ role: "org:admin" })) {
         data.navMain.push({
             title: "Admin",
             url: "#",
@@ -113,9 +125,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     url: "/admin/categories",
                 },
             ],
-        })
+        });
     }
-
 
     return (
         <Sidebar collapsible="icon" {...props}>

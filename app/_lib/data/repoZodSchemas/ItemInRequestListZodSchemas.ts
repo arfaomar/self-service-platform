@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ItemInRequestStatusEnum } from "@lib/data/entities";
 
 export const ItemInRequestListSchema = z.object({
     id: z
@@ -23,10 +24,12 @@ export const ItemInRequestListSchema = z.object({
         .startsWith("org_", {
             message: "Organization ID must start with 'org_'",
         }),
+    status: z.nativeEnum(ItemInRequestStatusEnum, { message: "Invalid status" }),
 });
 
 export const CreatedItemInRequestListSchema = ItemInRequestListSchema.omit({
     id: true,
+    status: true,
 }).extend({
     requestId: z
         .number()

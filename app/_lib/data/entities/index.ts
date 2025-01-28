@@ -1,6 +1,7 @@
 export { TicketStatusEnum } from "./TicketStatusEnum";
 export type { Ticket, CreatedTicket, UpdatedTicket } from "./Ticket";
 export { RequestStatusEnum } from "./RequestStatusEnum";
+export { ItemInRequestStatusEnum } from "./ItemInRequestStatusEnum";
 export type { Request, UpdatedRequest } from "./Request";
 export type { ShopItem, CreatedShopItem, UpdatedShopItem } from "./ShopItem";
 export type {
@@ -22,3 +23,8 @@ export type {
     UpdatedTicketConversation,
     TicketConversation,
 } from "./TicketConversation";
+export type {
+    Inventory,
+    CreatedInventory,
+    UpdatedInventory
+} from "./Inventory";
