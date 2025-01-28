@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { shopItemCategoryRepository } from "@lib/data/repositories";
-import EditCategoriesDialog from "@components/admin/EditCategoriesDialog";
+import CategoriesTable from "@components/admin/CategoriesTable";
 
 export default async function ManageCategoriesPage() {
     const { userId, orgId } = await auth();
@@ -13,5 +13,5 @@ export default async function ManageCategoriesPage() {
             orgId,
         );
 
-    return <EditCategoriesDialog shopItemCategories={shopItemCategories} />;
+    return <CategoriesTable shopItemCategories={shopItemCategories} />;
 }

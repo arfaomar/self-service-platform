@@ -124,6 +124,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     title: "Categories",
                     url: "/admin/categories",
                 },
+                {
+                    title: "Add Categories",
+                    url: "/admin/categories/add",
+                },
             ],
         });
     }

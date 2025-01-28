@@ -9,7 +9,7 @@ interface EditCategoriesDialogProps {
     shopItemCategories: ShopItemCategory[];
 }
 
-export default function EditCategoriesDialog({ shopItemCategories } : EditCategoriesDialogProps) {
+export default function CategoriesTable({ shopItemCategories } : EditCategoriesDialogProps) {
 
     const router = useRouter();
 

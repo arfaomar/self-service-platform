@@ -95,7 +95,7 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
                     type={"submit"}
                     className={"w-full"}
                 >
-                    Submit
+                    Save
                 </LoadingButton>
             </form>
         </Form>
