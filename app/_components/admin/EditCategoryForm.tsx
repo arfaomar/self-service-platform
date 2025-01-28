@@ -13,9 +13,11 @@ import {
 } from "@components/ui/Form";
 import { Input } from "@components/ui/Input";
 import { ShopItemCategory } from "@lib/data/entities/ShopItemCategory";
-import { startTransition, useActionState } from "react";
-import editCategoryAction from "@components/admin/editCategoryAction";
+import { startTransition, useActionState, useEffect } from "react";
+import editCategoryAction from "@actions/editCategoryAction";
 import { LoadingButton } from "@components/ui/LoadingButton";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const editCategorySchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -33,7 +35,14 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
         },
     });
 
-    const initialState = 0;
+    const initialState: {
+        message: string;
+        success?: boolean;
+        error?: boolean;
+        redirectUrl?: string;
+    } = {
+        message: "",
+    };
 
     const [state, formAction, isPending] = useActionState(
         editCategoryAction,
@@ -42,16 +51,32 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
 
     const onSubmit = (data: z.infer<typeof editCategorySchema>) => {
         const formData = new FormData();
+        formData.append("id", category.id.toString());
         formData.append("name", data.name);
         startTransition(() => {
-            formAction();
+            formAction(formData);
         });
     };
 
+    const router = useRouter();
+
+    useEffect(() => {
+        if (state && "error" in state && state.message !== "") {
+            toast.error(state.message);
+        } else if (state && "success" in state && state.message !== "") {
+            toast.success(state.message);
+            if (state.redirectUrl) {
+                router.push(state.redirectUrl);
+            }
+        }
+    }, [state, router]);
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
+            >
                 <FormField
                     control={form.control}
                     name="name"
