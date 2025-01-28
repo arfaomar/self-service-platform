@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Table,
     TableBody,
@@ -11,6 +13,7 @@ import {
     ItemInRequestStatusEnum,
     Request,
 } from "@lib/data/entities";
+import { useRouter } from "next/navigation";
 
 export interface MyRequestsTableProps {
     request: Request;
@@ -22,6 +25,8 @@ export default function MyRequestsTable({
 }: {
     requests: MyRequestsTableProps[];
 }) {
+
+    const router = useRouter();
     return (
         <section>
             <h1 className={"text-3xl font-semibold text-center"}>
@@ -55,7 +60,11 @@ export default function MyRequestsTable({
                         </TableHeader>
                         <TableBody>
                             {requests.map((request, index) => (
-                                <TableRow key={index}>
+                                <TableRow
+                                    key={index}
+                                    onClick={() => router.push(`/equipment/request/${request.request.id}`)}
+                                    className="cursor-pointer"
+                                >
                                     <TableCell>{request.request.id}</TableCell>
                                     <TableCell>
                                         {request.request.creationDate.toDateString()}
