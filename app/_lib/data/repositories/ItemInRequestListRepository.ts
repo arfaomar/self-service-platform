@@ -28,7 +28,7 @@ export class ItemInRequestListRepository
             .insert(itemInRequestList)
             .values(parsedItemData.data)
             .returning();
-        return createdItem;
+        return createdItem as ItemInRequestList;
     }
 
     async getItemInRequestListById(id: number): Promise<ItemInRequestList> {
@@ -41,7 +41,7 @@ export class ItemInRequestListRepository
         if (foundItem.length === 0) {
             throw new Error("Item in request list not found");
         }
-        return foundItem[0];
+        return foundItem[0] as ItemInRequestList;
     }
 
     async getItemsInRequestList(
@@ -73,7 +73,8 @@ export class ItemInRequestListRepository
         if (updatedItem.length === 0) {
             throw new Error("Item in request list not found for update");
         }
-        return updatedItem[0];
+
+        return updatedItem[0] as ItemInRequestList;
     }
 
     async deleteItemInRequestList(id: number): Promise<void> {
