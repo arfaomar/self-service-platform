@@ -11,3 +11,8 @@ export const requestStatus = pgEnum("request_status", [
     "Declined",
     "Processing",
 ]);
+export const itemInRequestListStatus = pgEnum("item_in_request_list_status", [
+    "Accepted",
+    "Declined",
+    "Processing",
+]);

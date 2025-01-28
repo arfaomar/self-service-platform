@@ -1,6 +1,7 @@
 import { index, integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
 import { request } from "./request";
 import { shopItem } from "./shopItem";
+import { itemInRequestListStatus } from "./enums";
 
 export const itemInRequestList = pgTable(
     "item_in_request_list",
@@ -20,6 +21,7 @@ export const itemInRequestList = pgTable(
             }),
         quantity: integer("quantity").notNull(),
         organizationId: varchar("organization_id", { length: 31 }).notNull(),
+        status: itemInRequestListStatus("status").default("Processing").notNull(),
     },
     (table) => ({
         idxRequestId: index("idx_item_request").on(table.requestId),
