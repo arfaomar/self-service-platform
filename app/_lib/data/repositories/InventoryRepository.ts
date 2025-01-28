@@ -13,6 +13,11 @@ import {
 } from "@lib/data/repoZodSchemas";
 
 export class InventoryRepository implements IInventoryRepository {
+    async  getAllInventory(): Promise<Inventory[]> {
+        const allInventory = await db.select().from(inventory);
+        return allInventory as Inventory[];
+    }
+
     async createInventory(inventoryData: CreatedInventory): Promise<Inventory> {
         const parsedInventoryData = CreatedInventorySchema.safeParse(inventoryData);
         if (!parsedInventoryData.success) {

@@ -2,6 +2,7 @@ import { Inventory, CreatedInventory, UpdatedInventory } from "@lib/data/entitie
 
 export interface IInventoryRepository {
     createInventory(inventory: CreatedInventory): Promise<Inventory>;
+    getAllInventory(): Promise<Inventory[]>;
     getInventoryById(id: number): Promise<Inventory>;
     getInventoryByOwnerId(ownerId: string): Promise<Inventory[]>;
     updateInventory(inventory: UpdatedInventory): Promise<Inventory>;
