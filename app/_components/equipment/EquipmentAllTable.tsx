@@ -1,59 +1,85 @@
+"use server";
 import {
     Table, TableBody, TableCell,
     TableHead,
     TableHeader,
     TableRow
 } from "@components/ui/Table";
-import { EquipmentListProps } from "../../(routes)/equipment/list/page";
+import { Inventory, ShopItem } from "@lib/data/entities";
+import { Skeleton } from "@components/ui/Skeleton";
+import { fetchUserData } from "@lib/utils";
+import Image from "next/image";
 
-export default function EquipmentAllTable( inventories : { inventories: EquipmentListProps[] } ) {
+export default async function EquipmentAllTable(  { inventories, shopItems } :
+    {  inventories:  Inventory[],
+        shopItems: ShopItem[] }
+    ) {
+
     return (
         <section>
             <h1 className={"text-3xl font-semibold text-center"}>
                 All Equipment
             </h1>
             <div className={"mx-auto my-10 container rounded-lg bg-card p-4"}>
-                <span className={"flex flex-row justify-evenly mb-2"}>
-                    <p className={""}>
-                        Owning Users: {inventories.inventories.length}
-                    </p>
-                    <p className={""}>
-                        Total Items: {
-                        inventories.inventories.reduce(
-                            (acc, curr) => acc + curr.items.length,
-                            0,
-                        )}
-                    </p>
-                </span>
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead className={"w-1/12"}></TableHead>
-                            <TableHead className={"w-2/12"}>ID</TableHead>
-                            <TableHead>Username</TableHead>
-                            <TableHead className={"w-1/12"}>
-                                Owned Items
-                            </TableHead>
+                            <TableHead className={"w-2/12"}>Item Name</TableHead>
+                            <TableHead className={"w-2/12"}>Name</TableHead>
+                            <TableHead className={"w-2/12"}>Purchase Date</TableHead>
+                            <TableHead className={"w-2/12"}>Update Date</TableHead>
+                            <TableHead className={"w-1/12"}>Status</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {inventories.inventories.map((inventory) => {
-                            const items = inventory.items;
-                            return (
-                                <TableRow key={inventory.userId}>
-                                    <TableCell>
-                                        <div
-                                            className={
-                                                "w-16 h-16 object-cover rounded-lg bg-gray-400"
-                                            }
-                                        />
-                                    </TableCell>
-                                    <TableCell>{inventory.userId}</TableCell>
-                                    <TableCell>No Name</TableCell>
-                                    <TableCell>{items.length}</TableCell>
-                                </TableRow>
-                            );
-                        })}
+                        {
+                           inventories.map(async (inventory) => {
+                               const shopItem = shopItems.find((shopItem) => shopItem.id === inventory.itemId);
+                               const userData = await fetchUserData(inventory.ownerId);
+                               return (
+                                   <TableRow key={inventory.id}>
+                                       <TableCell className={"w-1/12"}>
+                                           {
+                                               shopItem?.url ? (
+                                                   <Image
+                                                       src={shopItem.url}
+                                                       alt={shopItem.name}
+                                                       className={"rounded-lg w-16 h-16  bg-background text-center content-center"}
+                                                       width={64}
+                                                       height={64}
+                                                   />
+                                               ) : (
+                                                   <Skeleton
+                                                       className="rounded-lg w-16 h-16  bg-background text-center content-center">
+                                                       <div>No Image</div>
+                                                   </Skeleton>
+                                               )
+                                           }
+                                       </TableCell>
+                                       <TableCell className={"w-1/12"}>
+                                           {shopItem?.name}
+                                       </TableCell>
+                                       <TableCell className={"w-2/12"}>
+                                           {userData.first_name} {userData.last_name}
+                                       </TableCell>
+                                       <TableCell className={"w-2/12"}>
+                                           {inventory.purchaseDate.toLocaleDateString()}
+                                       </TableCell>
+                                       <TableCell className={"w-1/12"}>
+                                           {
+                                                  inventory.updateDate ? inventory.updateDate.toLocaleDateString() : "-"
+                                           }
+                                       </TableCell>
+                                       <TableCell>
+                                           {
+                                               inventory.status? inventory.status : "OK"
+                                           }
+                                       </TableCell>
+                                   </TableRow>
+                               );
+                           })
+                        }
                     </TableBody>
                 </Table>
             </div>

@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import EquipmentAllTable from "@components/equipment/EquipmentAllTable";
-import { inventoryRepository, ticketRepository } from "@lib/data/repositories";
+import { inventoryRepository, shopItemRepository } from "@lib/data/repositories";
 import { Inventory, Ticket } from "@lib/data/entities";
 
 export type EquipmentListProps = {
@@ -15,21 +15,8 @@ export default async function EquipmentListPage() {
         return null;
     }
 
-    console.log("userId", userId);
-    console.log("orgId", orgId);
-
     const inventories = await inventoryRepository.getAllInventories();
-    const equipmentLists : EquipmentListProps[] = [];
+    const shopItems = await shopItemRepository.getAllShopItemsInOrganization(orgId);
 
-    for (const inventory of inventories) {
-        const ownerId = inventory.ownerId;
-        if (equipmentLists.some((e) => e.userId === ownerId)) {
-            equipmentLists.find((e) => e.userId === ownerId)?.items.push(inventory);
-            continue;
-        }
-        const issues = await ticketRepository.getTicketsByUserId(ownerId, orgId);
-        equipmentLists.push({ userId: ownerId, items: [inventory], issues });
-    }
-
-    return <EquipmentAllTable inventories={equipmentLists} />;
+    return <EquipmentAllTable inventories={inventories} shopItems={shopItems} />;
 }
