@@ -22,3 +22,8 @@ export type {
     UpdatedTicketConversation,
     TicketConversation,
 } from "./TicketConversation";
+export type {
+    Inventory,
+    CreatedInventory,
+    UpdatedInventory
+} from "./Inventory";
