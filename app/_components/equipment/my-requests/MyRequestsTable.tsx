@@ -14,6 +14,8 @@ import {
     Request,
 } from "@lib/data/entities";
 import { useRouter } from "next/navigation";
+import { getBadgeVariant } from "@lib/utils";
+import { Badge } from "@components/ui/Badge";
 
 export interface MyRequestsTableProps {
     request: Request;
@@ -83,7 +85,9 @@ export default function MyRequestsTable({
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        {request.request.status}
+                                        <Badge variant={getBadgeVariant(request.request.status)}>
+                                            {request.request.status}
+                                        </Badge>
                                     </TableCell>
                                     <TableCell>
                                         {request.items.length}

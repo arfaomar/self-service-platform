@@ -6,11 +6,17 @@ export function getBadgeVariant(
     switch (status) {
         case "Open":
             return "default";
+        case "Accepted":
+            return "default";
         case "Closed":
             return "outline";
+        case "Declined":
+            return "destructive";
         case "On Hold":
             return "destructive";
         case "In Progress":
+            return "secondary";
+        case "Processing":
             return "secondary";
         default:
             return "outline";
