@@ -30,12 +30,12 @@ export default function TicketAmountChart({
     } satisfies ChartConfig;
 
     return (
-        <Card className="aspect-video rounded-xl bg-muted/50 flex flex-col">
+        <Card className="rounded-xl bg-muted/50 flex flex-col">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Ticket Histogram</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
-                <ChartContainer config={chartConfig} className="max-h-[360px] mx-auto container">
+                <ChartContainer config={chartConfig} className="max-h-96 mx-auto container">
                     <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis

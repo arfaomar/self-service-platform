@@ -50,15 +50,15 @@ export default function TicketStatusChart({ chartData }: TicketChartProps) {
     }, [chartData]);
 
     return (
-        <Card className="aspect-video rounded-xl bg-muted/50 flex flex-col">
-            <CardHeader className="items-center pb-0">
+        <Card className="rounded-xl bg-muted/50 flex flex-col">
+            <CardHeader className="items-center pb-0 px-0">
                 <CardTitle>Support Tickets</CardTitle>
                 <CardDescription>Overview of ticket statuses</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <CardContent className="flex-1 pb-0 aspect-video">
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[300px]"
+                    className="mx-auto aspect-square max-h-[250px]"
                 >
                     <PieChart>
                         <ChartTooltip
