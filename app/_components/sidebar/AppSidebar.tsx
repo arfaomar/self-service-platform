@@ -54,8 +54,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     ...(has({ permission: "org:tickets:view_all" })
                         ? [
                               {
-                                  title: "( All Tickets )",
-                                  url: "#",
+                                  title: "All Tickets",
+                                  url: "/support/all-tickets",
                               },
                           ]
                         : []),

@@ -20,6 +20,25 @@ export default async function MyTicketsPage() {
         orgId,
     );
 
+    if (userTickets.length === 0) {
+        return (
+            <section>
+                <h1 className={"text-3xl font-semibold text-center"}>
+                    My Tickets
+                </h1>
+                <div
+                    className={"mx-auto my-10 container rounded-lg bg-card p-4"}
+                >
+                    <div className={"text-center"}>
+                        <h1 className={"text-muted-foreground m-16"}>
+                            No tickets found
+                        </h1>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section>
             <h1 className={"text-3xl font-semibold text-center"}>My Tickets</h1>
@@ -34,7 +53,7 @@ export default async function MyTicketsPage() {
                             <TableHead>Updated At</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TicketTableBody tickets={userTickets}/>
+                    <TicketTableBody tickets={userTickets} />
                 </Table>
             </div>
         </section>
