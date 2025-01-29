@@ -3,6 +3,8 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/ui/Table";
 import { useRouter } from "next/navigation";
 import { ShopItem, ShopItemCategory } from "@lib/data/entities";
+import Image from "next/image";
+import { Skeleton } from "@components/ui/Skeleton";
 
 
 interface EquipmentTableProps {
@@ -36,17 +38,52 @@ export default function EquipmentTable({ shopItems, categories } : EquipmentTabl
                             return (
                                 <TableRow
                                     key={item.id}
-                                    onClick={() => router.push(`/admin/equipment/${item.id}`)}
+                                    onClick={() =>
+                                        router.push(
+                                            `/admin/equipment/${item.id}`,
+                                        )
+                                    }
                                     className="cursor-pointer"
                                 >
-                                    <TableCell className={"py-4"}>{item.id}</TableCell>
-                                    <TableCell className={"py-4"}>{item.name}</TableCell>
-                                    <TableCell className={"py-4"}>{item.description}</TableCell>
-                                    <TableCell className={"py-4"}>BILD</TableCell>
                                     <TableCell className={"py-4"}>
-                                        {categories.find((category) => category.id === item.categoryId)?.name}
+                                        {item.id}
                                     </TableCell>
-                                    <TableCell className={"py-4"}>{item.stock}</TableCell>
+                                    <TableCell className={"py-4"}>
+                                        {item.name}
+                                    </TableCell>
+                                    <TableCell className={"py-4"}>
+                                        {item.description}
+                                    </TableCell>
+                                    <TableCell className={"py-4"}>
+                                        {
+                                            item?.url ? (
+                                                <Image
+                                                    src={item.url}
+                                                    alt={item.name}
+                                                    className={"rounded-lg w-16 h-16  bg-background text-center content-center"}
+                                                    width={64}
+                                                    height={64}
+                                                />
+                                            ) : (
+                                                <Skeleton
+                                                    className="rounded-lg w-16 h-16  bg-background text-center content-center">
+                                                    <div>No Image</div>
+                                                </Skeleton>
+                                            )
+                                        }
+                                    </TableCell>
+                                    <TableCell className={"py-4"}>
+                                        {
+                                            categories.find(
+                                                (category) =>
+                                                    category.id ===
+                                                    item.categoryId,
+                                            )?.name
+                                        }
+                                    </TableCell>
+                                    <TableCell className={"py-4"}>
+                                        {item.stock}
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}
