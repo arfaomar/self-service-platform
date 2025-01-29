@@ -8,6 +8,7 @@ export const ShopItemSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     url: z.string().optional(),
     description: z.string().optional(),
+    categoryId: z.number().optional(),
     stock: z
         .number()
         .int()

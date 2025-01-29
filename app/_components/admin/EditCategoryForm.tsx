@@ -18,6 +18,8 @@ import editCategoryAction from "@actions/editCategoryAction";
 import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Save, Trash2 } from "lucide-react";
+import { Button } from "@components/ui/Button";
 
 const editCategorySchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -90,13 +92,23 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
                         </FormItem>
                     )}
                 />
-                <LoadingButton
-                    loading={isPending}
-                    type={"submit"}
-                    className={"w-full"}
-                >
-                    Save
-                </LoadingButton>
+                <div className={"grid grid-cols-2 gap-4"}>
+                    <LoadingButton
+                        loading={isPending}
+                        type={"submit"}
+                        className={"w-full"}
+                    >
+                        <Save className={"mr-2"} />
+                        Save
+                    </LoadingButton>
+                    <Button
+                        variant={"destructive"}
+                        className={"w-full"}
+                    >
+                        <Trash2 />
+                        Delete
+                    </Button>
+                </div>
             </form>
         </Form>
     );
