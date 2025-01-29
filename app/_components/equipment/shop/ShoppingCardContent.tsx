@@ -11,8 +11,12 @@ import { useEquipmentShopContext } from "@contexts/EquipmentShopContext";
 import { ShopItemInCart } from "@lib/data/entities";
 import { Button } from "@components/ui/Button";
 import { Input } from "@components/ui/Input";
-import { Trash } from "lucide-react";
-import { useEffect } from "react";
+import { Trash2 } from "lucide-react";
+import { useActionState, useEffect } from "react";
+import { LoadingButton } from "@components/ui/LoadingButton";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import submitEquipmentRequestAction from "@actions/submitEquipmentRequestAction";
 
 export default function ShoppingCardContent() {
     const { setArticlesInShoppingCart, articlesInShoppingCart } =
@@ -50,6 +54,34 @@ export default function ShoppingCardContent() {
         );
     };
 
+    const initialState: {
+        message: string;
+        success?: boolean;
+        error?: boolean;
+        redirectUrl?: string;
+    } = {
+        message: "",
+    };
+
+    const [state, formAction, isPending] = useActionState(
+        submitEquipmentRequestAction,
+        initialState,
+    );
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if (state && "error" in state && state.message !== "") {
+            toast.error(state.message);
+        } else if (state && "success" in state && state.message !== "") {
+            toast.success(state.message);
+            setArticlesInShoppingCart([]);
+            if (state.redirectUrl) {
+                router.push(state.redirectUrl);
+            }
+        }
+    }, [state, router, setArticlesInShoppingCart]);
+
     return (
         <SheetContent>
             <SheetHeader className={"mb-6"}>
@@ -83,7 +115,7 @@ export default function ShoppingCardContent() {
                             </p>
                         </span>
 
-                        <div className={"flex flex-col"}>
+                        <div className={"flex flex-col space-y-2"}>
                             <Input
                                 type={"number"}
                                 value={article.quantity || 0}
@@ -97,16 +129,32 @@ export default function ShoppingCardContent() {
                                 className={"w-fit"}
                             />
                             <Button
-                                variant={"destructive"}
-                                size={"icon"}
-                                className={"mt-2"}
+                                variant={"ghost"}
                                 onClick={() => handleRemove(article.id)}
                             >
-                                <Trash />
+                                <Trash2 />
                             </Button>
                         </div>
                     </div>
                 ))
+            )}
+
+            {articlesInShoppingCart.length > 0 && (
+                <div className={"mt-4 flex justify-evenly items-center"}>
+                    <form action={formAction}>
+                        <LoadingButton
+                            loading={isPending}
+                            type={"submit"}
+                            name="articlesInShoppingCart"
+                            value={JSON.stringify(articlesInShoppingCart)}
+                        >
+                            Submit Request
+                        </LoadingButton>
+                    </form>
+                    <Button variant={"destructive"} onClick={() => setArticlesInShoppingCart([])}>
+                        Clear Cart
+                    </Button>
+                </div>
             )}
         </SheetContent>
     );

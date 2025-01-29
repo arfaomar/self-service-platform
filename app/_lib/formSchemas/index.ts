@@ -1,3 +1,13 @@
 import { submitTicketFormSchema } from "@lib/formSchemas/submitTicketFormSchema";
 import { sendTicketResponseFormSchema } from "@lib/formSchemas/sendTicketResponseFormSchema";
-export { submitTicketFormSchema, sendTicketResponseFormSchema };
+import {
+    articlesInShoppingCartSchema,
+    shopItemInCartSchema,
+} from "@lib/formSchemas/submitEquipmentRequestFormSchema";
+
+export {
+    submitTicketFormSchema,
+    sendTicketResponseFormSchema,
+    articlesInShoppingCartSchema,
+    shopItemInCartSchema,
+};

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import { Headset, NotepadText } from "lucide-react";
+import { Headset, NotepadText, Shield } from "lucide-react";
 
 import { NavMain } from "@components/sidebar/NavMain";
 import { NavUser } from "@components/sidebar/NavUser";
@@ -113,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         data.navMain.push({
             title: "Admin",
             url: "#",
-            icon: NotepadText,
+            icon: Shield,
             isActive: currentSection.toLowerCase() === "admin",
             items: [
                 {

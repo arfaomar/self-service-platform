@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Skeleton } from "@components/ui/Skeleton";
 import { Badge } from "@components/ui/Badge";
 import { useEquipmentShopContext } from "@contexts/EquipmentShopContext";
+import { toast } from "sonner";
 
 interface ShopItemCardProps {
     shopItem: ShopItem;
@@ -39,6 +40,7 @@ export default function ShopItemCard({ shopItem }: ShopItemCardProps) {
                 { ...shopItem, quantity: 1 },
             ]);
         }
+        toast.info(`${shopItem.name} added to the shopping cart`);
     };
 
     return (
