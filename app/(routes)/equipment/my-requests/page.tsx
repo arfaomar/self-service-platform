@@ -8,7 +8,6 @@ export default async function MyRequestsPage() {
         return null;
     }
 
-    console.log(userId, orgId);
 
     const myRequests = await requestRepository.getAllRequestsByUserId(userId, orgId);
     const requestsWithItems: MyRequestsTableProps[] = [];

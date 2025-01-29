@@ -5,7 +5,7 @@ import {
     UpdatedRequestSchema,
 } from "@lib/data/repoZodSchemas";
 import { db, request } from "../../../../db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { z } from "zod";
 
 export class RequestRepository implements IRequestRepository {
@@ -74,7 +74,8 @@ export class RequestRepository implements IRequestRepository {
                     eq(request.userId, validUserId),
                     eq(request.organizationId, validOrgId),
                 ),
-            );
+            )
+            .orderBy(desc(request.creationDate));
         return foundRequests as Request[];
     }
 
