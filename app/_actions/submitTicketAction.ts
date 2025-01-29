@@ -83,7 +83,7 @@ const uploadImages = async (images: File[]) => {
         try {
             const cloudData = new FormData();
             cloudData.append("file", image);
-            cloudData.append("upload_preset", "self-service");
+            cloudData.append("upload_preset", "screenshot");
             const response = await fetch(
                 `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
                 {
