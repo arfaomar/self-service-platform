@@ -22,6 +22,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { TicketConversation } from "@lib/data/entities";
 import ConversationInput from "@components/support/ticket/ConversationInput";
+import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 
 export default async function TicketPage({
     params,
@@ -41,6 +43,18 @@ export default async function TicketPage({
         await ticketConversationRepository.getTicketConversationsByTicketId(
             parseInt(ticketId),
         );
+
+    const { userId, has } = await auth();
+
+    const canSeeAllTickets =
+        has({ permission: "org:tickets:manage_all" }) &&
+        has({ permission: "org:tickets:view_all" });
+
+    const canSeeTicket = ticket.ownerId === userId || canSeeAllTickets;
+
+    if (!canSeeTicket) {
+        notFound();
+    }
 
     return (
         <>
@@ -125,14 +139,9 @@ export default async function TicketPage({
                 </CardFooter>
             </Card>
             {conversations.map((conversation) => (
-                <ConversationCard
-                    key={conversation.id}
-                    {...conversation}
-                />
+                <ConversationCard key={conversation.id} {...conversation} />
             ))}
-            <ConversationInput
-                ticketId={ticketId}
-            />
+            <ConversationInput ticketId={ticketId} />
         </>
     );
 }
