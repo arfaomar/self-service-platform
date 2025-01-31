@@ -2,9 +2,17 @@
 
 import { auth } from "@clerk/nextjs/server";
 import IndividualRequest from "@components/equipment/request/IndividualRequest";
-import { itemInRequestRepository, requestRepository, shopItemRepository } from "@lib/data/repositories";
+import {
+    itemInRequestRepository,
+    requestRepository,
+    shopItemRepository,
+} from "@lib/data/repositories";
 
-export default async function RequestPage({params} : {params: {requestId: string}}) {
+export default async function RequestPage({
+    params,
+}: {
+    params: Promise<{ requestId: string }>;
+}) {
     const { userId, orgId } = await auth();
     if (!userId || !orgId) {
         return null;
