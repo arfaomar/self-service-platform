@@ -27,7 +27,7 @@ export default async function MyEquipmentPage() {
     return (
         <section>
             <h1 className={"text-3xl font-semibold text-center"}>
-                My Requests
+                My Equipment
             </h1>
             <div className={"mx-auto my-10 container rounded-lg bg-card p-4"}>
                 {myInventory.length > 0 ? (
@@ -35,7 +35,7 @@ export default async function MyEquipmentPage() {
                 ) : (
                     <div className={"text-center"}>
                         <h1 className={"text-muted-foreground m-16"}>
-                            No requests found
+                            No equipment found
                         </h1>
                     </div>
                 )}
