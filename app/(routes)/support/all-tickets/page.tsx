@@ -8,8 +8,6 @@ export default async function AllTicketsPage() {
         return null;
     }
 
-    console.log(userId, orgId);
-
     const tickets = await ticketRepository.getTicketsByOrganizationId(orgId)
 
 
