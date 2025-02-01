@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export function getBadgeVariant(
     status: string,
-): "default" | "secondary" | "destructive" | "outline" {
+): "default" | "secondary" | "destructive" | "outline" | "inProgress" {
     switch (status) {
         case "Open":
             return "default";
@@ -15,7 +15,7 @@ export function getBadgeVariant(
         case "On Hold":
             return "destructive";
         case "In Progress":
-            return "secondary";
+            return "inProgress";
         case "Processing":
             return "secondary";
         default:

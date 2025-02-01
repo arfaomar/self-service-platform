@@ -24,6 +24,7 @@ import { TicketConversation } from "@lib/data/entities";
 import ConversationInput from "@components/support/ticket/ConversationInput";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
+import ChangeTicketStatusForm from "@components/support/ticket/ChangeTicketStatusForm";
 
 export default async function TicketPage({
     params,
@@ -33,16 +34,6 @@ export default async function TicketPage({
     const ticketId = (await params).ticketId;
 
     const ticket = await ticketRepository.getTicketById(parseInt(ticketId));
-
-    const screenshots =
-        await ticketScreenshotRepository.findTicketScreenshotsByTicketId(
-            parseInt(ticketId),
-        );
-
-    const conversations: TicketConversation[] =
-        await ticketConversationRepository.getTicketConversationsByTicketId(
-            parseInt(ticketId),
-        );
 
     const { userId, has } = await auth();
 
@@ -56,34 +47,45 @@ export default async function TicketPage({
         notFound();
     }
 
+    const screenshots =
+        await ticketScreenshotRepository.findTicketScreenshotsByTicketId(
+            parseInt(ticketId),
+        );
+
+    const conversations: TicketConversation[] =
+        await ticketConversationRepository.getTicketConversationsByTicketId(
+            parseInt(ticketId),
+        );
+
     return (
         <>
             <Card className={"mx-auto container mb-16"}>
                 <CardHeader>
-                    <CardTitle>{ticket.title}</CardTitle>
-
-                    <div
-                        className={
-                            "text-sm flex flex-row justify-start items-center space-x-12"
-                        }
-                    >
-                        <CardDescription>
-                            <Badge
-                                variant={getBadgeVariant(ticket.status)}
-                                className={"mr-2"}
+                    <div className={"flex flex-row justify-between"}>
+                        <div className={"space-y-4"}>
+                            <CardTitle>{ticket.title}</CardTitle>
+                            <div
+                                className={
+                                    "text-sm flex flex-row justify-start items-center space-x-12"
+                                }
                             >
-                                {ticket.status}
-                            </Badge>
-                            Ticket{" "}
-                            <span className={"font-bold"}>#{ticket.id}</span>{" "}
-                        </CardDescription>
-                        <CardDescription>
+                                <CardDescription>
+                                    <Badge
+                                        variant={getBadgeVariant(ticket.status)}
+                                        className={"mr-2"}
+                                    >
+                                        {ticket.status}
+                                    </Badge>
+                                    Ticket{" "}
+                                    <span className={"font-bold"}>#{ticket.id}</span>{" "}
+                                </CardDescription>
+                                <CardDescription>
                             <span className={"flex items-center"}>
                                 <Clock4 className={"h-4 w-4 mr-2"} />
                                 <p>{formatDate(ticket.creationDate)}</p>
                             </span>
-                        </CardDescription>
-                        <CardDescription>
+                                </CardDescription>
+                                <CardDescription>
                             <span className={"flex items-center"}>
                                 <RotateCw className={"h-4 w-4 mr-2"} />
                                 <p>
@@ -92,7 +94,15 @@ export default async function TicketPage({
                                         : "-"}
                                 </p>
                             </span>
-                        </CardDescription>
+                                </CardDescription>
+                            </div>
+                        </div>
+                        {canSeeAllTickets && (
+                            <ChangeTicketStatusForm
+                                ticketId={ticketId}
+                                currentStatus={ticket.status}
+                            />
+                        )}
                     </div>
                 </CardHeader>
                 <CardContent className={"space-y-4"}>
