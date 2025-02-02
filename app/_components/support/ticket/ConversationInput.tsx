@@ -16,8 +16,17 @@ import { LoadingButton } from "@components/ui/LoadingButton";
 import { startTransition, useActionState, useEffect } from "react";
 import sendTicketResponseAction from "@actions/sendTicketResponseAction";
 import { sendTicketResponseFormSchema } from "@lib/formSchemas";
+import { TicketStatusEnum } from "@lib/data/entities";
 
-export default function ConversationInput({ ticketId }: { ticketId: string }) {
+interface ConversationInputProps {
+    ticketId: string;
+    ticketStatus: TicketStatusEnum;
+}
+
+export default function ConversationInput({
+    ticketId,
+    ticketStatus,
+}: ConversationInputProps) {
     const formSchema = z.object({
         content: z
             .string()
@@ -69,37 +78,45 @@ export default function ConversationInput({ ticketId }: { ticketId: string }) {
         });
     };
 
+    const isClosed = ticketStatus === TicketStatusEnum.Closed;
+
     return (
         <div className="container border rounded-xl mx-auto p-4">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                        control={form.control}
-                        name="content"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Textarea
-                                        placeholder="Write your response here"
-                                        className="resize-none"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <LoadingButton
-                        type="submit"
-                        loading={isPending}
-                        name={"ticketId"}
-                        value={ticketId}
-                        className="mt-4"
-                    >
-                        Send
-                    </LoadingButton>
-                </form>
-            </Form>
+            {!isClosed ? (
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <FormField
+                            control={form.control}
+                            name="content"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Textarea
+                                            placeholder="Write your response here"
+                                            className="resize-none"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <LoadingButton
+                            type="submit"
+                            loading={isPending}
+                            name={"ticketId"}
+                            value={ticketId}
+                            className="mt-4"
+                        >
+                            Send
+                        </LoadingButton>
+                    </form>
+                </Form>
+            ) : (
+                <div className="text-center text-muted-foreground">
+                    This ticket is closed
+                </div>
+            )}
         </div>
     );
 }

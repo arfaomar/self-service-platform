@@ -17,7 +17,6 @@ import {
 } from "@components/ui/Card";
 import ConversationCard from "@components/support/ticket/ConversationCard";
 import { Clock4, RotateCw } from "lucide-react";
-import { Button } from "@components/ui/Button";
 import Image from "next/image";
 import Link from "next/link";
 import { TicketConversation } from "@lib/data/entities";
@@ -25,6 +24,7 @@ import ConversationInput from "@components/support/ticket/ConversationInput";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import ChangeTicketStatusForm from "@components/support/ticket/ChangeTicketStatusForm";
+import CloseTicketForm from "@components/support/ticket/CloseTicketForm";
 
 export default async function TicketPage({
     params,
@@ -77,23 +77,25 @@ export default async function TicketPage({
                                         {ticket.status}
                                     </Badge>
                                     Ticket{" "}
-                                    <span className={"font-bold"}>#{ticket.id}</span>{" "}
+                                    <span className={"font-bold"}>
+                                        #{ticket.id}
+                                    </span>{" "}
                                 </CardDescription>
                                 <CardDescription>
-                            <span className={"flex items-center"}>
-                                <Clock4 className={"h-4 w-4 mr-2"} />
-                                <p>{formatDate(ticket.creationDate)}</p>
-                            </span>
+                                    <span className={"flex items-center"}>
+                                        <Clock4 className={"h-4 w-4 mr-2"} />
+                                        <p>{formatDate(ticket.creationDate)}</p>
+                                    </span>
                                 </CardDescription>
                                 <CardDescription>
-                            <span className={"flex items-center"}>
-                                <RotateCw className={"h-4 w-4 mr-2"} />
-                                <p>
-                                    {ticket.updateDate
-                                        ? formatDate(ticket.updateDate)
-                                        : "-"}
-                                </p>
-                            </span>
+                                    <span className={"flex items-center"}>
+                                        <RotateCw className={"h-4 w-4 mr-2"} />
+                                        <p>
+                                            {ticket.updateDate
+                                                ? formatDate(ticket.updateDate)
+                                                : "-"}
+                                        </p>
+                                    </span>
                                 </CardDescription>
                             </div>
                         </div>
@@ -145,13 +147,15 @@ export default async function TicketPage({
                     </div>
                 </CardContent>
                 <CardFooter className={"grid justify-items-end"}>
-                    <Button variant={"destructive"}>Close Ticket</Button>
+                    {ticket.ownerId === userId && (
+                        <CloseTicketForm ticketId={ticketId} />
+                    )}
                 </CardFooter>
             </Card>
             {conversations.map((conversation) => (
                 <ConversationCard key={conversation.id} {...conversation} />
             ))}
-            <ConversationInput ticketId={ticketId} />
+            <ConversationInput ticketId={ticketId} ticketStatus={ticket.status} />
         </>
     );
 }

@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { changeTicketStatusFormSchema } from "@lib/formSchemas";
 import { ticketRepository } from "@lib/data/repositories";
 import { revalidatePath } from "next/cache";
+import { TicketStatusEnum } from "@lib/data/entities";
 
 export default async function changeTicketStatusAction(
     prevState: {
@@ -42,6 +43,17 @@ export default async function changeTicketStatusAction(
         const ticket = await ticketRepository.getTicketById(
             parsedData.data.ticketId,
         );
+
+        if (
+            ticket.ownerId === userId &&
+            parsedData.data.status !== TicketStatusEnum.Closed &&
+            !has({ permission: "org:tickets:manage_all" })
+        ) {
+            return {
+                message: "You can only set the status to closed",
+                error: true,
+            };
+        }
 
         if (
             !has({ permission: "org:tickets:manage_all" }) ||
