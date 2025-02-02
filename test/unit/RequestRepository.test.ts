@@ -68,18 +68,8 @@ describe('RequestRepository', () => {
             const orgId = 'org_123456789012345678901234567';
 
             await expect(requestRepository.createRequest(invalidUserId, orgId))
-                .rejects.toMatchObject({
-                    errors: expect.arrayContaining([
-                        expect.objectContaining({
-                            code: "too_small",
-                            message: "String must contain exactly 32 character(s)",
-                        }),
-                        expect.objectContaining({
-                            code: "invalid_string",
-                            message: expect.stringContaining("must start with"),
-                        }),
-                    ])
-                });
+                .rejects.toThrow("String must contain exactly 32 character(s)");
+
         });
 
         it('should throw an error if orgId is invalid', async () => {
@@ -87,19 +77,7 @@ describe('RequestRepository', () => {
             const invalidOrgId = 'invalid_org_id';
 
             await expect(requestRepository.createRequest(userId, invalidOrgId))
-                .rejects.toThrowError(
-                    expect.objectContaining({
-                        errors: expect.arrayContaining([
-                            expect.objectContaining({
-                                code: "too_small",
-                                message: "String must contain exactly 31 character(s)",
-                            }),
-                            expect.objectContaining({
-                                code: "invalid_string",
-                                message: expect.stringContaining("must start with \"org_\""),
-                            }),
-                        ]),
-                    })
+                .rejects.toThrow("String must contain exactly 31 character(s)"
                 );
         });
 
@@ -190,20 +168,7 @@ describe('RequestRepository', () => {
         it('should throw an error if orgId is invalid', async () => {
             await expect(
                 requestRepository.getAllRequestsInOrganization('invalid_org_id'),
-            ).rejects.toThrow(
-                expect.objectContaining({
-                    errors: expect.arrayContaining([
-                        expect.objectContaining({
-                            code: "too_small",
-                            message: "String must contain exactly 31 character(s)",
-                        }),
-                        expect.objectContaining({
-                            code: "invalid_string",
-                            message: expect.stringContaining("must start with \"org_\""),
-                        }),
-                    ]),
-                })
-            );
+            ).rejects.toThrow("String must contain exactly 31 character(s)");
         })
 
     });

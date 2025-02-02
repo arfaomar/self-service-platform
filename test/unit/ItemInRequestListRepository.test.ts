@@ -95,7 +95,7 @@ describe('ItemInRequestListRepository', () => {
                 itemId: 20,
                 quantity: 10,
                 organizationId: 'org_123456789012345678901234567',
-                status: ItemInRequestStatusEnum.Accepted, // Updated status
+                status: ItemInRequestStatusEnum.Accepted,
             };
 
             const updateData = {

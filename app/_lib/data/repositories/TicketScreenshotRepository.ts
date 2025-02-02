@@ -46,6 +46,12 @@ export class TicketScreenshotRepository implements ITicketScreenshotRepository {
     }
 
     async deleteTicketScreenshot(id: number): Promise<void> {
-        await db.delete(ticketScreenshot).where(eq(ticketScreenshot.id, id));
+
+        const deletedCount = await db.delete(ticketScreenshot).where(eq(ticketScreenshot.id, id));
+
+        if (!deletedCount) {
+            throw new Error("Ticket screenshot not found for deletion");
+        }
+
     }
 }

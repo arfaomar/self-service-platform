@@ -1,8 +1,8 @@
 import { db } from '../../db';
 import { ShopItemRepository } from '@lib/data/repositories/ShopItemRepository';
-import { shopItem } from '../../db';
+import { shopItem, shopItemCategory } from '../../db';
 import { eq } from 'drizzle-orm';
-import { CreatedShopItem, UpdatedShopItem, ShopItem } from '@lib/data/entities';
+import {CreatedShopItem, UpdatedShopItem, ShopItem, ShopItemCategory} from '@lib/data/entities';
 
 jest.mock('../../db', () => ({
     db: {
@@ -39,7 +39,7 @@ describe('ShopItemRepository', () => {
     });
 
     afterEach(() => {
-        jest.clearAllMocks(); // Clear mocks after each test
+        jest.clearAllMocks();
     });
 
     describe('createShopItem', () => {
@@ -58,7 +58,6 @@ describe('ShopItemRepository', () => {
                 ...newShopItem,
             };
 
-            // Mock the db.insert method to return the created item
             (db.insert as jest.Mock).mockReturnValue({
                 values: jest.fn().mockReturnValue({
                     returning: jest.fn().mockResolvedValue([mockCreatedItem]),
@@ -84,7 +83,6 @@ describe('ShopItemRepository', () => {
                 organizationId: 'org_123456789012345678901234567',
             };
 
-            // Mock the db.select method to return the shop item
             (db.select as jest.Mock).mockReturnValue({
                 from: jest.fn().mockReturnValue({
                     where: jest.fn().mockResolvedValue([mockShopItem]),
@@ -99,7 +97,6 @@ describe('ShopItemRepository', () => {
         });
 
         it('should throw an error if the shop item is not found', async () => {
-            // Mock the db.select method to return an empty array
             (db.select as jest.Mock).mockReturnValueOnce({
                 from: jest.fn().mockReturnValueOnce({
                     where: jest.fn().mockResolvedValueOnce([]),
@@ -128,7 +125,6 @@ describe('ShopItemRepository', () => {
                 organizationId: 'org_123456789012345678901234567',
             };
 
-            // Mock the db.update method to return the updated item
             (db.update as jest.Mock).mockReturnValue({
                 set: jest.fn().mockReturnValue({
                     where: jest.fn().mockReturnValue({
@@ -147,7 +143,6 @@ describe('ShopItemRepository', () => {
         });
 
         it('should throw an error if the shop item is not found', async () => {
-            // Mock the db.update method to return an empty array
             (db.update as jest.Mock).mockReturnValueOnce({
                 set: jest.fn().mockReturnValueOnce({
                     where: jest.fn().mockReturnValueOnce({
@@ -165,10 +160,137 @@ describe('ShopItemRepository', () => {
             await expect(repository.updateShopItem(updatedData)).rejects.toThrow('Shop item not found for update');
         });
     });
+    describe('getAllShopItemsInOrganization', () => {
+        it('should retrieve all shop items for a given organization', async () => {
+            const mockShopItems: ShopItem[] = [
+                {
+                    id: 1,
+                    name: 'Test Item 1',
+                    description: 'Test Description 1',
+                    url: 'https://test.com/1',
+                    categoryId: 1,
+                    stock: 10,
+                    organizationId: 'org_123456789012345678901234567',
+                },
+                {
+                    id: 2,
+                    name: 'Test Item 2',
+                    description: 'Test Description 2',
+                    url: 'https://test.com/2',
+                    categoryId: 2,
+                    stock: 20,
+                    organizationId: 'org_123456789012345678901234567',
+                },
+            ];
+
+            (db.select as jest.Mock).mockReturnValue({
+                from: jest.fn().mockReturnValue({
+                    where: jest.fn().mockResolvedValue(mockShopItems),
+                }),
+            });
+
+            const result = await repository.getAllShopItemsInOrganization(
+                'org_123456789012345678901234567',
+            );
+
+            expect(result).toEqual(mockShopItems);
+            expect(db.select).toHaveBeenCalled();
+            expect(db.select().from).toHaveBeenCalledWith(shopItem);
+            expect(db.select().from(shopItem).where).toHaveBeenCalledWith(
+                eq(shopItem.organizationId, 'org_123456789012345678901234567'),
+            );
+        });
+
+        it('should throw an error if the organization ID is invalid', async () => {
+            const invalidOrgId = 'invalid_org_id';
+
+            await expect(
+                repository.getAllShopItemsInOrganization(invalidOrgId),
+            ).rejects.toThrow('String must contain exactly 31 character(s)');
+        });
+    });
+
+    describe('getShopItemCategoryByShopItemId', () => {
+        it('should retrieve the category of a shop item', async () => {
+            const mockShopItem: ShopItem = {
+                id: 1,
+                name: 'Test Item',
+                description: 'Test Description',
+                url: 'https://test.com',
+                categoryId: 1,
+                stock: 10,
+                organizationId: 'org_123456789012345678901234567',
+            };
+
+            const mockCategory: ShopItemCategory = {
+                id: 1,
+                name: 'Test Category',
+                organizationId: 'org_123456789012345678901234567'
+
+            };
+
+            jest.spyOn(repository, 'getShopItemById').mockResolvedValueOnce(mockShopItem);
+
+            (db.select as jest.Mock).mockReturnValue({
+                from: jest.fn().mockReturnValue({
+                    where: jest.fn().mockResolvedValue([mockCategory]),
+                }),
+            });
+
+            const result = await repository.getShopItemCategoryByShopItemId(1);
+            expect(result).toEqual(mockCategory);
+            expect(db.select).toHaveBeenCalled();
+            expect(db.select().from).toHaveBeenCalledWith(shopItemCategory);
+            expect(db.select().from(shopItemCategory).where).toHaveBeenCalledWith(
+                eq(shopItemCategory.id, mockShopItem.categoryId!),
+            );
+        });
+
+        it('should throw an error if the shop item does not have a category', async () => {
+            const mockShopItem: ShopItem = {
+                id: 1,
+                name: 'Test Item',
+                description: 'Test Description',
+                url: 'https://test.com',
+                categoryId: null,
+                stock: 10,
+                organizationId: 'org_123456789012345678901234567',
+            };
+
+            jest.spyOn(repository, 'getShopItemById').mockResolvedValueOnce(mockShopItem);
+
+            await expect(
+                repository.getShopItemCategoryByShopItemId(1),
+            ).rejects.toThrow('Shop item does not have a valid category ID');
+        });
+
+        it('should throw an error if the category is not found', async () => {
+            const mockShopItem: ShopItem = {
+                id: 1,
+                name: 'Test Item',
+                description: 'Test Description',
+                url: 'https://test.com',
+                categoryId: 1,
+                stock: 10,
+                organizationId: 'org_123456789012345678901234567',
+            };
+
+            jest.spyOn(repository, 'getShopItemById').mockResolvedValueOnce(mockShopItem);
+
+            (db.select as jest.Mock).mockReturnValue({
+                from: jest.fn().mockReturnValue({
+                    where: jest.fn().mockResolvedValue([]),
+                }),
+            });
+
+            await expect(
+                repository.getShopItemCategoryByShopItemId(1),
+            ).rejects.toThrow('Shop item category not found');
+        });
+    });
 
     describe('deleteShopItem', () => {
         it('should delete a shop item', async () => {
-            // Mock the db.delete method
             (db.delete as jest.Mock).mockReturnValue({
                 where: jest.fn().mockResolvedValue({}),
             });
@@ -179,7 +301,6 @@ describe('ShopItemRepository', () => {
         });
 
         it('should throw an error if the shop item does not exist', async () => {
-            // Mock the db.delete method to throw an error
             (db.delete as jest.Mock).mockReturnValueOnce({
                 where: jest.fn().mockRejectedValueOnce(new Error('Failed to delete shop item')),
             });
