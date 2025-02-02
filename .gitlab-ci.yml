@@ -12,6 +12,7 @@ install-dependencies:
   stage: install
   script:
     - echo "Installing dependencies..."
+    - apt-get update && apt-get install -y gettext
     - envsubst < .env.template > .env.local
     - npm ci
   cache:
