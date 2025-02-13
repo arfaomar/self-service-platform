@@ -1,6 +1,9 @@
+"use server";
+
 import { auth } from "@clerk/nextjs/server";
 import { ticketRepository } from "@lib/data/repositories";
 import AllTicketsTable from "@components/support/ticket/AllTicketsTable";
+import PageSection from "@components/general/PageSection";
 
 export default async function AllTicketsPage() {
     const { userId, orgId } = await auth();
@@ -8,11 +11,11 @@ export default async function AllTicketsPage() {
         return null;
     }
 
-    const tickets = await ticketRepository.getTicketsByOrganizationId(orgId)
-
-
+    const tickets = await ticketRepository.getTicketsByOrganizationId(orgId);
 
     return (
-        <AllTicketsTable tickets={tickets}/>
+        <PageSection title={"All Tickets"} contentLength={tickets.length}>
+            <AllTicketsTable tickets={tickets} />
+        </PageSection>
     );
 }

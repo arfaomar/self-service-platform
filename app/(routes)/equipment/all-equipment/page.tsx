@@ -1,7 +1,13 @@
+"use server";
+
 import { auth } from "@clerk/nextjs/server";
 import EquipmentAllTable from "@components/equipment/EquipmentAllTable";
-import { inventoryRepository, shopItemRepository } from "@lib/data/repositories";
+import {
+    inventoryRepository,
+    shopItemRepository,
+} from "@lib/data/repositories";
 import { Inventory, Ticket } from "@lib/data/entities";
+import PageSection from "@components/general/PageSection";
 
 export type AllEquipmentProps = {
     userId: string;
@@ -16,7 +22,15 @@ export default async function AllEquipmentPage() {
     }
 
     const inventories = await inventoryRepository.getAllInventories();
-    const shopItems = await shopItemRepository.getAllShopItemsInOrganization(orgId);
+    const shopItems =
+        await shopItemRepository.getAllShopItemsInOrganization(orgId);
 
-    return <EquipmentAllTable inventories={inventories} shopItems={shopItems} />;
+    return (
+        <PageSection title={"All Equipment"} contentLength={inventories.length}>
+            <EquipmentAllTable
+                inventories={inventories}
+                shopItems={shopItems}
+            />
+        </PageSection>
+    );
 }
