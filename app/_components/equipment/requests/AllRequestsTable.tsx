@@ -1,10 +1,12 @@
 "use client";
 
 import {
-    Table, TableBody, TableCell,
+    Table,
+    TableBody,
+    TableCell,
     TableHead,
     TableHeader,
-    TableRow
+    TableRow,
 } from "@components/ui/Table";
 import Image from "next/image";
 import { Skeleton } from "@components/ui/Skeleton";
@@ -20,9 +22,9 @@ export interface AllRequestsTableProp {
     creationDate: string;
     updateDate: string;
     status: RequestStatusEnum;
-    requestedItemsAmount: number,
-    acceptedItemsAmount: number,
-    declinedItemsAmount: number,
+    requestedItemsAmount: number;
+    acceptedItemsAmount: number;
+    declinedItemsAmount: number;
 }
 
 export default function AllRequestsTable({
@@ -30,7 +32,6 @@ export default function AllRequestsTable({
 }: {
     requestProps: AllRequestsTableProp[];
 }) {
-
     const router = useRouter();
     return (
         <Table>
@@ -51,36 +52,39 @@ export default function AllRequestsTable({
                     return (
                         <TableRow
                             key={index}
-                              onClick={() => router.push(`/equipment/request/${requestProp.requestId}`)}
-                              className="cursor-pointer"
+                            onClick={() =>
+                                router.push(
+                                    `/equipment/request/${requestProp.requestId}`,
+                                )
+                            }
+                            className="cursor-pointer"
                         >
                             <TableCell>
-                                {requestProp.userImageUrl? (
+                                {requestProp.userImageUrl ? (
                                     <Image
                                         src={requestProp.userImageUrl}
                                         alt={requestProp.userFullName}
-                                        className={"rounded-lg w-12 h-12 bg-background text-center content-center"}
+                                        className={
+                                            "rounded-lg w-12 h-12 bg-background text-center content-center"
+                                        }
                                         width={64}
                                         height={64}
                                     />
                                 ) : (
-                                    <Skeleton
-                                        className="rounded-lg w-12 h-12  bg-background text-center content-center">
+                                    <Skeleton className="rounded-lg w-12 h-12  bg-background text-center content-center">
                                         <div>No Image</div>
                                     </Skeleton>
                                 )}
                             </TableCell>
+                            <TableCell>{requestProp.userFullName}</TableCell>
+                            <TableCell>{requestProp.creationDate}</TableCell>
+                            <TableCell>{requestProp.updateDate}</TableCell>
                             <TableCell>
-                                {requestProp.userFullName}
-                            </TableCell>
-                            <TableCell>
-                                {requestProp.creationDate}
-                            </TableCell>
-                            <TableCell>
-                                {requestProp.updateDate}
-                            </TableCell>
-                            <TableCell>
-                                <Badge variant={getBadgeVariant(requestProp.status)}>
+                                <Badge
+                                    variant={getBadgeVariant(
+                                        requestProp.status,
+                                    )}
+                                >
                                     {requestProp.status}
                                 </Badge>
                             </TableCell>
