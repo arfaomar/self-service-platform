@@ -9,8 +9,5 @@ export default async function AddCategoriesPage() {
         return null;
     }
 
-
-    return (
-        <AddCategoriesForm />
-    );
+    return <AddCategoriesForm />;
 }

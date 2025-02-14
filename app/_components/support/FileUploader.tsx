@@ -127,7 +127,7 @@ export function FileUploader(props: FileUploaderProps) {
                 {({ getRootProps, getInputProps, isDragActive }) => (
                     <div
                         {...getRootProps()}
-                        className={`group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/25 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isDragActive ? "border-muted-foreground/50" : ""} ${isDisabled ? "pointer-events-none opacity-60" : ""} ${className}`}
+                        className={`group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center ring-offset-background transition hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isDragActive ? "border-muted-foreground/50" : ""} ${isDisabled ? "pointer-events-none opacity-60" : ""} ${className}`}
                         {...dropzoneProps}
                     >
                         <input {...getInputProps()} />

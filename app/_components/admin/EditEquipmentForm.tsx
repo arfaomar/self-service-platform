@@ -117,7 +117,7 @@ export default function EditEquipmentForm({
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
+                className="mx-auto my-10 max-w-4xl grid-cols-1 items-center justify-center space-y-8"
             >
                 <FormField
                     control={form.control}
@@ -147,19 +147,21 @@ export default function EditEquipmentForm({
                 />
                 {shopItem?.url ? (
                     <div className={""}>
-                        <span className={"text-center mt-4"}>Current Image</span>
+                        <span className={"mt-4 text-center"}>
+                            Current Image
+                        </span>
                         <Image
                             src={shopItem.url}
                             alt={shopItem.name}
                             className={
-                                "rounded-lg w-48 h-48 mt-4 bg-background text-center content-center"
+                                "mt-4 h-48 w-48 content-center rounded-lg bg-background text-center"
                             }
                             width={320}
                             height={320}
                         />
                     </div>
                 ) : (
-                    <Skeleton className="rounded-lg w-48 h-48  bg-background text-center content-center">
+                    <Skeleton className="h-48 w-48 content-center rounded-lg bg-background text-center">
                         <div>No Image</div>
                     </Skeleton>
                 )}
@@ -233,18 +235,14 @@ export default function EditEquipmentForm({
                         type={"submit"}
                         className={"w-full"}
                     >
-                        <Save className={"mr-2"}/>
+                        <Save className={"mr-2"} />
                         Save
                     </LoadingButton>
-                    <Button
-                        variant={"destructive"}
-                        className={"w-full"}
-                    >
+                    <Button variant={"destructive"} className={"w-full"}>
                         <Trash2 />
                         Delete
                     </Button>
                 </div>
-
             </form>
         </Form>
     );

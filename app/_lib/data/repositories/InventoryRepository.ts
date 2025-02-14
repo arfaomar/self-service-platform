@@ -2,24 +2,25 @@ import { IInventoryRepository } from "@lib/data/interfaces";
 import {
     CreatedInventory,
     Inventory,
-    UpdatedInventory
+    UpdatedInventory,
 } from "@lib/data/entities";
 import { db, inventory } from "../../../../db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import {
     CreatedInventorySchema,
-    UpdatedInventorySchema
+    UpdatedInventorySchema,
 } from "@lib/data/repoZodSchemas";
 
 export class InventoryRepository implements IInventoryRepository {
-    async  getAllInventories(): Promise<Inventory[]> {
+    async getAllInventories(): Promise<Inventory[]> {
         const allInventory = await db.select().from(inventory);
         return allInventory as Inventory[];
     }
 
     async createInventory(inventoryData: CreatedInventory): Promise<Inventory> {
-        const parsedInventoryData = CreatedInventorySchema.safeParse(inventoryData);
+        const parsedInventoryData =
+            CreatedInventorySchema.safeParse(inventoryData);
         if (!parsedInventoryData.success) {
             throw new Error(parsedInventoryData.error.errors[0].message);
         }
@@ -45,7 +46,11 @@ export class InventoryRepository implements IInventoryRepository {
     }
 
     async getInventoryByOwnerId(ownerId: string): Promise<Inventory[]> {
-        const validOwnerId = z.string().length(32).startsWith("user_").parse(ownerId);
+        const validOwnerId = z
+            .string()
+            .length(32)
+            .startsWith("user_")
+            .parse(ownerId);
         const foundInventory = await db
             .select()
             .from(inventory)
@@ -55,7 +60,8 @@ export class InventoryRepository implements IInventoryRepository {
     }
 
     async updateInventory(inventoryData: UpdatedInventory): Promise<Inventory> {
-        const parsedInventoryData = UpdatedInventorySchema.safeParse(inventoryData);
+        const parsedInventoryData =
+            UpdatedInventorySchema.safeParse(inventoryData);
         if (!parsedInventoryData.success) {
             throw new Error(parsedInventoryData.error.errors[0].message);
         }

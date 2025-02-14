@@ -94,14 +94,14 @@ export default function ShoppingCartContent() {
             <div className="relative">
                 <SheetTrigger
                     className={
-                        "h-10 w-10 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-6 [&_svg]:shrink-0"
+                        "inline-flex h-10 w-10 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-6 [&_svg]:shrink-0"
                     }
                 >
                     <ShoppingCart />
                     {totalQuantity > 0 && (
-                        <span className="absolute -top-2 -right-2 flex size-4 border border-accent rounded-full shadow-2xl">
-                            <span className="p-1 absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75 size-full"></span>
-                            <span className="relative inline-flex items-center justify-center rounded-full bg-card text-card-foreground text-xs font-medium size-full">
+                        <span className="absolute -right-2 -top-2 flex size-4 rounded-full border border-accent shadow-2xl">
+                            <span className="absolute inline-flex size-full h-full w-full animate-ping rounded-full bg-primary p-1 opacity-75"></span>
+                            <span className="relative inline-flex size-full items-center justify-center rounded-full bg-card text-xs font-medium text-card-foreground">
                                 {totalQuantity}
                             </span>
                         </span>
@@ -121,7 +121,7 @@ export default function ShoppingCartContent() {
                     articlesInShoppingCart.map((article: ShopItemInCart) => (
                         <div
                             className={
-                                "p-4 border-y flex justify-between items-start w-full"
+                                "flex w-full items-start justify-between border-y p-4"
                             }
                             key={article.id}
                         >
@@ -165,7 +165,7 @@ export default function ShoppingCartContent() {
                 )}
 
                 {articlesInShoppingCart.length > 0 && (
-                    <div className={"mt-4 flex justify-evenly items-center"}>
+                    <div className={"mt-4 flex items-center justify-evenly"}>
                         <form action={formAction}>
                             <LoadingButton
                                 loading={isPending}

@@ -41,15 +41,21 @@ describe("TicketConversationRepository", () => {
     it("should create a new ticket conversation", async () => {
         (db.insert as jest.Mock).mockReturnValue({
             values: jest.fn().mockReturnValue({
-                returning: jest.fn().mockResolvedValue([mockTicketConversation]),
+                returning: jest
+                    .fn()
+                    .mockResolvedValue([mockTicketConversation]),
             }),
         });
 
-        const result = await repository.createTicketConversation(mockTicketConversation);
+        const result = await repository.createTicketConversation(
+            mockTicketConversation,
+        );
 
         expect(result).toEqual(mockTicketConversation);
         expect(db.insert).toHaveBeenCalledWith(ticketConversation);
-        expect(db.insert(ticketConversation).values).toHaveBeenCalledWith(mockTicketConversation2);
+        expect(db.insert(ticketConversation).values).toHaveBeenCalledWith(
+            mockTicketConversation2,
+        );
     });
 
     it("should retrieve a ticket conversation by ID", async () => {
@@ -72,14 +78,18 @@ describe("TicketConversationRepository", () => {
             }),
         });
 
-        await expect(repository.getTicketConversationById(999)).rejects.toThrow("Shop item not found");
+        await expect(repository.getTicketConversationById(999)).rejects.toThrow(
+            "Shop item not found",
+        );
     });
 
     it("should retrieve all ticket conversations by Ticket ID", async () => {
         (db.select as jest.Mock).mockReturnValue({
             from: jest.fn().mockReturnValue({
                 where: jest.fn().mockReturnValue({
-                    orderBy: jest.fn().mockResolvedValue([mockTicketConversation]),
+                    orderBy: jest
+                        .fn()
+                        .mockResolvedValue([mockTicketConversation]),
                 }),
             }),
         });
@@ -91,7 +101,10 @@ describe("TicketConversationRepository", () => {
     });
 
     it("should update a ticket conversation", async () => {
-        const updatedMock = { ...mockTicketConversation, content: "Updated content" };
+        const updatedMock = {
+            ...mockTicketConversation,
+            content: "Updated content",
+        };
 
         (db.update as jest.Mock).mockReturnValue({
             set: jest.fn().mockReturnValue({
@@ -112,7 +125,9 @@ describe("TicketConversationRepository", () => {
             where: jest.fn().mockResolvedValue(1),
         });
 
-        await expect(repository.deleteTicketConversation(1)).resolves.not.toThrow();
+        await expect(
+            repository.deleteTicketConversation(1),
+        ).resolves.not.toThrow();
         expect(db.delete).toHaveBeenCalled();
     });
 
@@ -122,7 +137,7 @@ describe("TicketConversationRepository", () => {
         });
 
         await expect(repository.deleteTicketConversation(999)).rejects.toThrow(
-            "Ticket conversation not found for deletion"
+            "Ticket conversation not found for deletion",
         );
     });
 

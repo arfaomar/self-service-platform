@@ -4,7 +4,8 @@ export interface TicketScreenshot {
     url: string;
 }
 
-export interface UpdatedTicketScreenshot extends Partial<Omit<TicketScreenshot, "id">> {
+export interface UpdatedTicketScreenshot
+    extends Partial<Omit<TicketScreenshot, "id">> {
     id: number;
 }
 

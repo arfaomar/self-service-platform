@@ -1,5 +1,9 @@
 import { ITicketScreenshotRepository } from "@lib/data/interfaces";
-import { TicketScreenshot, UpdatedTicketScreenshot, CreatedTicketScreenshot } from "@lib/data/entities";
+import {
+    TicketScreenshot,
+    UpdatedTicketScreenshot,
+    CreatedTicketScreenshot,
+} from "@lib/data/entities";
 import { db, ticketScreenshot } from "../../../../db";
 import { eq } from "drizzle-orm";
 
@@ -46,12 +50,12 @@ export class TicketScreenshotRepository implements ITicketScreenshotRepository {
     }
 
     async deleteTicketScreenshot(id: number): Promise<void> {
-
-        const deletedCount = await db.delete(ticketScreenshot).where(eq(ticketScreenshot.id, id));
+        const deletedCount = await db
+            .delete(ticketScreenshot)
+            .where(eq(ticketScreenshot.id, id));
 
         if (!deletedCount) {
             throw new Error("Ticket screenshot not found for deletion");
         }
-
     }
 }

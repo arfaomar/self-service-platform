@@ -50,7 +50,7 @@ export default function ShopItemCard({ shopItem }: ShopItemCardProps) {
             onClick={handleClick}
         >
             <CardHeader
-                className={"rounded-t-lg bg-background w-full h-48 p-0"}
+                className={"h-48 w-full rounded-t-lg bg-background p-0"}
             >
                 {shopItem.url ? (
                     <Image
@@ -58,17 +58,17 @@ export default function ShopItemCard({ shopItem }: ShopItemCardProps) {
                         alt={shopItem.name}
                         height={256}
                         width={256}
-                        className={"rounded-t-lg w-full h-full object-cover"}
+                        className={"h-full w-full rounded-t-lg object-cover"}
                     />
                 ) : (
-                    <Skeleton className="rounded-b-none rounded-t-lg w-full h-full bg-background text-center content-center">
+                    <Skeleton className="h-full w-full content-center rounded-b-none rounded-t-lg bg-background text-center">
                         <div>No Image</div>
                     </Skeleton>
                 )}
             </CardHeader>
             <CardContent
                 className={
-                    "flex flex-row justify-between items-start p-3 border-t-2"
+                    "flex flex-row items-start justify-between border-t-2 p-3"
                 }
             >
                 <div>
@@ -79,7 +79,7 @@ export default function ShopItemCard({ shopItem }: ShopItemCardProps) {
                         {shopItem.description}
                     </CardDescription>
                 </div>
-                <Badge className={"p-1 h-fit"} variant={"secondary"}>
+                <Badge className={"h-fit p-1"} variant={"secondary"}>
                     Stock: {shopItem.stock}
                 </Badge>
             </CardContent>

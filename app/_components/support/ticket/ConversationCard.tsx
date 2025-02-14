@@ -21,15 +21,20 @@ export default async function ConversationCard({
     const userData = await fetchUserData(userId);
 
     return (
-        <Card className={"my-8 container mx-auto"}>
+        <Card className={"container mx-auto my-8"}>
             <CardHeader>
                 <CardTitle className={"flex flex-row items-center"}>
                     <Image
                         src={userData.image_url}
-                        alt={userData.first_name + " " + userData.last_name + " profile picture"}
+                        alt={
+                            userData.first_name +
+                            " " +
+                            userData.last_name +
+                            " profile picture"
+                        }
                         width={32}
                         height={32}
-                        className={"rounded-full mr-4"}
+                        className={"mr-4 rounded-full"}
                     />
                     {userData.first_name} {userData.last_name}
                 </CardTitle>

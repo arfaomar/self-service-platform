@@ -15,8 +15,8 @@ import {
 } from "@components/ui/Sidebar";
 
 export default function ManageCategoriesPageLayout({
-                                                    children,
-                                                }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
@@ -39,7 +39,9 @@ export default function ManageCategoriesPageLayout({
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbPage>Manage Categories</BreadcrumbPage>
+                                    <BreadcrumbPage>
+                                        Manage Categories
+                                    </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>

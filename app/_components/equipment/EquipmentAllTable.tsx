@@ -44,13 +44,13 @@ export default async function EquipmentAllTable({
                                         src={shopItem.url}
                                         alt={shopItem.name}
                                         className={
-                                            "rounded-lg w-16 h-16  bg-background text-center content-center"
+                                            "h-16 w-16 content-center rounded-lg bg-background text-center"
                                         }
                                         width={64}
                                         height={64}
                                     />
                                 ) : (
-                                    <Skeleton className="rounded-lg w-16 h-16  bg-background text-center content-center">
+                                    <Skeleton className="h-16 w-16 content-center rounded-lg bg-background text-center">
                                         <div>No Image</div>
                                     </Skeleton>
                                 )}

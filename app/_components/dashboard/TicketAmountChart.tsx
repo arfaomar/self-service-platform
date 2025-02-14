@@ -1,11 +1,6 @@
 "use client";
 
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@components/ui/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/Card";
 import {
     ChartConfig,
     ChartContainer,
@@ -30,12 +25,15 @@ export default function TicketAmountChart({
     } satisfies ChartConfig;
 
     return (
-        <Card className="rounded-xl bg-muted/50 flex flex-col">
+        <Card className="flex flex-col rounded-xl bg-muted/50">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Ticket Histogram</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
-                <ChartContainer config={chartConfig} className="max-h-96 mx-auto container">
+                <ChartContainer
+                    config={chartConfig}
+                    className="container mx-auto max-h-96"
+                >
                     <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis
@@ -56,7 +54,6 @@ export default function TicketAmountChart({
                     </BarChart>
                 </ChartContainer>
             </CardContent>
-
         </Card>
     );
 }

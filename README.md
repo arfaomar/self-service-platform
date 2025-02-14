@@ -17,16 +17,16 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ### **Database Setup**
+
 1. Create a `.env.local` file in the root directory and configure it using the `.env.example` as a reference.
 2. Start the PostgreSQL container:
-   ```bash
-   docker-compose --env-file ./.env.local up -d
-   ```
+    ```bash
+    docker-compose --env-file ./.env.local up -d
+    ```
 3. Apply the database schema:
-   ```bash
-   npx drizzle-kit push
-   ```
-
+    ```bash
+    npx drizzle-kit push
+    ```
 
 ## Learn More
 

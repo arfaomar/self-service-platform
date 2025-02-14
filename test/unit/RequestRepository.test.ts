@@ -1,8 +1,6 @@
-import { RequestRepository } from '@lib/data/repositories/RequestRepository';
-import {db, request} from "../../db";
-import {
-    RequestStatusEnum,
-} from "@lib/data/entities";
+import { RequestRepository } from "@lib/data/repositories/RequestRepository";
+import { db, request } from "../../db";
+import { RequestStatusEnum } from "@lib/data/entities";
 
 jest.mock("../../db", () => ({
     db: {
@@ -17,16 +15,16 @@ jest.mock("../../db", () => ({
         delete: jest.fn().mockReturnThis(),
     },
     request: {
-        id: 'id',
-        userId: 'userId',
-        status: 'status',
-        creationDate: 'creationDate',
-        organizationId: 'organizationId',
-        updateDate: 'updateDate',
+        id: "id",
+        userId: "userId",
+        status: "status",
+        creationDate: "creationDate",
+        organizationId: "organizationId",
+        updateDate: "updateDate",
     },
 }));
 
-describe('RequestRepository', () => {
+describe("RequestRepository", () => {
     let requestRepository: RequestRepository;
 
     beforeEach(() => {
@@ -34,10 +32,10 @@ describe('RequestRepository', () => {
         jest.clearAllMocks();
     });
 
-    describe('createRequest', () => {
-        it('should create a request with valid userId and orgId', async () => {
-            const userId = 'user_123456789012345678901234567';
-            const orgId = 'org_123456789012345678901234567';
+    describe("createRequest", () => {
+        it("should create a request with valid userId and orgId", async () => {
+            const userId = "user_123456789012345678901234567";
+            const orgId = "org_123456789012345678901234567";
 
             const mockRequest = {
                 id: 1,
@@ -63,35 +61,32 @@ describe('RequestRepository', () => {
             });
         });
 
-        it('should throw an error if userId is invalid', async () => {
-            const invalidUserId = 'invalid_user_id';
-            const orgId = 'org_123456789012345678901234567';
+        it("should throw an error if userId is invalid", async () => {
+            const invalidUserId = "invalid_user_id";
+            const orgId = "org_123456789012345678901234567";
 
-            await expect(requestRepository.createRequest(invalidUserId, orgId))
-                .rejects.toThrow("String must contain exactly 32 character(s)");
-
+            await expect(
+                requestRepository.createRequest(invalidUserId, orgId),
+            ).rejects.toThrow("String must contain exactly 32 character(s)");
         });
 
-        it('should throw an error if orgId is invalid', async () => {
-            const userId = 'user_123456789012345678901234567';
-            const invalidOrgId = 'invalid_org_id';
+        it("should throw an error if orgId is invalid", async () => {
+            const userId = "user_123456789012345678901234567";
+            const invalidOrgId = "invalid_org_id";
 
-            await expect(requestRepository.createRequest(userId, invalidOrgId))
-                .rejects.toThrow("String must contain exactly 31 character(s)"
-                );
+            await expect(
+                requestRepository.createRequest(userId, invalidOrgId),
+            ).rejects.toThrow("String must contain exactly 31 character(s)");
         });
-
-
-
     });
-    describe('getRequestById', () => {
-        it('should return a request if found', async () => {
+    describe("getRequestById", () => {
+        it("should return a request if found", async () => {
             const mockRequest = {
                 id: 1,
-                userId: 'user_12345678901234567890123456789012',
+                userId: "user_12345678901234567890123456789012",
                 status: RequestStatusEnum.Processing,
                 creationDate: new Date(),
-                organizationId: 'org_1234567890123456789012345678901',
+                organizationId: "org_1234567890123456789012345678901",
                 updateDate: null,
             };
 
@@ -111,22 +106,26 @@ describe('RequestRepository', () => {
             );
         });
 
-        it('should throw an error if request not found', async () => {
+        it("should throw an error if request not found", async () => {
             (db.select as jest.Mock).mockReturnValue({
                 from: jest.fn().mockReturnValue({
                     where: jest.fn().mockResolvedValue([]),
                 }),
             });
 
-            await expect(requestRepository.getRequestById(1)).rejects.toThrow('Request not found');
+            await expect(requestRepository.getRequestById(1)).rejects.toThrow(
+                "Request not found",
+            );
         });
 
-        it('should throw an error if id is invalid', async () => {
-            await expect(requestRepository.getRequestById(-1)).rejects.toThrow();
+        it("should throw an error if id is invalid", async () => {
+            await expect(
+                requestRepository.getRequestById(-1),
+            ).rejects.toThrow();
         });
     });
-    describe('getAllRequestsInOrganization', () => {
-        it('should return all requests in an organization', async () => {
+    describe("getAllRequestsInOrganization", () => {
+        it("should return all requests in an organization", async () => {
             const mockRequests = [
                 {
                     id: 1,
@@ -165,15 +164,16 @@ describe('RequestRepository', () => {
             );
         });
 
-        it('should throw an error if orgId is invalid', async () => {
+        it("should throw an error if orgId is invalid", async () => {
             await expect(
-                requestRepository.getAllRequestsInOrganization('invalid_org_id'),
+                requestRepository.getAllRequestsInOrganization(
+                    "invalid_org_id",
+                ),
             ).rejects.toThrow("String must contain exactly 31 character(s)");
-        })
-
+        });
     });
-    describe('updateRequest', () => {
-        it('should update a request', async () => {
+    describe("updateRequest", () => {
+        it("should update a request", async () => {
             const requestData = {
                 id: 1,
                 status: RequestStatusEnum.Accepted,
@@ -181,17 +181,19 @@ describe('RequestRepository', () => {
 
             const mockUpdatedRequest = {
                 id: 1,
-                userId: 'user_12345678901234567890123456789012',
+                userId: "user_12345678901234567890123456789012",
                 status: RequestStatusEnum.Accepted,
                 creationDate: new Date(),
-                organizationId: 'org_1234567890123456789012345678901',
+                organizationId: "org_1234567890123456789012345678901",
                 updateDate: new Date(),
             };
 
             (db.update as jest.Mock).mockReturnValue({
                 set: jest.fn().mockReturnValue({
                     where: jest.fn().mockReturnValue({
-                        returning: jest.fn().mockResolvedValue([mockUpdatedRequest]),
+                        returning: jest
+                            .fn()
+                            .mockResolvedValue([mockUpdatedRequest]),
                     }),
                 }),
             });
@@ -200,23 +202,27 @@ describe('RequestRepository', () => {
             expect(result).toEqual(mockUpdatedRequest);
             expect(db.update).toHaveBeenCalledWith(request);
             expect(db.update(request).set).toHaveBeenCalledWith(requestData);
-            expect(db.update(request).set(requestData).where).toHaveBeenCalledWith(
+            expect(
+                db.update(request).set(requestData).where,
+            ).toHaveBeenCalledWith(
                 expect.objectContaining({
                     queryChunks: expect.any(Array),
                 }),
             );
         });
 
-        it('should throw an error if validation fails', async () => {
+        it("should throw an error if validation fails", async () => {
             const invalidRequestData = {
                 id: 1,
                 status: "invalid_status",
             };
 
-            await expect(requestRepository.updateRequest(invalidRequestData as never)).rejects.toThrow();
+            await expect(
+                requestRepository.updateRequest(invalidRequestData as never),
+            ).rejects.toThrow();
         });
 
-        it('should throw an error if request not found for update', async () => {
+        it("should throw an error if request not found for update", async () => {
             const requestData = {
                 id: 1,
                 status: RequestStatusEnum.Accepted,
@@ -230,13 +236,13 @@ describe('RequestRepository', () => {
                 }),
             });
 
-            await expect(requestRepository.updateRequest(requestData)).rejects.toThrow(
-                'Request not found for update',
-            );
+            await expect(
+                requestRepository.updateRequest(requestData),
+            ).rejects.toThrow("Request not found for update");
         });
     });
-    describe('deleteRequest', () => {
-        it('should delete a request', async () => {
+    describe("deleteRequest", () => {
+        it("should delete a request", async () => {
             (db.delete as jest.Mock).mockReturnValue({
                 where: jest.fn().mockResolvedValue({}),
             });
@@ -250,12 +256,16 @@ describe('RequestRepository', () => {
             );
         });
 
-        it('should throw an error if deletion fails', async () => {
+        it("should throw an error if deletion fails", async () => {
             (db.delete as jest.Mock).mockReturnValue({
-                where: jest.fn().mockRejectedValue(new Error('Failed to delete request')),
+                where: jest
+                    .fn()
+                    .mockRejectedValue(new Error("Failed to delete request")),
             });
 
-            await expect(requestRepository.deleteRequest(1)).rejects.toThrow('Failed to delete request');
+            await expect(requestRepository.deleteRequest(1)).rejects.toThrow(
+                "Failed to delete request",
+            );
         });
     });
 });

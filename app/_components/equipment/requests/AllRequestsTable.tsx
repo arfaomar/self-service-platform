@@ -65,13 +65,13 @@ export default function AllRequestsTable({
                                         src={requestProp.userImageUrl}
                                         alt={requestProp.userFullName}
                                         className={
-                                            "rounded-lg w-12 h-12 bg-background text-center content-center"
+                                            "h-12 w-12 content-center rounded-lg bg-background text-center"
                                         }
                                         width={64}
                                         height={64}
                                     />
                                 ) : (
-                                    <Skeleton className="rounded-lg w-12 h-12  bg-background text-center content-center">
+                                    <Skeleton className="h-12 w-12 content-center rounded-lg bg-background text-center">
                                         <div>No Image</div>
                                     </Skeleton>
                                 )}

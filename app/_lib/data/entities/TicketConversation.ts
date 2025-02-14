@@ -17,4 +17,3 @@ export interface UpdatedTicketConversation
     extends Partial<Omit<TicketConversation, "id">> {
     id: number;
 }
-

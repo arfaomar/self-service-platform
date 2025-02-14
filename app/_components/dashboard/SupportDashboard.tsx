@@ -37,10 +37,9 @@ export default async function SupportDashboard() {
     //<div className="grid auto-rows-min gap-4 md:grid-cols-3 max-h-80">
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-
             <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                 <TicketStatusChart chartData={ticketStatusChartData} />
-                <div className="rounded-xl bg-muted/50 flex flex-col" />
+                <div className="flex flex-col rounded-xl bg-muted/50" />
                 <MyRecentEquipmentRequestStatus
                     requestData={requestsWithItems}
                 />

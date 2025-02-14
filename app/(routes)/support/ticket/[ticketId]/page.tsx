@@ -59,14 +59,14 @@ export default async function TicketPage({
 
     return (
         <>
-            <Card className={"mx-auto container mb-16"}>
+            <Card className={"container mx-auto mb-16"}>
                 <CardHeader>
                     <div className={"flex flex-row justify-between"}>
                         <div className={"space-y-4"}>
                             <CardTitle>{ticket.title}</CardTitle>
                             <div
                                 className={
-                                    "text-sm flex flex-row justify-start items-center space-x-12"
+                                    "flex flex-row items-center justify-start space-x-12 text-sm"
                                 }
                             >
                                 <CardDescription>
@@ -83,13 +83,13 @@ export default async function TicketPage({
                                 </CardDescription>
                                 <CardDescription>
                                     <span className={"flex items-center"}>
-                                        <Clock4 className={"h-4 w-4 mr-2"} />
+                                        <Clock4 className={"mr-2 h-4 w-4"} />
                                         <p>{formatDate(ticket.creationDate)}</p>
                                     </span>
                                 </CardDescription>
                                 <CardDescription>
                                     <span className={"flex items-center"}>
-                                        <RotateCw className={"h-4 w-4 mr-2"} />
+                                        <RotateCw className={"mr-2 h-4 w-4"} />
                                         <p>
                                             {ticket.updateDate
                                                 ? formatDate(ticket.updateDate)
@@ -111,12 +111,12 @@ export default async function TicketPage({
                     <CardDescription>Description:</CardDescription>
                     <div
                         className={
-                            "rounded-lg border border-muted-foreground bg-muted p-4 min-h-32"
+                            "min-h-32 rounded-lg border border-muted-foreground bg-muted p-4"
                         }
                     >
                         <p
                             className={
-                                "whitespace-nowrap overflow-hidden text-ellipsis"
+                                "overflow-hidden text-ellipsis whitespace-nowrap"
                             }
                         >
                             {ticket.description}
@@ -125,7 +125,7 @@ export default async function TicketPage({
                     <CardDescription>Attachments:</CardDescription>
                     <div
                         className={
-                            "rounded-lg border border-muted-foreground bg-muted p-4 min-h-32"
+                            "min-h-32 rounded-lg border border-muted-foreground bg-muted p-4"
                         }
                     >
                         {screenshots.map((screenshot) => (
@@ -155,7 +155,10 @@ export default async function TicketPage({
             {conversations.map((conversation) => (
                 <ConversationCard key={conversation.id} {...conversation} />
             ))}
-            <ConversationInput ticketId={ticketId} ticketStatus={ticket.status} />
+            <ConversationInput
+                ticketId={ticketId}
+                ticketStatus={ticket.status}
+            />
         </>
     );
 }

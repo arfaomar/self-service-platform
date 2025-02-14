@@ -9,7 +9,9 @@ export interface ITicketConversationRepository {
         newTicketConversation: CreatedTicketConversation,
     ): Promise<TicketConversation>;
     getTicketConversationById(id: number): Promise<TicketConversation>;
-    getTicketConversationsByTicketId(ticketId: number): Promise<TicketConversation[]>;
+    getTicketConversationsByTicketId(
+        ticketId: number,
+    ): Promise<TicketConversation[]>;
     updateTicketConversation(
         ticketConversation: UpdatedTicketConversation,
     ): Promise<TicketConversation>;

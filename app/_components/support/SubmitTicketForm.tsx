@@ -73,12 +73,12 @@ export default function SubmitTicketForm() {
 
     return (
         <Form {...form}>
-            <h1 className="text-3xl font-semibold text-center">
+            <h1 className="text-center text-3xl font-semibold">
                 Submit a Ticket
             </h1>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
+                className="mx-auto my-10 max-w-4xl grid-cols-1 items-center justify-center space-y-8"
             >
                 <FormField
                     control={form.control}

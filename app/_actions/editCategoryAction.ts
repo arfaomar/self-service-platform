@@ -10,7 +10,7 @@ const editCategoryFormSchema = z.object({
     categoryName: z.string().nonempty("Category name is required"),
 });
 
-export default async function editCategoryAction (
+export default async function editCategoryAction(
     prevState: {
         message: string;
         success?: boolean;
@@ -30,7 +30,7 @@ export default async function editCategoryAction (
 
         const parsedData = editCategoryFormSchema.safeParse({
             categoryId: parseInt(formData.get("id") as string),
-            categoryName: formData.get("name")
+            categoryName: formData.get("name"),
         });
 
         if (!parsedData.success) {
@@ -51,7 +51,6 @@ export default async function editCategoryAction (
 
         await shopItemCategoryRepository.updateShopItemCategory(newCategory);
         revalidatePath(`/admin/categories`);
-
 
         return {
             message: "Category created successfully",

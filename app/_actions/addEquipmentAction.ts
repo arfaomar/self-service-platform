@@ -47,8 +47,12 @@ export default async function addEquipmentAction(
             name: formData.get("name"),
             description: formData.get("description"),
             image: formData.get("image") as File,
-            categoryId: formData.get("categoryId") ? parseInt(formData.get("categoryId") as string) : undefined,
-            stock: formData.get("stock") ? parseInt(formData.get("stock") as string) : undefined,
+            categoryId: formData.get("categoryId")
+                ? parseInt(formData.get("categoryId") as string)
+                : undefined,
+            stock: formData.get("stock")
+                ? parseInt(formData.get("stock") as string)
+                : undefined,
         });
 
         if (!parsedData.success) {
@@ -63,18 +67,19 @@ export default async function addEquipmentAction(
 
         const imageUrl = await uploadImage(parsedData.data.image);
 
-        const newEquipment : CreatedShopItem = {
+        const newEquipment: CreatedShopItem = {
             name: parsedData.data.name,
             description: parsedData.data.description,
             url: imageUrl,
-            categoryId: parsedData.data.categoryId? parsedData.data.categoryId : null,
+            categoryId: parsedData.data.categoryId
+                ? parsedData.data.categoryId
+                : null,
             stock: parsedData.data.stock,
             organizationId: orgId,
-        }
+        };
 
         await shopItemRepository.createShopItem(newEquipment);
         revalidatePath(`/admin/equipment`);
-
 
         return {
             message: "Equipment created successfully",
