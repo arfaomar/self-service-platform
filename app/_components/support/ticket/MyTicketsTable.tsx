@@ -1,6 +1,13 @@
 "use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/ui/Table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@components/ui/Table";
 import { Ticket } from "@lib/data/entities";
 import { Badge } from "@components/ui/Badge";
 import { formatDate, getBadgeVariant } from "@lib/utils";
@@ -28,7 +35,7 @@ export default function MyTicketsTable({ tickets }: MyTicketsTableProps) {
                 {tickets.length === 0 ? (
                     <TableRow>
                         <TableCell
-                            className="h-24 text-center content-center"
+                            className="h-24 content-center text-center"
                             colSpan={5}
                         >
                             No tickets found. Have you submitted one yet?

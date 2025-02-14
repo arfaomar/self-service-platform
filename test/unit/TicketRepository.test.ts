@@ -173,22 +173,22 @@ describe("TicketRepository", () => {
                 }),
             );
         });
-        it('should throw an error if the user ID is invalid', async () => {
-            const invalidUserId = 'invalid_user_id'; // Invalid user ID
-            const validOrgId = 'org_123456789012345678901234567'; // Valid organization ID
+        it("should throw an error if the user ID is invalid", async () => {
+            const invalidUserId = "invalid_user_id"; // Invalid user ID
+            const validOrgId = "org_123456789012345678901234567"; // Valid organization ID
 
             await expect(
                 ticketRepository.getTicketsByUserId(invalidUserId, validOrgId),
-            ).rejects.toThrow('String must contain exactly 32 character(s)');
+            ).rejects.toThrow("String must contain exactly 32 character(s)");
         });
 
-        it('should throw an error if the organization ID is invalid', async () => {
-            const validUserId = 'user_123456789012345678901234567'; // Valid user ID
-            const invalidOrgId = 'invalid_org_id'; // Invalid organization ID
+        it("should throw an error if the organization ID is invalid", async () => {
+            const validUserId = "user_123456789012345678901234567"; // Valid user ID
+            const invalidOrgId = "invalid_org_id"; // Invalid organization ID
 
             await expect(
                 ticketRepository.getTicketsByUserId(validUserId, invalidOrgId),
-            ).rejects.toThrow('String must contain exactly 31 character(s)');
+            ).rejects.toThrow("String must contain exactly 31 character(s)");
         });
     });
 
@@ -237,12 +237,12 @@ describe("TicketRepository", () => {
                 }),
             );
         });
-        it('should throw an error if the organization ID is invalid', async () => {
-            const invalidOrgId = 'invalid_org_id'; // Invalid organization ID
+        it("should throw an error if the organization ID is invalid", async () => {
+            const invalidOrgId = "invalid_org_id"; // Invalid organization ID
 
             await expect(
                 ticketRepository.getTicketsByOrganizationId(invalidOrgId),
-            ).rejects.toThrow('String must contain exactly 31 character(s)');
+            ).rejects.toThrow("String must contain exactly 31 character(s)");
         });
     });
 
@@ -277,7 +277,9 @@ describe("TicketRepository", () => {
             expect(result).toEqual(mockUpdatedTicket);
             expect(db.update).toHaveBeenCalledWith(ticket);
             expect(db.update(ticket).set).toHaveBeenCalledWith(ticketData);
-            expect(db.update(ticket).set(ticketData).where).toHaveBeenCalledWith(
+            expect(
+                db.update(ticket).set(ticketData).where,
+            ).toHaveBeenCalledWith(
                 expect.objectContaining({
                     queryChunks: expect.any(Array),
                 }),

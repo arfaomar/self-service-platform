@@ -1,4 +1,9 @@
-import { ShopItem, CreatedShopItem, UpdatedShopItem, ShopItemCategory } from "@lib/data/entities";
+import {
+    ShopItem,
+    CreatedShopItem,
+    UpdatedShopItem,
+    ShopItemCategory,
+} from "@lib/data/entities";
 
 export interface IShopItemRepository {
     createShopItem(shopItem: CreatedShopItem): Promise<ShopItem>;

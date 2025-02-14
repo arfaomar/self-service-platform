@@ -21,7 +21,8 @@ const createEquipmentFormSchema = z.object({
         )
         .refine((file) => file.size < 8 * 1024 * 1024, {
             message: "File size must be less than 5MB",
-        }).optional(),
+        })
+        .optional(),
     categoryId: z.number().optional(),
     stock: z.number().min(1, "Stock is required").optional(),
 });
@@ -49,8 +50,12 @@ export default async function editEquipmentAction(
             name: formData.get("name"),
             description: formData.get("description"),
             image: formData.get("image") as File,
-            categoryId: formData.get("categoryId") ? parseInt(formData.get("categoryId") as string) : undefined,
-            stock: formData.get("stock") ? parseInt(formData.get("stock") as string) : undefined,
+            categoryId: formData.get("categoryId")
+                ? parseInt(formData.get("categoryId") as string)
+                : undefined,
+            stock: formData.get("stock")
+                ? parseInt(formData.get("stock") as string)
+                : undefined,
         });
 
         if (!parsedData.success) {
@@ -68,19 +73,20 @@ export default async function editEquipmentAction(
             imageUrl = await uploadImage(parsedData.data.image);
         }
 
-        const newEquipment : UpdatedShopItem = {
+        const newEquipment: UpdatedShopItem = {
             id: parsedData.data.id,
             name: parsedData.data.name,
             description: parsedData.data.description,
             url: imageUrl.length > 0 ? imageUrl : null,
-            categoryId: parsedData.data.categoryId? parsedData.data.categoryId : null,
+            categoryId: parsedData.data.categoryId
+                ? parsedData.data.categoryId
+                : null,
             stock: parsedData.data.stock,
             organizationId: orgId,
-        }
+        };
 
         await shopItemRepository.updateShopItem(newEquipment);
         revalidatePath(`/admin/equipment`);
-
 
         return {
             message: "Equipment created successfully",

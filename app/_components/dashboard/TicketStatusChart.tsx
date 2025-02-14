@@ -50,12 +50,12 @@ export default function TicketStatusChart({ chartData }: TicketChartProps) {
     }, [chartData]);
 
     return (
-        <Card className="rounded-xl bg-muted/50 flex flex-col">
-            <CardHeader className="items-center pb-0 px-0">
+        <Card className="flex flex-col rounded-xl bg-muted/50">
+            <CardHeader className="items-center px-0 pb-0">
                 <CardTitle>Support Tickets</CardTitle>
                 <CardDescription>Overview of ticket statuses</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 pb-0 aspect-video">
+            <CardContent className="aspect-video flex-1 pb-0">
                 <ChartContainer
                     config={chartConfig}
                     className="mx-auto aspect-square max-h-[250px]"
@@ -73,7 +73,11 @@ export default function TicketStatusChart({ chartData }: TicketChartProps) {
                         >
                             <Label
                                 content={({ viewBox }) => {
-                                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                    if (
+                                        viewBox &&
+                                        "cx" in viewBox &&
+                                        "cy" in viewBox
+                                    ) {
                                         return (
                                             <text
                                                 x={viewBox.cx}
@@ -96,7 +100,7 @@ export default function TicketStatusChart({ chartData }: TicketChartProps) {
                                                     Tickets
                                                 </tspan>
                                             </text>
-                                        )
+                                        );
                                     }
                                 }}
                             />

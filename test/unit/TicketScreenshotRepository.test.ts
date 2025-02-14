@@ -36,11 +36,14 @@ describe("TicketScreenshotRepository", () => {
             }),
         });
 
-        const result = await repository.createTicketScreenshot(mockTicketScreenshot);
+        const result =
+            await repository.createTicketScreenshot(mockTicketScreenshot);
 
         expect(result).toEqual(mockTicketScreenshot);
         expect(db.insert).toHaveBeenCalledWith(ticketScreenshot);
-        expect(db.insert(ticketScreenshot).values).toHaveBeenCalledWith(mockTicketScreenshot);
+        expect(db.insert(ticketScreenshot).values).toHaveBeenCalledWith(
+            mockTicketScreenshot,
+        );
     });
 
     it("should retrieve a ticket screenshot by ID", async () => {
@@ -63,7 +66,9 @@ describe("TicketScreenshotRepository", () => {
             }),
         });
 
-        await expect(repository.findTicketScreenshotById(999)).rejects.toThrow("Ticket screenshot not found");
+        await expect(repository.findTicketScreenshotById(999)).rejects.toThrow(
+            "Ticket screenshot not found",
+        );
     });
 
     it("should retrieve all ticket screenshots by Ticket ID", async () => {
@@ -80,7 +85,10 @@ describe("TicketScreenshotRepository", () => {
     });
 
     it("should update a ticket screenshot", async () => {
-        const updatedMock = { ...mockTicketScreenshot, url: "https://example.com/new_screenshot.png" };
+        const updatedMock = {
+            ...mockTicketScreenshot,
+            url: "https://example.com/new_screenshot.png",
+        };
 
         (db.update as jest.Mock).mockReturnValue({
             set: jest.fn().mockReturnValue({
@@ -88,7 +96,9 @@ describe("TicketScreenshotRepository", () => {
             }),
         });
 
-        await expect(repository.updateTicketScreenshot(updatedMock)).resolves.not.toThrow();
+        await expect(
+            repository.updateTicketScreenshot(updatedMock),
+        ).resolves.not.toThrow();
         expect(db.update).toHaveBeenCalled();
     });
 
@@ -97,7 +107,9 @@ describe("TicketScreenshotRepository", () => {
             where: jest.fn().mockResolvedValue(1),
         });
 
-        await expect(repository.deleteTicketScreenshot(1)).resolves.not.toThrow();
+        await expect(
+            repository.deleteTicketScreenshot(1),
+        ).resolves.not.toThrow();
         expect(db.delete).toHaveBeenCalled();
     });
 
@@ -106,7 +118,8 @@ describe("TicketScreenshotRepository", () => {
             where: jest.fn().mockResolvedValue(0),
         });
 
-        await expect(repository.deleteTicketScreenshot(999)).rejects.toThrow("Ticket screenshot not found for deletion");
+        await expect(repository.deleteTicketScreenshot(999)).rejects.toThrow(
+            "Ticket screenshot not found for deletion",
+        );
     });
 });
-

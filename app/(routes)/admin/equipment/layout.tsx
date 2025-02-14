@@ -15,8 +15,8 @@ import {
 } from "@components/ui/Sidebar";
 
 export default function ManageEquipmentPageLayout({
-                                                       children,
-                                                   }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
@@ -39,7 +39,9 @@ export default function ManageEquipmentPageLayout({
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbPage>Manage Equipment</BreadcrumbPage>
+                                    <BreadcrumbPage>
+                                        Manage Equipment
+                                    </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>

@@ -15,8 +15,8 @@ import {
 } from "@components/ui/Sidebar";
 
 export default function MyRequestsPageLayout({
-                                                    children,
-                                                }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (

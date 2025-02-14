@@ -1,5 +1,10 @@
 import { IShopItemRepository } from "@lib/data/interfaces";
-import { CreatedShopItem, ShopItem, ShopItemCategory, UpdatedShopItem } from "@lib/data/entities";
+import {
+    CreatedShopItem,
+    ShopItem,
+    ShopItemCategory,
+    UpdatedShopItem,
+} from "@lib/data/entities";
 import {
     CreatedShopItemSchema,
     UpdatedShopItemSchema,
@@ -76,7 +81,9 @@ export class ShopItemRepository implements IShopItemRepository {
         return foundShopItems;
     }
 
-    async getShopItemCategoryByShopItemId(id: number): Promise<ShopItemCategory> {
+    async getShopItemCategoryByShopItemId(
+        id: number,
+    ): Promise<ShopItemCategory> {
         const foundShopItem = await this.getShopItemById(id);
 
         if (foundShopItem.categoryId == null) {

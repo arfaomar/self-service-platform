@@ -9,7 +9,7 @@ const createCategoryFormSchema = z.object({
     categoryName: z.string().nonempty("Category name is required"),
 });
 
-export default async function addCategoryAction (
+export default async function addCategoryAction(
     prevState: {
         message: string;
         success?: boolean;
@@ -28,7 +28,7 @@ export default async function addCategoryAction (
         }
 
         const parsedData = createCategoryFormSchema.safeParse({
-            categoryName: formData.get("name")
+            categoryName: formData.get("name"),
         });
 
         if (!parsedData.success) {
@@ -62,4 +62,3 @@ export default async function addCategoryAction (
         };
     }
 }
-

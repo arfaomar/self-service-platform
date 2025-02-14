@@ -15,8 +15,8 @@ import {
 } from "@components/ui/Sidebar";
 
 export default function AllTicketsPageLayout({
-                                                children,
-                                            }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (

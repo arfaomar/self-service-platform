@@ -9,12 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/Tabs";
 import { Input } from "@components/ui/Input";
 import ShopItemCard from "@components/equipment/shop/ShopItemCard";
 import EquipmentShopContextProvider from "@contexts/EquipmentShopContext";
-import {
-    Sheet,
-    SheetTrigger,
-} from "@components/ui/Sheet";
-import { ShoppingCart } from "lucide-react";
-import ShoppingCardContent from "@components/equipment/shop/ShoppingCardContent";
+
+import ShoppingCartContent from "@components/equipment/shop/ShoppingCartContent";
 
 export default async function EquipmentShopPage() {
     const { userId, orgId } = await auth();
@@ -34,16 +30,16 @@ export default async function EquipmentShopPage() {
 
     return (
         <section>
-            <h1 className={"text-3xl font-semibold text-center"}>
+            <h1 className={"text-center text-3xl font-semibold"}>
                 Equipment Shop
             </h1>
             <EquipmentShopContextProvider>
                 <Tabs
                     defaultValue={defaultCategory}
-                    className="mx-auto my-10 container"
+                    className="container mx-auto my-10"
                 >
                     <div className={"flex justify-between"}>
-                        <TabsList className={"bg-card mb-4"}>
+                        <TabsList className={"mb-4 bg-card"}>
                             {shopItemCategories.length > 0 ? (
                                 shopItemCategories.map((shopItemCategory) => (
                                     <TabsTrigger
@@ -66,18 +62,9 @@ export default async function EquipmentShopPage() {
                             <Input
                                 placeholder="Search for items..."
                                 type="text"
-                                className={"w-96 mr-4"}
+                                className={"mr-4 w-96"}
                             />
-                            <Sheet>
-                                <SheetTrigger
-                                    className={
-                                        "h-10 w-10 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-6 [&_svg]:shrink-0"
-                                    }
-                                >
-                                    <ShoppingCart />
-                                </SheetTrigger>
-                                <ShoppingCardContent />
-                            </Sheet>
+                            <ShoppingCartContent />
                         </div>
                     </div>
                     {shopItemCategories.length > 0 ? (
@@ -103,7 +90,7 @@ export default async function EquipmentShopPage() {
                                     key={shopItemCategory.id}
                                     value={shopItemCategory.name}
                                     className={
-                                        "w-full h-96 text-center content-center"
+                                        "h-96 w-full content-center text-center"
                                     }
                                 >
                                     <span
@@ -131,7 +118,7 @@ export default async function EquipmentShopPage() {
                     ) : (
                         <TabsContent
                             value={"default"}
-                            className={"w-full h-96 text-center content-center"}
+                            className={"h-96 w-full content-center text-center"}
                         >
                             <span className={"text-xl text-muted-foreground"}>
                                 No Items Found

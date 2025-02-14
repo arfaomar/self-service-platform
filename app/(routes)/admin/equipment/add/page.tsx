@@ -8,10 +8,10 @@ export default async function AddEquipmentPage() {
         return null;
     }
 
-    const categories = await shopItemCategoryRepository.getAllShopItemCategoriesInOrganization(orgId);
+    const categories =
+        await shopItemCategoryRepository.getAllShopItemCategoriesInOrganization(
+            orgId,
+        );
 
-
-    return (
-        <AddEquipmentForm categories={categories}  />
-    );
+    return <AddEquipmentForm categories={categories} />;
 }

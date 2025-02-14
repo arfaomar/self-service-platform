@@ -24,7 +24,9 @@ export const ItemInRequestListSchema = z.object({
         .startsWith("org_", {
             message: "Organization ID must start with 'org_'",
         }),
-    status: z.nativeEnum(ItemInRequestStatusEnum, { message: "Invalid status" }),
+    status: z.nativeEnum(ItemInRequestStatusEnum, {
+        message: "Invalid status",
+    }),
 });
 
 export const CreatedItemInRequestListSchema = ItemInRequestListSchema.omit({

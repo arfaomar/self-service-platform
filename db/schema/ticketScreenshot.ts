@@ -10,5 +10,5 @@ export const ticketScreenshot = pgTable("ticket_screenshot", {
             onUpdate: "cascade",
             onDelete: "cascade",
         }),
-    url: varchar("url", { length: 255}).notNull(),
+    url: varchar("url", { length: 255 }).notNull(),
 });

@@ -1,4 +1,8 @@
-import { TicketScreenshot, UpdatedTicketScreenshot, CreatedTicketScreenshot } from "@lib/data/entities";
+import {
+    TicketScreenshot,
+    UpdatedTicketScreenshot,
+    CreatedTicketScreenshot,
+} from "@lib/data/entities";
 
 export interface ITicketScreenshotRepository {
     createTicketScreenshot(

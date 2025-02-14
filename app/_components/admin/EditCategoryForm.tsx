@@ -77,7 +77,7 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8 grid-cols-1 items-center justify-center my-10 max-w-4xl mx-auto"
+                className="mx-auto my-10 max-w-4xl grid-cols-1 items-center justify-center space-y-8"
             >
                 <FormField
                     control={form.control}
@@ -101,10 +101,7 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
                         <Save className={"mr-2"} />
                         Save
                     </LoadingButton>
-                    <Button
-                        variant={"destructive"}
-                        className={"w-full"}
-                    >
+                    <Button variant={"destructive"} className={"w-full"}>
                         <Trash2 />
                         Delete
                     </Button>

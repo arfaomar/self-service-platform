@@ -8,8 +8,19 @@ import {
     CardTitle,
 } from "@components/ui/Card";
 
-import { ItemInRequestList, ItemInRequestStatusEnum, Request } from "@lib/data/entities";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/ui/Table";
+import {
+    ItemInRequestList,
+    ItemInRequestStatusEnum,
+    Request,
+} from "@lib/data/entities";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@components/ui/Table";
 import { Badge } from "@components/ui/Badge";
 import { getBadgeVariant } from "@lib/utils";
 import { useRouter } from "next/navigation";
@@ -26,12 +37,12 @@ export default function MyRecentEquipmentRequestStatus({
     const router = useRouter();
 
     return (
-        <Card className=" rounded-xl bg-muted/50 flex flex-col">
+        <Card className="flex flex-col rounded-xl bg-muted/50">
             <CardHeader className="items-center pb-0">
                 <CardTitle>My Equipment Requests</CardTitle>
                 <CardDescription>description</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 container">
+            <CardContent className="container flex-1">
                 {requestData.length > 0 ? (
                     <Table>
                         <TableHeader>
@@ -61,7 +72,11 @@ export default function MyRecentEquipmentRequestStatus({
                             {requestData.map((request, index) => (
                                 <TableRow
                                     key={index}
-                                    onClick={() => router.push(`/equipment/request/${request.request.id}`)}
+                                    onClick={() =>
+                                        router.push(
+                                            `/equipment/request/${request.request.id}`,
+                                        )
+                                    }
                                     className="cursor-pointer"
                                 >
                                     <TableCell>{request.request.id}</TableCell>
@@ -82,7 +97,11 @@ export default function MyRecentEquipmentRequestStatus({
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        <Badge variant={getBadgeVariant(request.request.status)}>
+                                        <Badge
+                                            variant={getBadgeVariant(
+                                                request.request.status,
+                                            )}
+                                        >
                                             {request.request.status}
                                         </Badge>
                                     </TableCell>
@@ -90,50 +109,46 @@ export default function MyRecentEquipmentRequestStatus({
                                         {request.items.length}
                                     </TableCell>
                                     <TableCell>
-                                        {
+                                        {request.items.filter(
+                                            (item) =>
+                                                item.status ===
+                                                ItemInRequestStatusEnum.Accepted,
+                                        ).length > 0 ? (
                                             request.items.filter(
                                                 (item) =>
                                                     item.status ===
-                                                    ItemInRequestStatusEnum.Accepted
-                                            ).length > 0 ? (
-                                                request.items.filter(
-                                                    (item) =>
-                                                        item.status ===
-                                                        ItemInRequestStatusEnum.Accepted
-                                                ).length
-                                            ) : (
-                                                <span
-                                                    className={
-                                                        "text-muted-foreground"
-                                                    }
-                                                >
-                                                    0
-                                                </span>
-                                            )
-                                        }
+                                                    ItemInRequestStatusEnum.Accepted,
+                                            ).length
+                                        ) : (
+                                            <span
+                                                className={
+                                                    "text-muted-foreground"
+                                                }
+                                            >
+                                                0
+                                            </span>
+                                        )}
                                     </TableCell>
                                     <TableCell>
-                                        {
+                                        {request.items.filter(
+                                            (item) =>
+                                                item.status ===
+                                                ItemInRequestStatusEnum.Declined,
+                                        ).length > 0 ? (
                                             request.items.filter(
                                                 (item) =>
                                                     item.status ===
-                                                    ItemInRequestStatusEnum.Declined
-                                            ).length > 0 ? (
-                                                request.items.filter(
-                                                    (item) =>
-                                                        item.status ===
-                                                        ItemInRequestStatusEnum.Declined
-                                                ).length
-                                            ) : (
-                                                <span
-                                                    className={
-                                                        "text-muted-foreground"
-                                                    }
-                                                >
-                                                    0
-                                                </span>
-                                            )
-                                        }
+                                                    ItemInRequestStatusEnum.Declined,
+                                            ).length
+                                        ) : (
+                                            <span
+                                                className={
+                                                    "text-muted-foreground"
+                                                }
+                                            >
+                                                0
+                                            </span>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -141,7 +156,7 @@ export default function MyRecentEquipmentRequestStatus({
                     </Table>
                 ) : (
                     <div className={"text-center"}>
-                        <h1 className={"text-muted-foreground m-16"}>
+                        <h1 className={"m-16 text-muted-foreground"}>
                             No new requests found
                         </h1>
                     </div>

@@ -1,4 +1,8 @@
-import { Inventory, CreatedInventory, UpdatedInventory } from "@lib/data/entities";
+import {
+    Inventory,
+    CreatedInventory,
+    UpdatedInventory,
+} from "@lib/data/entities";
 
 export interface IInventoryRepository {
     createInventory(inventory: CreatedInventory): Promise<Inventory>;

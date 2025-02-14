@@ -21,7 +21,9 @@ export const itemInRequestList = pgTable(
             }),
         quantity: integer("quantity").notNull(),
         organizationId: varchar("organization_id", { length: 31 }).notNull(),
-        status: itemInRequestListStatus("status").default("Processing").notNull(),
+        status: itemInRequestListStatus("status")
+            .default("Processing")
+            .notNull(),
     },
     (table) => ({
         idxRequestId: index("idx_item_request").on(table.requestId),

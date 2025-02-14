@@ -1,8 +1,10 @@
 import {
-    Table, TableBody, TableCell,
+    Table,
+    TableBody,
+    TableCell,
     TableHead,
     TableHeader,
-    TableRow
+    TableRow,
 } from "@components/ui/Table";
 import Image from "next/image";
 import { Skeleton } from "@components/ui/Skeleton";
@@ -37,13 +39,14 @@ export default function MyEquipmentTable({
                                 <Image
                                     src={equipmentProp.imageUrl}
                                     alt={equipmentProp.name}
-                                    className={"rounded-lg w-16 h-16  bg-background text-center content-center"}
+                                    className={
+                                        "h-16 w-16 content-center rounded-lg bg-background text-center"
+                                    }
                                     width={64}
                                     height={64}
                                 />
                             ) : (
-                                <Skeleton
-                                    className="rounded-lg w-16 h-16  bg-background text-center content-center">
+                                <Skeleton className="h-16 w-16 content-center rounded-lg bg-background text-center">
                                     <div>No Image</div>
                                 </Skeleton>
                             )}
