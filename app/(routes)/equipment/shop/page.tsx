@@ -9,12 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/Tabs";
 import { Input } from "@components/ui/Input";
 import ShopItemCard from "@components/equipment/shop/ShopItemCard";
 import EquipmentShopContextProvider from "@contexts/EquipmentShopContext";
-import {
-    Sheet,
-    SheetTrigger,
-} from "@components/ui/Sheet";
-import { ShoppingCart } from "lucide-react";
-import ShoppingCardContent from "@components/equipment/shop/ShoppingCardContent";
+
+import ShoppingCartContent from "@components/equipment/shop/ShoppingCartContent";
 
 export default async function EquipmentShopPage() {
     const { userId, orgId } = await auth();
@@ -68,16 +64,10 @@ export default async function EquipmentShopPage() {
                                 type="text"
                                 className={"w-96 mr-4"}
                             />
-                            <Sheet>
-                                <SheetTrigger
-                                    className={
-                                        "h-10 w-10 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-6 [&_svg]:shrink-0"
-                                    }
-                                >
-                                    <ShoppingCart />
-                                </SheetTrigger>
-                                <ShoppingCardContent />
-                            </Sheet>
+
+
+                                <ShoppingCartContent />
+
                         </div>
                     </div>
                     {shopItemCategories.length > 0 ? (
