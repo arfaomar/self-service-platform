@@ -34,8 +34,8 @@ export default async function AllRequestsPage() {
                 userFullName:
                     userData?.first_name + " " + userData?.last_name ||
                     "Unknown",
-                creationDate: request.creationDate.toLocaleDateString(),
-                updateDate: request.updateDate?.toLocaleDateString() || "-",
+                creationDate: request.creationDate,
+                updateDate: request.updateDate,
                 status: request.status,
                 requestedItemsAmount: items.length,
                 acceptedItemsAmount: items.filter(

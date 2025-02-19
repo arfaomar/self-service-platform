@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import { Skeleton } from "@components/ui/Skeleton";
 import { RequestStatusEnum } from "@lib/data/entities";
-import { getBadgeVariant } from "@lib/utils";
+import { formatDate, getBadgeVariant } from "@lib/utils";
 import { Badge } from "@components/ui/Badge";
 import { useRouter } from "next/navigation";
 
@@ -19,8 +19,8 @@ export interface AllRequestsTableProp {
     requestId: number;
     userImageUrl: string;
     userFullName: string;
-    creationDate: string;
-    updateDate: string;
+    creationDate: Date;
+    updateDate: Date | undefined;
     status: RequestStatusEnum;
     requestedItemsAmount: number;
     acceptedItemsAmount: number;
@@ -72,13 +72,19 @@ export default function AllRequestsTable({
                                     />
                                 ) : (
                                     <Skeleton className="h-12 w-12 content-center rounded-lg bg-background text-center">
-                                        <div>No Image</div>
+                                        <div>NA</div>
                                     </Skeleton>
                                 )}
                             </TableCell>
                             <TableCell>{requestProp.userFullName}</TableCell>
-                            <TableCell>{requestProp.creationDate}</TableCell>
-                            <TableCell>{requestProp.updateDate}</TableCell>
+                            <TableCell>
+                                {formatDate(requestProp.creationDate)}
+                            </TableCell>
+                            <TableCell>
+                                {requestProp.updateDate
+                                    ? formatDate(requestProp.updateDate)
+                                    : "-"}
+                            </TableCell>
                             <TableCell>
                                 <Badge
                                     variant={getBadgeVariant(

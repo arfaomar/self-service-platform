@@ -14,7 +14,7 @@ import {
     Request,
 } from "@lib/data/entities";
 import { useRouter } from "next/navigation";
-import { getBadgeVariant } from "@lib/utils";
+import { formatDate, getBadgeVariant } from "@lib/utils";
 import { Badge } from "@components/ui/Badge";
 
 export interface MyRequestsTableProps {
@@ -54,14 +54,14 @@ export default function MyRequestsTable({
                     >
                         <TableCell>{request.request.id}</TableCell>
                         <TableCell>
-                            {request.request.creationDate.toDateString()}
+                            {formatDate(request.request.creationDate)}
                         </TableCell>
                         <TableCell>
                             {request.request.updateDate ? (
-                                request.request.updateDate.toDateString()
+                                formatDate(request.request.updateDate)
                             ) : (
                                 <span className={"text-muted-foreground"}>
-                                    N/A
+                                    -
                                 </span>
                             )}
                         </TableCell>

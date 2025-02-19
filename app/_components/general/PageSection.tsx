@@ -1,6 +1,6 @@
-import React from "react";
+"use server";
 
-export default function PageSection({
+export default async function PageSection({
     children,
     title,
     contentLength,
