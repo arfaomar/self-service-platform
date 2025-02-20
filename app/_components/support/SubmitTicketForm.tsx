@@ -21,14 +21,24 @@ import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
 import { FileUploader } from "@components/support/FileUploader";
 import { useRouter } from "next/navigation";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@components/ui/Select";
+import { ShopItem } from "@lib/data/entities";
 
-export default function SubmitTicketForm() {
+export default function SubmitTicketForm({ items }: { items: ShopItem[] }) {
     const form = useForm<z.infer<typeof submitTicketFormSchema>>({
         resolver: zodResolver(submitTicketFormSchema),
         defaultValues: {
             ticketTitle: "",
             ticketDescription: "",
             images: [],
+            ticketItem: "",
         },
     });
 
@@ -138,6 +148,40 @@ export default function SubmitTicketForm() {
                             </FormControl>
                             <FormDescription>
                                 Max. 4 images, 8MB each
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="ticketItem"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Shop Item (optional)</FormLabel>
+                            <FormControl>
+                                <Select {...field}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a shop item" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {items.map((item) => (
+                                                <SelectItem
+                                                    key={item.id}
+                                                    value={item.id.toString()}
+                                                >
+                                                    {item.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormDescription>
+                                Choose a shop item related to your ticket
+                                (optional)
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

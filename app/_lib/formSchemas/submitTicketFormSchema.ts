@@ -28,4 +28,6 @@ export const submitTicketFormSchema = z.object({
                 }),
         )
         .max(4, { message: "You can upload up to 4 images" }),
+
+    ticketItem: z.string().optional(),
 });
