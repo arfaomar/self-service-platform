@@ -26,7 +26,7 @@ import { ItemInRequestStatusEnum, RequestStatusEnum } from "@lib/data/entities";
 import { startTransition, useActionState, useEffect } from "react";
 import changeEquipmentRequestStatusAction from "@actions/changeEquipmentRequestStatusAction";
 
-interface ChangeTicketStatusFormProps {
+interface ChangeRequestStatusFormProps {
     requestId: string;
     itemInRequestId?: string;
     currentStatus: RequestStatusEnum | ItemInRequestStatusEnum;
@@ -36,7 +36,7 @@ export default function ChangeEquipmentRequestStatusForm({
     requestId,
     itemInRequestId,
     currentStatus,
-}: ChangeTicketStatusFormProps) {
+}: ChangeRequestStatusFormProps) {
     const formSchema = z.object({
         status: z.nativeEnum(
             itemInRequestId ? ItemInRequestStatusEnum : RequestStatusEnum,
