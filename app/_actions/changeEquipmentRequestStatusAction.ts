@@ -117,7 +117,7 @@ export default async function changeEquipmentRequestStatusAction(
         const parsedData = changeEquipmentRequestStatusFormSchema.safeParse({
             status: formData.get("status"),
             requestId: Number(formData.get("requestId")),
-            itemInRequestId: formData.get("itemInRequestId"),
+            itemInRequestId: Number(formData.get("itemInRequestId")),
         });
 
         if (!parsedData.success) {
