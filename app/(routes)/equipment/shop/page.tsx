@@ -73,7 +73,7 @@ export default async function EquipmentShopPage() {
                                 <TabsContent
                                     key={shopItemCategory.id}
                                     value={shopItemCategory.name}
-                                    className={"grid grid-cols-6"}
+                                    className={"grid grid-cols-6 gap-2"}
                                 >
                                     {shopItems.map((shopItem) =>
                                         shopItem.categoryId ===

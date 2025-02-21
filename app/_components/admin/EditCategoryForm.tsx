@@ -13,7 +13,7 @@ import {
 } from "@components/ui/Form";
 import { Input } from "@components/ui/Input";
 import { ShopItemCategory } from "@lib/data/entities/ShopItemCategory";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import editCategoryAction from "@actions/editCategoryAction";
 import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
@@ -51,10 +51,16 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
         initialState,
     );
 
+    const [toDelete, setToDelete] = useState(false);
+
     const onSubmit = (data: z.infer<typeof editCategorySchema>) => {
         const formData = new FormData();
         formData.append("id", category.id.toString());
         formData.append("name", data.name);
+
+        if (toDelete) {
+            formData.append("delete", "true");
+        }
         startTransition(() => {
             formAction(formData);
         });
@@ -101,7 +107,11 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
                         <Save className={"mr-2"} />
                         Save
                     </LoadingButton>
-                    <Button variant={"destructive"} className={"w-full"}>
+                    <Button
+                        variant={"destructive"}
+                        className={"w-full"}
+                        onClick={() => setToDelete(true)}
+                    >
                         <Trash2 />
                         Delete
                     </Button>
