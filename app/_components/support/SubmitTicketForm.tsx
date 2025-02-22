@@ -161,7 +161,10 @@ export default function SubmitTicketForm({ items }: { items: ShopItem[] }) {
                         <FormItem>
                             <FormLabel>Shop Item (optional)</FormLabel>
                             <FormControl>
-                                <Select {...field}>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select a shop item" />
                                     </SelectTrigger>
