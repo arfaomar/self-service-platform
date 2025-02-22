@@ -39,6 +39,7 @@ test-integration:
         - echo "Running integration tests..."
         - npm run test:integration
     rules:
+        - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
         - if: $CI_COMMIT_BRANCH == "main"
 
 # - - - BUILD - - -
