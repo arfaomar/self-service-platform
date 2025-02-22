@@ -27,6 +27,7 @@ export default async function MyEquipmentPage() {
             name: item?.name || "",
             description: item?.description || "",
             purchaseDate: myItem.purchaseDate,
+            status: myItem.status,
         };
         myEquipmentTableProps.push(equipmentProp);
     });

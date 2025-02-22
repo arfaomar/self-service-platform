@@ -3,16 +3,20 @@
 import { auth } from "@clerk/nextjs/server";
 import EditCategoryForm from "@components/admin/EditCategoryForm";
 import { shopItemCategoryRepository } from "@lib/data/repositories";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function EditCategoryPage({
     params,
 }: {
     params: Promise<{ categoryId: string }>;
 }) {
-    const { userId, orgId } = await auth();
+    const { userId, orgId, has } = await auth();
     if (!userId || !orgId) {
         return null;
+    }
+
+    if (!has({ role: "org:admin" })) {
+        notFound();
     }
 
     const categoryId = (await params).categoryId;

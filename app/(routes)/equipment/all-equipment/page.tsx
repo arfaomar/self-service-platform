@@ -1,13 +1,14 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import EquipmentAllTable from "@components/equipment/EquipmentAllTable";
+import AllEquipmentTable from "@components/equipment/AllEquipmentTable";
 import {
     inventoryRepository,
     shopItemRepository,
 } from "@lib/data/repositories";
 import { Inventory, Ticket } from "@lib/data/entities";
 import PageSection from "@components/general/PageSection";
+import { notFound } from "next/navigation";
 
 export type AllEquipmentProps = {
     userId: string;
@@ -16,9 +17,13 @@ export type AllEquipmentProps = {
 };
 
 export default async function AllEquipmentPage() {
-    const { userId, orgId } = await auth();
+    const { userId, orgId, has } = await auth();
     if (!userId || !orgId) {
         return null;
+    }
+
+    if (!has({ permission: "org:requests:view_all" })) {
+        notFound();
     }
 
     const inventories = await inventoryRepository.getAllInventories();
@@ -27,7 +32,7 @@ export default async function AllEquipmentPage() {
 
     return (
         <PageSection title={"All Equipment"} contentLength={inventories.length}>
-            <EquipmentAllTable
+            <AllEquipmentTable
                 inventories={inventories}
                 shopItems={shopItems}
             />

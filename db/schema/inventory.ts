@@ -15,5 +15,5 @@ export const inventory = pgTable("inventory", {
         .references(() => shopItem.id),
     purchaseDate: timestamp("purchase_date").defaultNow().notNull(),
     updateDate: timestamp("update_date"),
-    status: varchar("status", { length: 32 }),
+    status: varchar("status", { length: 32 }).default("OK").notNull(),
 });

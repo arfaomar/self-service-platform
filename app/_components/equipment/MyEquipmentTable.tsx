@@ -8,12 +8,14 @@ import {
 } from "@components/ui/Table";
 import Image from "next/image";
 import { Skeleton } from "@components/ui/Skeleton";
+import { formatDate } from "@lib/utils";
 
 export interface MyEquipmentTableProp {
     imageUrl: string;
     name: string;
     description: string;
     purchaseDate: Date;
+    status: string;
 }
 
 export default function MyEquipmentTable({
@@ -27,8 +29,9 @@ export default function MyEquipmentTable({
                 <TableRow>
                     <TableHead className={"w-1/12"}>Image</TableHead>
                     <TableHead className={"w-1/12"}>Name</TableHead>
-                    <TableHead className={"w-5/12"}>Description</TableHead>
+                    <TableHead className={"w-3/12"}>Description</TableHead>
                     <TableHead className={"w-1/12"}>Purchase Date</TableHead>
+                    <TableHead className={"w-1/12"}>Status</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -58,7 +61,10 @@ export default function MyEquipmentTable({
                             {equipmentProp.description}
                         </TableCell>
                         <TableCell className={"w-2/12"}>
-                            {equipmentProp.purchaseDate.toLocaleDateString()}
+                            {formatDate(equipmentProp.purchaseDate)}
+                        </TableCell>
+                        <TableCell className={"w-2/12"}>
+                            {equipmentProp.status}
                         </TableCell>
                     </TableRow>
                 ))}

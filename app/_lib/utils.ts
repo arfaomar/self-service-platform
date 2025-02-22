@@ -26,8 +26,8 @@ export function getBadgeVariant(
 export function formatDate(date: Date): string {
     return date.toLocaleString(undefined, {
         year: "numeric",
-        month: "numeric",
-        day: "numeric",
+        month: "2-digit",
+        day: "2-digit",
         hour: "numeric",
         minute: "numeric",
     });

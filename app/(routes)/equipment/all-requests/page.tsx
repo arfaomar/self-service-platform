@@ -10,11 +10,21 @@ import AllRequestsTable, {
 } from "@components/equipment/requests/AllRequestsTable";
 import { fetchUserData } from "@lib/utils";
 import PageSection from "@components/general/PageSection";
+import { notFound } from "next/navigation";
 
 export default async function AllRequestsPage() {
-    const { userId, orgId } = await auth();
+    const { userId, orgId, has } = await auth();
     if (!userId || !orgId) {
         return null;
+    }
+
+    if (
+        !(
+            has({ permission: "org:requests:view_all" }) &&
+            has({ permission: "org:requests:manage_all" })
+        )
+    ) {
+        notFound();
     }
 
     const requests =

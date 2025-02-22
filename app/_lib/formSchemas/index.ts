@@ -6,6 +6,7 @@ import {
 } from "@lib/formSchemas/submitEquipmentRequestFormSchema";
 import { changeTicketStatusFormSchema } from "@lib/formSchemas/changeTicketStatusFormSchema";
 import { changeEquipmentRequestStatusFormSchema } from "@lib/formSchemas/changeEquipmentRequestStatusFormSchema";
+import { updateInventoryStatusFormSchema } from "@lib/formSchemas/updateInventoryStatusFormSchema";
 export {
     submitTicketFormSchema,
     sendTicketResponseFormSchema,
@@ -13,4 +14,5 @@ export {
     shopItemInCartSchema,
     changeTicketStatusFormSchema,
     changeEquipmentRequestStatusFormSchema,
+    updateInventoryStatusFormSchema,
 };

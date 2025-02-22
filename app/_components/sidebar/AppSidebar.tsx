@@ -67,7 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 icon: NotepadText,
                 isActive: currentSection.toLowerCase() === "equipment",
                 items: [
-                    // USER + SUPPORT + ADMIN + MANAGER (directly assign)
+                    // USER + SUPPORT + ADMIN + MANAGER
                     {
                         title: "Shop",
                         url: "/equipment/shop",

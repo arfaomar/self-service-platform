@@ -4,7 +4,7 @@ export interface Inventory {
     itemId: number;
     purchaseDate: Date;
     updateDate?: Date | null;
-    status?: string | null;
+    status: string;
 }
 
 export interface CreatedInventory

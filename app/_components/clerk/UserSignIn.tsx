@@ -9,7 +9,7 @@ import { EmailCodeVerification } from "@components/clerk/EmailCodeVerification";
 
 export default function UserSignIn() {
     return (
-        <div className="grid w-full grow items-center px-4 sm:justify-center">
+        <div className="my-20 grid w-full grow items-center px-4 sm:justify-center">
             <SignIn.Root>
                 <Clerk.Loading>
                     {(isGlobalLoading) => (
