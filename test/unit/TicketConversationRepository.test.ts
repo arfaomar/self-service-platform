@@ -79,7 +79,7 @@ describe("TicketConversationRepository", () => {
         });
 
         await expect(repository.getTicketConversationById(999)).rejects.toThrow(
-            "Shop item not found",
+            "Ticket conversation not found",
         );
     });
 
