@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-
 import {
     Form,
     FormControl,
@@ -29,13 +28,11 @@ import changeEquipmentRequestStatusAction from "@actions/changeEquipmentRequestS
 interface ChangeRequestStatusFormProps {
     requestId: string;
     itemInRequestId?: string;
-    currentStatus: RequestStatusEnum | ItemInRequestStatusEnum;
 }
 
 export default function ChangeEquipmentRequestStatusForm({
     requestId,
     itemInRequestId,
-    currentStatus,
 }: ChangeRequestStatusFormProps) {
     const formSchema = z.object({
         status: z.nativeEnum(
@@ -46,9 +43,6 @@ export default function ChangeEquipmentRequestStatusForm({
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            status: currentStatus,
-        },
     });
 
     const initialState: {
@@ -107,7 +101,7 @@ export default function ChangeEquipmentRequestStatusForm({
                                     field.onChange(value);
                                     form.handleSubmit(onSubmit)();
                                 }}
-                                defaultValue={field.value}
+                                value={field.value}
                             >
                                 <FormControl>
                                     <SelectTrigger>

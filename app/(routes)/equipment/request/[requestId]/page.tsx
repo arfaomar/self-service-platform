@@ -136,7 +136,6 @@ export default async function RequestPage({
                         {canSeeAllRequests && (
                             <ChangeEquipmentRequestStatusForm
                                 requestId={requestId}
-                                currentStatus={request.status}
                             />
                         )}
                     </div>
@@ -238,7 +237,6 @@ export default async function RequestPage({
                                             <TableCell>
                                                 <ChangeEquipmentRequestStatusForm
                                                     requestId={requestId}
-                                                    currentStatus={item.status}
                                                     itemInRequestId={String(
                                                         item.id,
                                                     )}

@@ -74,7 +74,7 @@ export default function ShopItemCard({ shopItem }: ShopItemCardProps) {
                 <div>
                     <CardTitle>{shopItem.name}</CardTitle>
                     <CardDescription
-                        className={"line-clamp-2 overflow-ellipsis"}
+                        className={"line-clamp-1 overflow-ellipsis"}
                     >
                         {shopItem.description}
                     </CardDescription>

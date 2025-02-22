@@ -15,37 +15,26 @@ import {
 import { SafeParseSuccess } from "zod";
 import { revalidatePath } from "next/cache";
 
-async function transitionToAccepted(
-    itemInRequest: ItemInRequestList,
-    parsedData: SafeParseSuccess<{
-        requestId: number;
-        status: ItemInRequestStatusEnum | RequestStatusEnum;
-        itemInRequestId?: number | undefined;
-    }>,
-) {
+async function adjustStock(itemInRequest: ItemInRequestList, quantity: number) {
     const shopItem = await shopItemRepository.getShopItemById(
         itemInRequest.itemId,
     );
+    const newStock = shopItem.stock + quantity;
+    console.log("quantity", quantity, "new stock", newStock);
+    await shopItemRepository.updateShopItem({
+        id: shopItem.id,
+        stock: newStock,
+    });
+}
 
+async function transitionToAccepted(itemInRequest: ItemInRequestList) {
+    const shopItem = await shopItemRepository.getShopItemById(
+        itemInRequest.itemId,
+    );
     if (shopItem.stock < itemInRequest.quantity) {
         return false;
     }
-
-    await shopItemRepository.updateShopItem({
-        id: shopItem.id,
-        stock: shopItem.stock - itemInRequest.quantity,
-    });
-    if (parsedData.data.itemInRequestId) {
-        await itemInRequestRepository.updateItemInRequestList({
-            status: parsedData.data.status as ItemInRequestStatusEnum,
-            id: parsedData.data.itemInRequestId,
-        });
-    }
-
-    await requestRepository.updateRequest({
-        status: RequestStatusEnum.Accepted,
-        id: parsedData.data.requestId,
-    });
+    await adjustStock(itemInRequest, -itemInRequest.quantity);
     return true;
 }
 
@@ -57,42 +46,48 @@ async function transitionFromAccepted(
         itemInRequestId?: number | undefined;
     }>,
 ) {
-    try {
-        const shopItem = await shopItemRepository.getShopItemById(
-            itemInRequest.itemId,
-        );
-        await shopItemRepository.updateShopItem({
-            id: shopItem.id,
-            stock: shopItem.stock + itemInRequest.quantity,
+    await adjustStock(itemInRequest, itemInRequest.quantity);
+    if (parsedData.data.itemInRequestId) {
+        await itemInRequestRepository.updateItemInRequestList({
+            status: parsedData.data.status as ItemInRequestStatusEnum,
+            id: parsedData.data.itemInRequestId,
         });
-        if (parsedData.data.itemInRequestId) {
-            await itemInRequestRepository.updateItemInRequestList({
-                status: parsedData.data.status as ItemInRequestStatusEnum,
-                id: parsedData.data.itemInRequestId,
+    }
+
+    if (parsedData.data.status === ItemInRequestStatusEnum.Declined) {
+        const updatedItemsInRequest =
+            await itemInRequestRepository.getItemsInRequestList(
+                parsedData.data.requestId,
+            );
+        const allDeclined = updatedItemsInRequest.every(
+            (item) => item.status === ItemInRequestStatusEnum.Declined,
+        );
+
+        if (allDeclined) {
+            await requestRepository.updateRequest({
+                status: RequestStatusEnum.Declined,
+                updateDate: new Date(),
+                id: parsedData.data.requestId,
             });
         }
-
-        if (parsedData.data.status === ItemInRequestStatusEnum.Declined) {
-            const updatedItemsInRequest =
-                await itemInRequestRepository.getItemsInRequestList(
-                    parsedData.data.requestId,
-                );
-            const allDeclined = updatedItemsInRequest.every(
-                (item) => item.status === ItemInRequestStatusEnum.Declined,
+    } else if (parsedData.data.status === ItemInRequestStatusEnum.Processing) {
+        const updatedItemsInRequest =
+            await itemInRequestRepository.getItemsInRequestList(
+                parsedData.data.requestId,
             );
+        const allProcessing = updatedItemsInRequest.every(
+            (item) => item.status === ItemInRequestStatusEnum.Processing,
+        );
 
-            if (allDeclined) {
-                await requestRepository.updateRequest({
-                    status: RequestStatusEnum.Declined,
-                    id: parsedData.data.requestId,
-                });
-            }
+        if (allProcessing) {
+            await requestRepository.updateRequest({
+                status: RequestStatusEnum.Processing,
+                updateDate: new Date(),
+                id: parsedData.data.requestId,
+            });
         }
-        return true;
-    } catch (error) {
-        console.error(error);
-        return false;
     }
+    return true;
 }
 
 export default async function changeEquipmentRequestStatusAction(
@@ -155,46 +150,120 @@ export default async function changeEquipmentRequestStatusAction(
             }
 
             if (itemInRequest.status === ItemInRequestStatusEnum.Accepted) {
-                if (
-                    !(await transitionFromAccepted(itemInRequest, parsedData))
-                ) {
-                    return {
-                        message: "Failed to Change Equipment Request Status",
-                        error: true,
-                    };
-                }
-            } else if (
-                itemInRequest.status === ItemInRequestStatusEnum.Declined ||
-                itemInRequest.status === ItemInRequestStatusEnum.Processing
-            ) {
-                if (!(await transitionToAccepted(itemInRequest, parsedData))) {
+                await transitionFromAccepted(itemInRequest, parsedData);
+            }
+
+            if (parsedData.data.status === ItemInRequestStatusEnum.Accepted) {
+                if (!(await transitionToAccepted(itemInRequest))) {
                     return {
                         message: "Not enough stock",
                         error: true,
                     };
                 }
+            }
+
+            await itemInRequestRepository.updateItemInRequestList({
+                status: parsedData.data.status as ItemInRequestStatusEnum,
+                id: parsedData.data.itemInRequestId,
+            });
+
+            const updatedItemsInRequest =
+                await itemInRequestRepository.getItemsInRequestList(
+                    parsedData.data.requestId,
+                );
+
+            const allDeclined = updatedItemsInRequest.every(
+                (item) => item.status === ItemInRequestStatusEnum.Declined,
+            );
+
+            if (allDeclined) {
+                await requestRepository.updateRequest({
+                    status: RequestStatusEnum.Declined,
+                    updateDate: new Date(),
+                    id: parsedData.data.requestId,
+                });
             } else {
-                return {
-                    message: "Invalid status transition",
-                    info: true,
-                };
+                const allProcessing = updatedItemsInRequest.every(
+                    (item) =>
+                        item.status === ItemInRequestStatusEnum.Processing,
+                );
+
+                if (allProcessing) {
+                    await requestRepository.updateRequest({
+                        status: RequestStatusEnum.Processing,
+                        updateDate: new Date(),
+                        id: parsedData.data.requestId,
+                    });
+                } else {
+                    const anyAccepted = updatedItemsInRequest.some(
+                        (item) =>
+                            item.status === ItemInRequestStatusEnum.Accepted,
+                    );
+
+                    if (anyAccepted) {
+                        await requestRepository.updateRequest({
+                            status: RequestStatusEnum.Accepted,
+                            updateDate: new Date(),
+                            id: parsedData.data.requestId,
+                        });
+                    } else {
+                        await requestRepository.updateRequest({
+                            status: RequestStatusEnum.Processing,
+                            updateDate: new Date(),
+                            id: parsedData.data.requestId,
+                        });
+                    }
+                }
             }
         } else {
+            if (parsedData.data.status === RequestStatusEnum.Accepted) {
+                for (const itemInRequest of itemsInRequest) {
+                    if (!(await transitionToAccepted(itemInRequest))) {
+                        return {
+                            message:
+                                "Not enough stock for item " +
+                                itemInRequest.itemId,
+                            error: true,
+                        };
+                    }
+                }
+            } else {
+                for (const itemInRequest of itemsInRequest) {
+                    if (
+                        itemInRequest.status ===
+                        ItemInRequestStatusEnum.Accepted
+                    ) {
+                        await transitionFromAccepted(itemInRequest, parsedData);
+                    }
+                }
+            }
+
             await requestRepository.updateRequest({
                 status: parsedData.data.status as RequestStatusEnum,
+                updateDate: new Date(),
                 id: parsedData.data.requestId,
             });
 
             for (const itemInRequest of itemsInRequest) {
-                if (itemInRequest.status !== parsedData.data.status) {
-                    await itemInRequestRepository.updateItemInRequestList({
-                        status: parsedData.data
-                            .status as ItemInRequestStatusEnum,
-                        id: itemInRequest.id,
-                    });
-                }
+                await itemInRequestRepository.updateItemInRequestList({
+                    status: parsedData.data.status as ItemInRequestStatusEnum,
+                    id: itemInRequest.id,
+                });
+            }
+
+            const allDeclined = itemsInRequest.every(
+                (item) => item.status === ItemInRequestStatusEnum.Declined,
+            );
+
+            if (allDeclined) {
+                await requestRepository.updateRequest({
+                    status: RequestStatusEnum.Declined,
+                    updateDate: new Date(),
+                    id: parsedData.data.requestId,
+                });
             }
         }
+
         revalidatePath(
             `/equipment/request/${String(parsedData.data.requestId)}`,
         );
@@ -217,17 +286,52 @@ export default async function changeEquipmentRequestStatusAction(
 }
 
 /*
-This code changes the status of an equipment request.
-The main function, `changeEquipmentRequestStatusAction`, handles the status change logic, while two helper functions:
-`transitionToAccepted` and `transitionFromAccepted`, manage specific status transitions.
-- The `transitionToAccepted` function updates the status of an item in the request to `Accepted` if there is enough stock. It updates the stock and the status of the item in the request.
+### Transition to Accepted
 
-- The `transitionFromAccepted` function handles the transition from `Accepted` to another status.
-  It updates the stock and the status of the item in the request. If the new status is `Declined`, it checks if all
-  items in the request are declined and updates the request status accordingly.
+**Function: `transitionToAccepted`**
 
-The main function, `changeEquipmentRequestStatusAction`, starts by authenticating the user and parsing the form data using the `zod` schema.
-It retrieves the items in the request and checks if the status needs to be updated. Depending on the current and new statuses,
-it calls either `transitionToAccepted` or `transitionFromAccepted` to handle the status change.
-If no specific item in the request is being updated, it updates the status of the entire request and all items in the request.
+**Purpose:**
+- This function handles the transition of an item in the request to the `Accepted` status.
+
+**Steps:**
+1. Retrieve the shop item associated with the `itemInRequest`.
+2. Check if the shop item has enough stock to fulfill the request.
+3. If there is enough stock, adjust the stock by subtracting the quantity of the item in the request.
+4. Return `true` if the transition is successful, otherwise return `false`.
+
+**Side Effects:**
+- The stock of the shop item is decreased by the quantity of the item in the request.
+
+### Transition from Accepted
+
+**Function: `transitionFromAccepted`**
+
+**Purpose:**
+- This function handles the transition of an item in the request from the `Accepted` status to another status.
+
+**Steps:**
+1. Adjust the stock by adding back the quantity of the item in the request.
+2. If a specific item in the request is being updated, update its status.
+3. If the new status is `Declined`, check if all items in the request are declined and update the request status accordingly.
+4. If the new status is `Processing`, check if all items in the request are processing and update the request status accordingly.
+
+**Side Effects:**
+- The stock of the shop item is increased by the quantity of the item in the request.
+- The status of the item in the request is updated.
+- The status of the entire request may be updated based on the statuses of all items in the request.
+
+### Adjust Stock
+
+**Function: `adjustStock`**
+
+**Purpose:**
+- This function adjusts the stock of a shop item by a specified quantity.
+
+**Steps:**
+1. Retrieve the shop item associated with the `itemInRequest`.
+2. Calculate the new stock by adding the specified quantity to the current stock.
+3. Update the shop item with the new stock.
+
+**Side Effects:**
+- The stock of the shop item is updated.
 */
