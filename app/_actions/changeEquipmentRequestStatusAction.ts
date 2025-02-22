@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { changeEquipmentRequestStatusFormSchema } from "@lib/formSchemas/changeEquipmentRequestStatusFormSchema";
 import {
+    inventoryRepository,
     itemInRequestRepository,
     requestRepository,
     shopItemRepository,
@@ -35,6 +36,32 @@ async function transitionToAccepted(itemInRequest: ItemInRequestList) {
         return false;
     }
     await adjustStock(itemInRequest, -itemInRequest.quantity);
+
+    const request = await requestRepository.getRequestById(
+        itemInRequest.requestId,
+    );
+    await inventoryRepository.createInventory({
+        ownerId: request.userId,
+        itemId: itemInRequest.itemId,
+        purchaseDate: new Date(),
+    });
+
+    // Check if the whole request should be set to Accepted
+    const itemsInRequest = await itemInRequestRepository.getItemsInRequestList(
+        itemInRequest.requestId,
+    );
+    const anyAccepted = itemsInRequest.some(
+        (item) => item.status === ItemInRequestStatusEnum.Accepted,
+    );
+
+    if (anyAccepted) {
+        await requestRepository.updateRequest({
+            status: RequestStatusEnum.Accepted,
+            updateDate: new Date(),
+            id: itemInRequest.requestId,
+        });
+    }
+
     return true;
 }
 
@@ -47,6 +74,19 @@ async function transitionFromAccepted(
     }>,
 ) {
     await adjustStock(itemInRequest, itemInRequest.quantity);
+
+    const request = await requestRepository.getRequestById(
+        itemInRequest.requestId,
+    );
+    const inventories = await inventoryRepository.getInventoryByOwnerId(
+        request.userId,
+    );
+    const inventoryItem = inventories.find(
+        (inv) => inv.itemId === itemInRequest.itemId,
+    );
+    if (inventoryItem) {
+        await inventoryRepository.deleteInventory(inventoryItem.id);
+    }
     if (parsedData.data.itemInRequestId) {
         await itemInRequestRepository.updateItemInRequestList({
             status: parsedData.data.status as ItemInRequestStatusEnum,
