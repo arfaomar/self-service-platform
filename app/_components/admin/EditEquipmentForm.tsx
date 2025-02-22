@@ -19,7 +19,7 @@ import {
     SelectValue,
 } from "@components/ui/Select";
 import { Input } from "@components/ui/Input";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { LoadingButton } from "@components/ui/LoadingButton";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -84,17 +84,31 @@ export default function EditEquipmentForm({
         initialState,
     );
 
+    const [toDelete, setToDelete] = useState(false);
+
     const onSubmit = (data: z.infer<typeof editEquipmentSchema>) => {
         const formData = new FormData();
+        if (toDelete) {
+            formData.append("delete", "true");
+            startTransition(() => {
+                formAction(formData);
+            });
+        }
+
         formData.append("id", shopItem.id.toString());
         formData.append("name", data.name || "");
         formData.append("description", data.description || "");
-        formData.append("image", data.image || "");
+
+        if (data.image instanceof File) {
+            formData.append("image", data.image);
+        }
+
         formData.append(
             "categoryId",
             data.categoryId ? data.categoryId.toString() : "",
         );
         formData.append("stock", data.stock?.toString() || "0");
+
         startTransition(() => {
             formAction(formData);
         });
@@ -238,7 +252,11 @@ export default function EditEquipmentForm({
                         <Save className={"mr-2"} />
                         Save
                     </LoadingButton>
-                    <Button variant={"destructive"} className={"w-full"}>
+                    <Button
+                        variant={"destructive"}
+                        className={"w-full"}
+                        onClick={() => setToDelete(true)}
+                    >
                         <Trash2 />
                         Delete
                     </Button>

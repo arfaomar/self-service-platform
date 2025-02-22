@@ -6,6 +6,7 @@ import {
     shopItemRepository,
 } from "@lib/data/repositories";
 import EditEquipmentForm from "@components/admin/EditEquipmentForm";
+import { redirect } from "next/navigation";
 
 export default async function AddEquipmentPage({
     params,
@@ -18,13 +19,24 @@ export default async function AddEquipmentPage({
     }
 
     const equipmentId = (await params).equipmentId;
-    const shopItem = await shopItemRepository.getShopItemById(
-        parseInt(equipmentId),
-    );
-    const categories =
-        await shopItemCategoryRepository.getAllShopItemCategoriesInOrganization(
-            orgId,
+    try {
+        const shopItem = await shopItemRepository.getShopItemById(
+            parseInt(equipmentId),
         );
+        const categories =
+            await shopItemCategoryRepository.getAllShopItemCategoriesInOrganization(
+                orgId,
+            );
 
-    return <EditEquipmentForm categories={categories} shopItem={shopItem} />;
+        return (
+            <EditEquipmentForm categories={categories} shopItem={shopItem} />
+        );
+    } catch (error) {
+        const err = error as Error;
+        if (err.message === "Shop item not found") {
+            redirect("/admin/equipment");
+        } else {
+            console.error(error);
+        }
+    }
 }

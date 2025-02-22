@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import EditCategoryForm from "@components/admin/EditCategoryForm";
 import { shopItemCategoryRepository } from "@lib/data/repositories";
+import { redirect } from "next/navigation";
 
 export default async function EditCategoryPage({
     params,
@@ -15,9 +16,18 @@ export default async function EditCategoryPage({
     }
 
     const categoryId = (await params).categoryId;
-    const category = await shopItemCategoryRepository.getShopItemCategoryById(
-        parseInt(categoryId),
-    );
-
-    return <EditCategoryForm category={category} />;
+    try {
+        const category =
+            await shopItemCategoryRepository.getShopItemCategoryById(
+                parseInt(categoryId),
+            );
+        return <EditCategoryForm category={category} />;
+    } catch (error) {
+        const err = error as Error;
+        if (err.message === "Shop item category not found") {
+            redirect("/admin/categories");
+        } else {
+            console.error(error);
+        }
+    }
 }

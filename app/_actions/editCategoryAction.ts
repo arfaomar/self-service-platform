@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 const editCategoryFormSchema = z.object({
     categoryId: z.number().nonnegative("Category ID must be a positive number"),
     categoryName: z.string().nonempty("Category name is required"),
+    delete: z.boolean().optional(),
 });
 
 export default async function editCategoryAction(
@@ -15,11 +16,12 @@ export default async function editCategoryAction(
         message: string;
         success?: boolean;
         error?: boolean;
+        redirectUrl?: string;
     },
     formData: FormData,
 ) {
     try {
-        const { userId, orgId } = await auth();
+        const { userId, orgId, has } = await auth();
 
         if (!userId || !orgId) {
             return {
@@ -28,9 +30,17 @@ export default async function editCategoryAction(
             };
         }
 
+        if (!has({ role: "org:admin" })) {
+            return {
+                message: "User does not have permission to edit categories",
+                error: true,
+            };
+        }
+
         const parsedData = editCategoryFormSchema.safeParse({
             categoryId: parseInt(formData.get("id") as string),
             categoryName: formData.get("name"),
+            delete: formData.get("delete") === "true",
         });
 
         if (!parsedData.success) {
@@ -40,6 +50,20 @@ export default async function editCategoryAction(
             return {
                 message: errorMessages.join(", "),
                 error: true,
+            };
+        }
+
+        if (parsedData.data.delete === true) {
+            await shopItemCategoryRepository.deleteShopItemCategory(
+                parsedData.data.categoryId,
+            );
+
+            revalidatePath(`/admin/categories`);
+            revalidatePath(`/equipment/shop`);
+            return {
+                message: "Category deleted successfully",
+                success: true,
+                redirectUrl: `/admin/categories`,
             };
         }
 

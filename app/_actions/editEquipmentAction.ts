@@ -22,9 +22,16 @@ const createEquipmentFormSchema = z.object({
         .refine((file) => file.size < 8 * 1024 * 1024, {
             message: "File size must be less than 5MB",
         })
-        .optional(),
+        .optional()
+        .nullable(),
     categoryId: z.number().optional(),
     stock: z.number().min(1, "Stock is required").optional(),
+    delete: z.boolean().optional(),
+});
+
+const deleteEquipmentFormSchema = z.object({
+    id: z.number().min(1, "ID is required"),
+    delete: z.boolean().optional(),
 });
 
 export default async function editEquipmentAction(
@@ -32,10 +39,26 @@ export default async function editEquipmentAction(
         message: string;
         success?: boolean;
         error?: boolean;
+        redirectUrl?: string;
     },
     formData: FormData,
 ) {
     try {
+        const deleteParsedData = deleteEquipmentFormSchema.safeParse({
+            id: parseInt(formData.get("id") as string),
+            delete: formData.get("delete") === "true",
+        });
+
+        if (deleteParsedData.data?.delete) {
+            await shopItemRepository.deleteShopItem(deleteParsedData.data.id);
+            revalidatePath(`/admin/equipment`);
+            return {
+                message: "Equipment deleted successfully",
+                success: true,
+                redirectUrl: `/admin/equipment`,
+            };
+        }
+
         const { userId, orgId } = await auth();
 
         if (!userId || !orgId) {
@@ -56,6 +79,7 @@ export default async function editEquipmentAction(
             stock: formData.get("stock")
                 ? parseInt(formData.get("stock") as string)
                 : undefined,
+            delete: formData.get("delete") === "true",
         });
 
         if (!parsedData.success) {
@@ -68,16 +92,10 @@ export default async function editEquipmentAction(
             };
         }
 
-        let imageUrl: string = "";
-        if (parsedData.data.image) {
-            imageUrl = await uploadImage(parsedData.data.image);
-        }
-
         const newEquipment: UpdatedShopItem = {
             id: parsedData.data.id,
             name: parsedData.data.name,
             description: parsedData.data.description,
-            url: imageUrl.length > 0 ? imageUrl : null,
             categoryId: parsedData.data.categoryId
                 ? parsedData.data.categoryId
                 : null,
@@ -85,18 +103,24 @@ export default async function editEquipmentAction(
             organizationId: orgId,
         };
 
+        let imageUrl: string = "";
+        if (parsedData.data.image) {
+            imageUrl = await uploadImage(parsedData.data.image);
+            newEquipment.url = imageUrl;
+        }
+
         await shopItemRepository.updateShopItem(newEquipment);
         revalidatePath(`/admin/equipment`);
 
         return {
-            message: "Equipment created successfully",
+            message: "Equipment edited successfully",
             success: true,
             redirectUrl: `/admin/equipment`,
         };
     } catch (error) {
         console.log(error);
         return {
-            message: "An error has occurred while adding the equipment",
+            message: "An error has occurred while editing the equipment",
             error: true,
         };
     }
