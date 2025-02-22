@@ -1,7 +1,7 @@
 ![Self-Service Banner](./Self-Service-Banner.png)
 
 <details>
-<summary style="font-size: x-large; font-weight: bold">Table of Contents</summary>
+<summary style="font-size: 2.5em; font-weight: bold">Table of Contents</summary>
 
 - [About](#about)
 - [Features](#features)
@@ -9,7 +9,6 @@
 - [Installation](#installation)
 - [Testing](#testing)
 - [Database Structure](#database-structure)
-- [Account Credentials](#account-credentials)
 
 </details>
 
@@ -36,8 +35,6 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
 - **Next.js & API Routes**: Efficient handling of requests with server-side logic.
 - **PostgreSQL + Drizzle ORM**: Robust and scalable database setup.
 
----
-
 ## Tech Stack
 
 - **Frontend**: Next.js, React, Tailwind CSS + shadcn
@@ -46,8 +43,6 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
 - **Database**: PostgreSQL (Drizzle ORM)
 - **Storage**: Cloudinary (for ticket screenshots)
 - **Testing**: Jest
-
----
 
 ## Installation
 
@@ -92,53 +87,6 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
     ```
 8. Open [http://localhost:3000](http://localhost:3000) with your browser and login with Clerk.
 
----
-
 ## Testing
 
----
-
 ## Database Structure
-
----
-
-## Account Credentials
-
-### ProtonMail
-
-- **Admin**:
-    - **Email**:
-    - **Password**:
-- **Manager**:
-    - **Email**:
-    - **Password**:
-- **Employee**:
-    - **Email**:
-    - **Password**:
-- **IT-Support**:
-    - **Email**:
-    - **Password**:
-
-### Clerk
-
-- **API Keys**:
-
-    - Public Key:
-    - Secret Key:
-
-- **Admin**:
-    - **Email**:
-    - **Password**:
-- **Manager**:
-    - **Email**:
-    - **Password**:
-- **Employee**:
-    - **Email**:
-    - **Password**:
-- **IT-Support**:
-    - **Email**:
-    - **Password**:
-
-### Cloudinary
-
-- Cloud Name:
