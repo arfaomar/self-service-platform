@@ -1,12 +1,6 @@
 "use client";
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@components/ui/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/Card";
 
 import {
     ItemInRequestList,
@@ -22,8 +16,9 @@ import {
     TableRow,
 } from "@components/ui/Table";
 import { Badge } from "@components/ui/Badge";
-import { getBadgeVariant } from "@lib/utils";
+import { formatDate, getBadgeVariant } from "@lib/utils";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 interface MyRecentEquipmentRequestStatusProps {
     request: Request;
@@ -36,124 +31,147 @@ export default function MyRecentEquipmentRequestStatus({
 }) {
     const router = useRouter();
 
+    const containerRef = useRef<HTMLTableSectionElement>(null);
+    const itemRef = useRef<HTMLTableRowElement>(null);
+    const [visibleCount, setVisibleCount] = useState(requestData.length);
+
+    const updateVisibleCount = () => {
+        if (containerRef.current && itemRef.current) {
+            const containerHeight = containerRef.current.clientHeight;
+            const itemHeight = itemRef.current.clientHeight + 12;
+            const maxItems = Math.floor(containerHeight / itemHeight);
+            setVisibleCount(maxItems);
+        }
+    };
+
+    useEffect(() => {
+        updateVisibleCount();
+        window.addEventListener("resize", updateVisibleCount);
+        return () => {
+            window.removeEventListener("resize", updateVisibleCount);
+        };
+    }, [requestData]);
+
     return (
-        <Card className="flex flex-col rounded-xl bg-muted/50">
-            <CardHeader className="items-center pb-0">
+        <Card className="overflow-y-hidden rounded-xl bg-muted/50">
+            <CardHeader className="mb-3 items-center pb-0">
                 <CardTitle>My Equipment Requests</CardTitle>
-                <CardDescription>description</CardDescription>
             </CardHeader>
-            <CardContent className="container flex-1">
+            <CardContent className="h-full">
                 {requestData.length > 0 ? (
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className={"w-1/12"}>ID</TableHead>
-                                <TableHead className={"w-2/12"}>
-                                    Creation Date
-                                </TableHead>
-                                <TableHead className={"w-2/12"}>
-                                    Update Date
-                                </TableHead>
-                                <TableHead className={"w-2/12"}>
-                                    Status
-                                </TableHead>
-                                <TableHead className={"w-1/12"}>
-                                    Requested Items
-                                </TableHead>
-                                <TableHead className={"w-1/12"}>
-                                    Accepted Items
-                                </TableHead>
-                                <TableHead className={"w-1/12"}>
-                                    Declined Items
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {requestData.map((request, index) => (
-                                <TableRow
-                                    key={index}
-                                    onClick={() =>
-                                        router.push(
-                                            `/equipment/request/${request.request.id}`,
-                                        )
-                                    }
-                                    className="cursor-pointer"
-                                >
-                                    <TableCell>{request.request.id}</TableCell>
-                                    <TableCell>
-                                        {request.request.creationDate.toDateString()}
-                                    </TableCell>
-                                    <TableCell>
-                                        {request.request.updateDate ? (
-                                            request.request.updateDate.toDateString()
-                                        ) : (
-                                            <span
-                                                className={
-                                                    "text-muted-foreground"
-                                                }
-                                            >
-                                                N/A
-                                            </span>
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge
-                                            variant={getBadgeVariant(
-                                                request.request.status,
-                                            )}
-                                        >
-                                            {request.request.status}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        {request.items.length}
-                                    </TableCell>
-                                    <TableCell>
-                                        {request.items.filter(
-                                            (item) =>
-                                                item.status ===
-                                                ItemInRequestStatusEnum.Accepted,
-                                        ).length > 0 ? (
-                                            request.items.filter(
-                                                (item) =>
-                                                    item.status ===
-                                                    ItemInRequestStatusEnum.Accepted,
-                                            ).length
-                                        ) : (
-                                            <span
-                                                className={
-                                                    "text-muted-foreground"
-                                                }
-                                            >
-                                                0
-                                            </span>
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {request.items.filter(
-                                            (item) =>
-                                                item.status ===
-                                                ItemInRequestStatusEnum.Declined,
-                                        ).length > 0 ? (
-                                            request.items.filter(
-                                                (item) =>
-                                                    item.status ===
-                                                    ItemInRequestStatusEnum.Declined,
-                                            ).length
-                                        ) : (
-                                            <span
-                                                className={
-                                                    "text-muted-foreground"
-                                                }
-                                            >
-                                                0
-                                            </span>
-                                        )}
-                                    </TableCell>
+                    <div
+                        ref={containerRef}
+                        className={"h-full overflow-y-hidden"}
+                    >
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className={"w-2/12"}>
+                                        Update Date
+                                    </TableHead>
+                                    <TableHead className={"w-2/12"}>
+                                        Status
+                                    </TableHead>
+                                    <TableHead className={"w-1/12"}>
+                                        Requested Items
+                                    </TableHead>
+                                    <TableHead className={"w-1/12"}>
+                                        Accepted Items
+                                    </TableHead>
+                                    <TableHead className={"w-1/12"}>
+                                        Declined Items
+                                    </TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody className={"h-full overflow-y-hidden"}>
+                                {requestData
+                                    .slice(0, visibleCount)
+                                    .map((request, index) => (
+                                        <TableRow
+                                            ref={index === 0 ? itemRef : null}
+                                            key={index}
+                                            onClick={() =>
+                                                router.push(
+                                                    `/equipment/request/${request.request.id}`,
+                                                )
+                                            }
+                                            className="cursor-pointer"
+                                        >
+                                            <TableCell>
+                                                {request.request.updateDate ? (
+                                                    formatDate(
+                                                        request.request
+                                                            .creationDate,
+                                                    )
+                                                ) : (
+                                                    <span
+                                                        className={
+                                                            "text-muted-foreground"
+                                                        }
+                                                    >
+                                                        -
+                                                    </span>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant={getBadgeVariant(
+                                                        request.request.status,
+                                                    )}
+                                                >
+                                                    {request.request.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                {request.items.length}
+                                            </TableCell>
+                                            <TableCell>
+                                                {request.items.filter(
+                                                    (item) =>
+                                                        item.status ===
+                                                        ItemInRequestStatusEnum.Accepted,
+                                                ).length > 0 ? (
+                                                    request.items.filter(
+                                                        (item) =>
+                                                            item.status ===
+                                                            ItemInRequestStatusEnum.Accepted,
+                                                    ).length
+                                                ) : (
+                                                    <span
+                                                        className={
+                                                            "text-muted-foreground"
+                                                        }
+                                                    >
+                                                        0
+                                                    </span>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {request.items.filter(
+                                                    (item) =>
+                                                        item.status ===
+                                                        ItemInRequestStatusEnum.Declined,
+                                                ).length > 0 ? (
+                                                    request.items.filter(
+                                                        (item) =>
+                                                            item.status ===
+                                                            ItemInRequestStatusEnum.Declined,
+                                                    ).length
+                                                ) : (
+                                                    <span
+                                                        className={
+                                                            "text-muted-foreground"
+                                                        }
+                                                    >
+                                                        0
+                                                    </span>
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                    </div>
                 ) : (
                     <div className={"text-center"}>
                         <h1 className={"m-16 text-muted-foreground"}>
