@@ -10,8 +10,10 @@ import {
 import {
     itemInRequestRepository,
     requestRepository,
+    ticketRepository,
 } from "@lib/data/repositories";
 import MyRecentEquipmentRequestStatus from "@components/dashboard/MyRecentEquipmentRequestStatus";
+import RecentSupportTickets from "@components/dashboard/RecentSupportTickets";
 
 export default async function SupportDashboard() {
     const { userId, orgId } = await auth();
@@ -20,6 +22,10 @@ export default async function SupportDashboard() {
 
     const myRequests = await requestRepository.getAllRequestsByUserId(
         String(userId),
+        String(orgId),
+    );
+
+    const tickets = await ticketRepository.getTicketsByOrganizationId(
         String(orgId),
     );
 
@@ -33,10 +39,10 @@ export default async function SupportDashboard() {
     }
 
     return (
-        <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+        <main className="m-4 grid gap-4 xl:h-full xl:grid-rows-2 xl:overflow-y-hidden">
+            <div className="grid flex-grow gap-4 overflow-y-hidden xl:grid-cols-3">
                 <TicketStatusChart chartData={ticketStatusChartData} />
-                <div className="flex flex-col rounded-xl bg-muted/50" />
+                <RecentSupportTickets supportTickets={tickets} />
                 <MyRecentEquipmentRequestStatus
                     requestData={requestsWithItems}
                 />

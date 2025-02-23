@@ -45,7 +45,7 @@ export class TicketConversationRepository
             .where(eq(ticketConversation.id, validId));
 
         if (foundTicketConversation.length === 0) {
-            throw new Error("Shop item not found");
+            throw new Error("Ticket conversation not found");
         }
 
         return foundTicketConversation[0];
