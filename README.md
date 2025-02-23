@@ -95,7 +95,13 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
 
 ## Testing
 - Unit & Integration Tests: Jest
-- E2E Test: *TBA* [**Mohamed Yassine**](@stmomahf)
+```bash
+     npm test
+    ```
+- E2E Test: cyress
+```bash
+     npx cypress open 
+    ```
 
 ## Database Structure
 
