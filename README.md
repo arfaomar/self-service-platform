@@ -95,12 +95,12 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
 
 ## Testing
 - Unit & Integration Tests: Jest
-```bash
-     npm test
+    ```bash
+    npm test
     ```
 - E2E Test: cyress
-```bash
-     npx cypress open 
+    ```bash
+    npx cypress open 
     ```
 
 ## Database Structure
