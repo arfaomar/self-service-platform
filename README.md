@@ -98,7 +98,7 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
     ```bash
     npm test
     ```
-- E2E Test: cyress
+- E2E Test: cypress
     ```bash
     npx cypress open 
     ```
