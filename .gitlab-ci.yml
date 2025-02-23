@@ -2,6 +2,7 @@ image: node:lts
 
 stages:
     - install
+    - lint
     - test
     - build
 
@@ -10,7 +11,7 @@ install-dependencies:
     stage: install
     script:
         - echo "Installing dependencies..."
-        - apt-get update && apt-get install -y gettext
+        - apt-get update && apt-get install -y gettext docker-compose
         - envsubst < .env.template > .env.local
         - npm ci
     cache:
@@ -26,8 +27,6 @@ install-dependencies:
 # - - - TEST - - -
 test-unit:
     stage: test
-    needs:
-        - install-dependencies
     script:
         - echo "Running unit tests..."
         - npm run test:unit
@@ -37,40 +36,23 @@ test-unit:
 
 test-integration:
     stage: test
-    needs:
-        - install-dependencies
     services:
-        - docker:dind  # Use Docker-in-Docker to run PostgreSQL in docker-compose
+        - docker:dind  # Enables running Docker inside GitLab CI
     variables:
-        DOCKER_TLS_CERTDIR: ""  # Disable TLS for Docker-in-Docker
-    before_script:
-        - echo "Starting PostgreSQL using Docker Compose..."
-        - docker-compose --env-file .env.local up -d
-
+        DOCKER_TLS_CERTDIR: ""  # Required to allow Docker in Docker
+    script:
+        - echo "Installing Docker CLI..."
+        - apt-get update && apt-get install -y docker.io
+        - echo "Starting PostgreSQL with Docker Compose..."
+        - docker-compose up -d
         - echo "Waiting for PostgreSQL to be ready..."
-        - until docker exec $(docker ps -qf "name=postgres") pg_isready -U $DB_USER -h $DB_HOSTNAME -p $DB_PORT; do
-            echo "PostgreSQL not ready yet...";
-            sleep 2;
-          done
-        - echo "PostgreSQL is ready!"
-
+        - until docker exec $(docker ps -qf "name=postgres") pg_isready -U $POSTGRES_USER; do sleep 2; done
         - echo "Applying database schema with Drizzle..."
         - npx drizzle-kit push
-
-    script:
         - echo "Running integration tests..."
-        - npm run test:integration -- --ci --reporters=default --reporters=jest-junit
-
-    after_script:
+        - npm run test:integration
         - echo "Stopping PostgreSQL..."
         - docker-compose down
-
-    artifacts:
-        reports:
-            junit: test-results/report.xml
-        paths:
-            - test-results/report.xml
-
     rules:
         - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
         - if: $CI_COMMIT_BRANCH == "main"
@@ -78,8 +60,6 @@ test-integration:
 # - - - BUILD - - -
 build:
     stage: build
-    needs:
-        - test-integration
     script:
         - echo "Building the project..."
         - npm run build
