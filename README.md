@@ -94,7 +94,7 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
 9. Select the Organization named `Self Service 2` and check it out. `Self Service 1` has no data to show multinenancy when switching.
 
 ## Testing
-- Unit & Integration Tests: Jest
+- Unit & Integration Tests & Frontend Tests: Jest
     ```bash
     npm test
     ```
