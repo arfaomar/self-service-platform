@@ -41,6 +41,8 @@ test-integration:
     variables:
         DOCKER_TLS_CERTDIR: ""  # Required to allow Docker in Docker
     script:
+        - echo "Installing Docker CLI..."
+        - apt-get update && apt-get install -y docker.io
         - echo "Starting PostgreSQL with Docker Compose..."
         - docker compose --env-file .env.local up -d
         - echo "Waiting for PostgreSQL to be ready..."
