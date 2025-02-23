@@ -55,6 +55,9 @@ test-integration:
         DATABASE_NAME: ${DB_NAME}
 
     before_script:
+        - echo "Installing PostgreSQL client for pg_isready..."
+        - apt-get update && apt-get install -y postgresql-client
+        
         - echo "Updating .env.local to match the correct hostname..."
         - sed -i "s|${DB_HOSTNAME}|db|g" .env.local || true  # Ensure no failures if DB_HOSTNAME is empty
 
