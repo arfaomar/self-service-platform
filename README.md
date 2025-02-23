@@ -91,6 +91,8 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
     ```
 8. Open [http://localhost:3000](http://localhost:3000) with your browser and login with Clerk.
 
+9. Select the Organization named `Self Service 2` and check it out. `Self Service 1` has no data to show multinenancy when switching.
+
 ## Testing
 
 ## Database Structure
