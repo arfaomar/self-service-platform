@@ -2,7 +2,6 @@ image: node:lts
 
 stages:
     - install
-    - lint
     - test
     - build
 
@@ -22,10 +21,13 @@ install-dependencies:
         when: on_success
         paths:
             - node_modules/
+            - .env.local  # Ensure this is available for test-integration
 
 # - - - TEST - - -
 test-unit:
     stage: test
+    needs:
+        - install-dependencies
     script:
         - echo "Running unit tests..."
         - npm run test:unit
@@ -35,9 +37,38 @@ test-unit:
 
 test-integration:
     stage: test
+    needs:
+        - install-dependencies
+    services:
+        - name: postgres:15.0-alpine
+          alias: db  # Use a static alias (GitLab CI/CD does not allow dynamic alias values)
+          variables:
+              POSTGRES_USER: ${DB_USER}
+              POSTGRES_PASSWORD: ${DB_PASSWORD}
+              POSTGRES_DB: ${DB_NAME}
+              PGDATA: /var/lib/postgresql/data
+    variables:
+        DATABASE_HOST: db  # Must match the static alias used above
+        DATABASE_PORT: ${DB_PORT}
+        DATABASE_USERNAME: ${DB_USER}
+        DATABASE_PASSWORD: ${DB_PASSWORD}
+        DATABASE_NAME: ${DB_NAME}
+
+    before_script:
+        - echo "Updating .env.local to match the correct hostname..."
+        - sed -i "s|${DB_HOSTNAME}|db|g" .env.local || true  # Ensure no failures if DB_HOSTNAME is empty
+
+        - echo "Waiting for PostgreSQL to be ready..."
+        - until pg_isready -h $DATABASE_HOST -p $DATABASE_PORT -U $DATABASE_USERNAME; do sleep 2; done
+
+        - echo "Applying database schema with Drizzle..."
+        - npx drizzle-kit push
+
     script:
         - echo "Running integration tests..."
         - npm run test:integration
+
+
     rules:
         - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
         - if: $CI_COMMIT_BRANCH == "main"
@@ -45,6 +76,8 @@ test-integration:
 # - - - BUILD - - -
 build:
     stage: build
+    needs:
+        - test-integration
     script:
         - echo "Building the project..."
         - npm run build
