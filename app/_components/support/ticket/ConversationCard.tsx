@@ -34,12 +34,12 @@ export default async function ConversationCard({
                         }
                         width={32}
                         height={32}
-                        className={"mr-4 rounded-full"}
+                        className={"mr-4 rounded-lg"}
                     />
                     {userData.first_name} {userData.last_name}
                 </CardTitle>
             </CardHeader>
-            <CardContent>{content}</CardContent>
+            <CardContent className={""}>{content}</CardContent>
             <CardFooter>
                 <CardDescription>{formatDate(creationDate)}</CardDescription>
             </CardFooter>

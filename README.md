@@ -73,7 +73,11 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
     ```bash
     docker-compose --env-file ./.env.local up -d
     ```
-5. Apply the database schema:
+5. Apply the database [migration file](./drizzle):
+    ```bash
+    npx drizzle-kit migrate
+    ```
+    Alternatively you can just push the schema without data to you db:
     ```bash
     npx drizzle-kit push
     ```

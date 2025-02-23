@@ -6,7 +6,7 @@ import {
     ticketRepository,
     ticketScreenshotRepository,
 } from "@lib/data/repositories";
-import { formatDate, getBadgeVariant } from "@lib/utils";
+import { fetchUserData, formatDate, getBadgeVariant } from "@lib/utils";
 import {
     Card,
     CardContent,
@@ -25,6 +25,7 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import ChangeTicketStatusForm from "@components/support/ticket/ChangeTicketStatusForm";
 import CloseTicketForm from "@components/support/ticket/CloseTicketForm";
+import { Skeleton } from "@components/ui/Skeleton";
 
 export default async function TicketPage({
     params,
@@ -56,6 +57,8 @@ export default async function TicketPage({
         await ticketConversationRepository.getTicketConversationsByTicketId(
             parseInt(ticketId),
         );
+
+    const userData = await fetchUserData(ticket.ownerId);
 
     return (
         <>
@@ -97,6 +100,34 @@ export default async function TicketPage({
                                         </p>
                                     </span>
                                 </CardDescription>
+                                <CardDescription
+                                    className={"flex items-center gap-x-2"}
+                                >
+                                    <p>
+                                        By:{" "}
+                                        {userData?.first_name +
+                                            " " +
+                                            userData?.last_name || "Unknown"}
+                                    </p>
+                                    {userData?.image_url ? (
+                                        <Image
+                                            src={userData.image_url}
+                                            alt={
+                                                userData?.first_name +
+                                                " " +
+                                                userData?.last_name +
+                                                "image"
+                                            }
+                                            height={36}
+                                            width={36}
+                                            className={"h-9 w-9 rounded-lg"}
+                                        />
+                                    ) : (
+                                        <Skeleton className="h-9 w-9 content-center items-center rounded-lg text-center">
+                                            <div>NA</div>
+                                        </Skeleton>
+                                    )}
+                                </CardDescription>
                             </div>
                         </div>
                         {canSeeAllTickets && (
@@ -116,7 +147,7 @@ export default async function TicketPage({
                     >
                         <p
                             className={
-                                "overflow-hidden text-ellipsis whitespace-nowrap"
+                                "line-clamp-6 overflow-hidden text-ellipsis"
                             }
                         >
                             {ticket.description}
@@ -125,7 +156,7 @@ export default async function TicketPage({
                     <CardDescription>Attachments:</CardDescription>
                     <div
                         className={
-                            "min-h-32 rounded-lg border border-muted-foreground bg-muted p-4"
+                            "flex min-h-32 flex-row gap-x-4 rounded-lg border border-muted-foreground bg-muted p-4"
                         }
                     >
                         {screenshots.map((screenshot) => (

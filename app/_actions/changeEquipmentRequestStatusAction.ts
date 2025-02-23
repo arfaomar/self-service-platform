@@ -21,7 +21,6 @@ async function adjustStock(itemInRequest: ItemInRequestList, quantity: number) {
         itemInRequest.itemId,
     );
     const newStock = shopItem.stock + quantity;
-    console.log("quantity", quantity, "new stock", newStock);
     await shopItemRepository.updateShopItem({
         id: shopItem.id,
         stock: newStock,

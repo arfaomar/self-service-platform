@@ -56,7 +56,7 @@ export default async function changeTicketStatusAction(
         }
 
         if (
-            !has({ permission: "org:tickets:manage_all" }) ||
+            !has({ permission: "org:tickets:manage_all" }) &&
             ticket.ownerId !== userId
         ) {
             return {
