@@ -44,6 +44,10 @@ test-integration:
     variables:
         DOCKER_TLS_CERTDIR: ""  # Disable TLS for Docker-in-Docker
     before_script:
+
+        - echo "Installing docker-compose..."
+        - apt-get update && apt-get install -y docker-compose-plugin
+
         - echo "Starting PostgreSQL using Docker Compose..."
         - docker-compose --env-file .env.local up -d
 
@@ -65,11 +69,6 @@ test-integration:
         - echo "Stopping PostgreSQL..."
         - docker-compose down
 
-    artifacts:
-        reports:
-            junit: test-results/report.xml
-        paths:
-            - test-results/report.xml
 
     rules:
         - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
