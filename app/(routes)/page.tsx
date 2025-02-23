@@ -13,12 +13,26 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@components/ui/Sidebar";
+import SupportDashboard from "@components/dashboard/SupportDashboard";
+import { auth } from "@clerk/nextjs/server";
+import ManagerDashboard from "@components/dashboard/ManagerDashboard";
+import MemberDashboard from "@components/dashboard/MemberDashboard";
 
 export default async function Home() {
+    const { userId, orgId, has } = await auth();
+    if (!userId || !orgId) {
+        return null;
+    }
+
+    const isAdmin = has({ role: "org:admin" });
+    const isManager = has({ role: "org:manager" });
+    const isSupport = has({ role: "org:it_support" });
+    const isMember = has({ role: "org:member" });
+
     return (
         <SidebarProvider>
             <AppSidebar />
-            <SidebarInset>
+            <SidebarInset className={"flex h-screen"}>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">
                         <SidebarTrigger className="-ml-1" />
@@ -35,14 +49,17 @@ export default async function Home() {
                         </Breadcrumb>
                     </div>
                 </header>
-                <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                    </div>
-                    <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-                </main>
+                {isAdmin ? (
+                    <SupportDashboard />
+                ) : isManager ? (
+                    <ManagerDashboard />
+                ) : isSupport ? (
+                    <SupportDashboard />
+                ) : isMember ? (
+                    <MemberDashboard />
+                ) : (
+                    <></>
+                )}
             </SidebarInset>
         </SidebarProvider>
     );

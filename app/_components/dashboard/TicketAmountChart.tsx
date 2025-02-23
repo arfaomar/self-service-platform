@@ -29,10 +29,10 @@ export default function TicketAmountChart({
             <CardHeader className="items-center pb-0">
                 <CardTitle>Ticket Histogram</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <CardContent className="overflow-y-hidden">
                 <ChartContainer
                     config={chartConfig}
-                    className="container mx-auto max-h-96"
+                    className="container mx-auto h-full"
                 >
                     <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
