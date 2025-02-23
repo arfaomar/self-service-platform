@@ -1,4 +1,4 @@
-image: node:lts
+image: docker:latest  # Use Docker as the base image
 
 stages:
     - install
@@ -8,9 +8,12 @@ stages:
 # - - - INSTALL - - -
 install-dependencies:
     stage: install
+    services:
+        - docker:dind  # Enable Docker-in-Docker
+    variables:
+        DOCKER_TLS_CERTDIR: ""  # Required for dind
     script:
         - echo "Installing dependencies..."
-        - apt-get update && apt-get install -y gettext
         - envsubst < .env.template > .env.local
         - npm ci
     cache:
@@ -40,16 +43,20 @@ test-integration:
     needs:
         - install-dependencies
     services:
-        - docker:dind  # Use Docker-in-Docker to run PostgreSQL in docker-compose
+        - docker:dind  # Run PostgreSQL via Docker Compose inside GitLab CI/CD
     variables:
-        DOCKER_TLS_CERTDIR: ""  # Disable TLS for Docker-in-Docker
+        DOCKER_TLS_CERTDIR: ""  # Required for Docker-in-Docker
     before_script:
-
-        - echo "Installing docker-compose..."
-        - apt-get update && apt-get install -y docker-compose-plugin
+        - echo "Checking if Docker Compose is installed..."
+        - if ! docker compose version; then
+            echo "Installing Docker Compose...";
+            curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose;
+            chmod +x /usr/local/bin/docker-compose;
+            ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;
+          fi
 
         - echo "Starting PostgreSQL using Docker Compose..."
-        - docker-compose --env-file .env.local up -d
+        - docker compose --env-file .env.local up -d
 
         - echo "Waiting for PostgreSQL to be ready..."
         - until docker exec $(docker ps -qf "name=postgres") pg_isready -U $DB_USER -h $DB_HOSTNAME -p $DB_PORT; do
@@ -63,12 +70,11 @@ test-integration:
 
     script:
         - echo "Running integration tests..."
-        - npm run test:integration -- --ci --reporters=default --reporters=jest-junit
+        - npm run test:integration
 
     after_script:
         - echo "Stopping PostgreSQL..."
-        - docker-compose down
-
+        - docker compose down  # Using Docker CLI
 
     rules:
         - if: $CI_COMMIT_BRANCH =~ /feature\/.*/
