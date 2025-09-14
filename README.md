@@ -52,8 +52,8 @@ Authentication is handled via **Clerk**, supporting **Google, GitHub, and Email 
 
 - Node.js (v18.18+)
 - Next.js (v15)
-- Cloudinary Account (provided below)
-- Clerk Account (provided below)
+- Cloudinary Account
+- Clerk Account
 - Docker (for PostgreSQL DB)
 
 ### Steps
